@@ -1,0 +1,12 @@
+# Netlify: connect the repository, then set environment variables (see .env.example) in the dashboard.
+[build]
+  command = "npm run build:production"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Inquiry backend: netlify/functions/inquiry.mjs → POST /api/inquiry
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
