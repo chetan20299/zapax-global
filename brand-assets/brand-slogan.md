@@ -1,12 +1,12 @@
-# ZAPAX GLOBAL brand slogan
+# ZAPAX ENTERPRISE brand slogan
 
 ## Recommended slogan
 
 # Where trust travels.
 
-**Why it works for ZAPAX GLOBAL**
+**Why it works for ZAPAX ENTERPRISE**
 
-- **It names the product behind the products.** Buyers import onion, garlic or ginger, but what they are really buying from an export partner is trust: that the goods match the agreed specification, that documents are right, and that the shipment arrives. The slogan says this without any category word, so it stays true as ZAPAX GLOBAL expands into new products.
+- **It names the product behind the products.** Buyers import onion, garlic or ginger, but what they are really buying from an export partner is trust: that the goods match the agreed specification, that documents are right, and that the shipment arrives. The slogan says this without any category word, so it stays true as ZAPAX ENTERPRISE expands into new products.
 - **It is the logo in words.** The Route Z symbol traces a journey from an origin point. "Where trust travels" describes the same idea: trust that starts at origin in India and moves with every shipment, wherever it goes.
 - **It is international.** Three common English words, easy to pronounce for non-native speakers, with no idiom, pun or cultural reference that fails to translate.
 - **It is memorable.** The repeated "tr" sound (trust / travels) gives it rhythm, and it is short enough for a business card, a carton side panel or an email signature.
@@ -16,7 +16,7 @@
 
 ## All concepts evaluated
 
-Scores: 1 (weak) to 5 (strong). "Expandable" means it still fits if ZAPAX GLOBAL exports products far beyond agriculture.
+Scores: 1 (weak) to 5 (strong). "Expandable" means it still fits if ZAPAX ENTERPRISE exports products far beyond agriculture.
 
 | # | Concept | Meaning / positioning | Memorable | International | Expandable | Notes |
 |---|---------|----------------------|:--:|:--:|:--:|------|
@@ -25,12 +25,12 @@ Scores: 1 (weak) to 5 (strong). "Expandable" means it still fits if ZAPAX GLOBAL
 | 3 | Origin you can trust. | Confidence in where products come from | 3 | 5 | 5 | "…you can trust" is a very common slogan pattern |
 | 4 | From India, with integrity. | Indian origin plus honest conduct | 4 | 5 | 5 | Strong for India-origin positioning; "From India" phrasings are widely used |
 | 5 | Clearly sourced. Globally delivered. | Transparency plus reach | 3 | 4 | 5 | Descriptive and clear, but a little corporate |
-| 6 | Agreed. Sourced. Delivered. | ZAPAX GLOBAL's process: specification first | 4 | 4 | 4 | Distinctive, but reads as a process rather than a promise |
+| 6 | Agreed. Sourced. Delivered. | ZAPAX ENTERPRISE's process: specification first | 4 | 4 | 4 | Distinctive, but reads as a process rather than a promise |
 | 7 | Quality that travels. | Products arrive as good as they left | 4 | 5 | 4 | Commonly used phrase (luggage, food, packaging brands) |
-| 8 | The partner behind the product. | ZAPAX GLOBAL's role as accountable coordinator | 3 | 4 | 5 | Good B2B positioning line for profiles, less punchy as a slogan |
+| 8 | The partner behind the product. | ZAPAX ENTERPRISE's role as accountable coordinator | 3 | 4 | 5 | Good B2B positioning line for profiles, less punchy as a slogan |
 | 9 | Rooted in India. Trusted worldwide. | Indian heritage plus global trust | 4 | 4 | 3 | "Rooted" leans agricultural and limits future categories |
 | 10 | Every shipment, a promise kept. | Reliability, one order at a time | 3 | 4 | 5 | Warm but long; better as a campaign line |
-| 11 | India's word, delivered. | ZAPAX GLOBAL carries India's reputation | 3 | 3 | 5 | Clever, but "word" may be misread by non-native speakers |
+| 11 | India's word, delivered. | ZAPAX ENTERPRISE carries India's reputation | 3 | 3 | 5 | Clever, but "word" may be misread by non-native speakers |
 | 12 | Sourced with integrity. Delivered worldwide. | Ethics plus reach | 3 | 5 | 5 | "Sourced with integrity" is already in public use by other food brands |
 
 Secondary lines such as #6 *Agreed. Sourced. Delivered.* and #8 *The partner behind the product.* can be used inside the website, company profile or presentations without competing with the main slogan.
@@ -47,4 +47,4 @@ On 8 November 2026 we ran web searches for the exact phrases of the leading opti
 
 - **India:** the IP India public search (ipindiaonline.gov.in, trade mark search), word mark search in Classes 29, 30, 31 (food and agricultural products) and 35 (business/trading services)
 - **Key export markets:** WIPO Global Brand Database (branddb.wipo.int), EUIPO (TMview) and USPTO (tmsearch.uspto.gov)
-- A trademark attorney, who can also advise on registering the ZAPAX GLOBAL name and Route Z logo together.
+- A trademark attorney, who can also advise on registering the ZAPAX ENTERPRISE name and Route Z logo together.

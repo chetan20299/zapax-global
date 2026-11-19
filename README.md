@@ -1,11 +1,11 @@
-# ZAPAX GLOBAL website and brand identity
+# ZAPAX ENTERPRISE website and brand identity
 
-Production-ready static website and independent brand asset package for ZAPAX GLOBAL, an export company in Gujarat, India.
+Production-ready static website and independent brand asset package for ZAPAX ENTERPRISE, an export company in Gujarat, India.
 
 **Slogan:** *Where trust travels.*
 **Colours (only these three):** Indigo `#2E3277` · Turmeric `#E0A526` · White `#FFFFFF`
 
-Before launch read **[CONTENT-REVIEW.md](CONTENT-REVIEW.md)** (what ZAPAX GLOBAL must confirm) and **[DEPLOYMENT.md](DEPLOYMENT.md)** (domain, DNS, SSL, hosting, verification checklist).
+Before launch read **[CONTENT-REVIEW.md](CONTENT-REVIEW.md)** (what ZAPAX ENTERPRISE must confirm) and **[DEPLOYMENT.md](DEPLOYMENT.md)** (domain, DNS, SSL, hosting, verification checklist).
 
 ## Quick start
 

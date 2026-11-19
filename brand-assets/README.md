@@ -1,6 +1,6 @@
-# ZAPAX GLOBAL brand asset package
+# ZAPAX ENTERPRISE brand asset package
 
-Everything needed to use the ZAPAX GLOBAL identity outside the website: letterheads, invoices, quotations, export documents, packaging, presentations, email signatures, social media and trade-show materials.
+Everything needed to use the ZAPAX ENTERPRISE identity outside the website: letterheads, invoices, quotations, export documents, packaging, presentations, email signatures, social media and trade-show materials.
 
 **Slogan:** *Where trust travels.* (rationale in `brand-slogan.md`)
 
@@ -35,7 +35,7 @@ Word, PowerPoint and Google Docs: insert the **PNG** (or SVG in Microsoft 365). 
 
 | Name | HEX | RGB | CMYK (starting point, proof on press) | Use |
 |------|-----|-----|------|-----|
-| ZAPAX GLOBAL Indigo | #2E3277 | 46 50 119 | 61 58 0 53 | Logo, text, buttons, dark backgrounds |
+| ZAPAX ENTERPRISE Indigo | #2E3277 | 46 50 119 | 61 58 0 53 | Logo, text, buttons, dark backgrounds |
 | Turmeric | #E0A526 | 224 165 38 | 0 26 83 12 | Origin dot, accents, buttons on indigo |
 | White | #FFFFFF | 255 255 255 | 0 0 0 0 | Backgrounds, text on indigo |
 

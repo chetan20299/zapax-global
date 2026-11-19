@@ -23,7 +23,7 @@ const cta = (title = 'Start with your requirement', text = 'Tell us the product,
 <section class="section">
   <div class="wrap cta-panel">
     <div><h2>${title}</h2><p>${text}</p></div>
-    <div class="actions">${quote()}<a class="btn btn-ghost" href="/ZAPAX-GLOBAL-product-overview.pdf" download>Download product overview (PDF)</a></div>
+    <div class="actions">${quote()}<a class="btn btn-ghost" href="/ZAPAX-ENTERPRISE-product-overview.pdf" download>Download product overview (PDF)</a></div>
   </div>
 </section>`;
 
@@ -78,8 +78,8 @@ const processSteps = [
 // ---------- Home ----------
 const homePage = {
   path: '/',
-  title: 'ZAPAX GLOBAL | Dehydrated Onion, Garlic and Ginger Exporter from India',
-  description: 'ZAPAX GLOBAL exports dehydrated onion, garlic, black garlic, ginger, vegetables and fruits from India, with every specification agreed in writing before shipment.',
+  title: 'ZAPAX ENTERPRISE | Dehydrated Onion, Garlic and Ginger Exporter from India',
+  description: 'ZAPAX ENTERPRISE exports dehydrated onion, garlic, black garlic, ginger, vegetables and fruits from India, with every specification agreed in writing before shipment.',
   bodyClass: 'is-home',
   body: `
 <section class="home-hero">
@@ -87,7 +87,7 @@ const homePage = {
     <p class="kicker">Export company · Gujarat, India</p>
     <h1>Indian exports, carried on trust.</h1>
     <div class="home-hero-row">
-      <p class="lead">ZAPAX GLOBAL exports dehydrated onion, garlic, black garlic, ginger, vegetables and fruits from India, sourced through trusted producing partners. Every detail is agreed with you in writing, so the trust built at the first inquiry travels with your order all the way to your port.</p>
+      <p class="lead">ZAPAX ENTERPRISE exports dehydrated onion, garlic, black garlic, ginger, vegetables and fruits from India, sourced through trusted producing partners. Every detail is agreed with you in writing, so the trust built at the first inquiry travels with your order all the way to your port.</p>
       <div class="actions">${quote()}<a class="btn btn-ghost" href="/products/">Browse products</a></div>
     </div>
   </div>
@@ -98,7 +98,7 @@ const homePage = {
   <div class="wrap split">
     <h2 class="statement">Trust that travels with every shipment.</h2>
     <div class="prose">
-      <p>ZAPAX GLOBAL is an export company based in Gujarat, India. We connect importers, distributors and manufacturers around the world with trusted producing partners across India, and we remain your single point of contact from the first inquiry to the arrival of your shipment.</p>
+      <p>ZAPAX ENTERPRISE is an export company based in Gujarat, India. We connect importers, distributors and manufacturers around the world with trusted producing partners across India, and we remain your single point of contact from the first inquiry to the arrival of your shipment.</p>
       <p>We do not run our own processing plant. We work with producing partners selected for each product, which means we can match the right source to your specification and grow our range as buyer needs evolve.</p>
       <p><a class="link" href="/about/">Read our story ${icon('arrow')}</a></p>
     </div>
@@ -152,7 +152,7 @@ const homePage = {
 
 <section class="section">
   <div class="wrap">
-    ${head('Why buyers trust ZAPAX GLOBAL')}
+    ${head('Why buyers trust ZAPAX ENTERPRISE')}
     <dl class="reasons">
       <div><dt>One accountable contact</dt><dd>You speak to the same team from inquiry to delivery, not a chain of intermediaries.</dd></div>
       <div><dt>Clarity before commitment</dt><dd>Specifications, packing, documents and Incoterms are agreed in writing before you place an order.</dd></div>
@@ -200,14 +200,14 @@ ${cta('Ready to discuss your next order?')}
 const aboutPage = {
   path: '/about/',
   title: 'About Us | Export Company from Gujarat, India',
-  description: 'ZAPAX GLOBAL LLP was founded in Gujarat by Chetan Punani and Keval Chauhan to carry India’s products to the world on trust. Our story, founders and values.',
+  description: 'ZAPAX ENTERPRISE LLP was founded in Gujarat by Chetan Punani and Keval Chauhan to carry India’s products to the world on trust. Our story, founders and values.',
   schemaType: 'AboutPage',
   trail: [home, ['/about/', 'About']],
   body: `
-${hero({ h1: 'Built in Gujarat to carry India’s best to the world', lead: 'ZAPAX GLOBAL began with a simple belief: international buyers deserve an Indian export partner who is clear, dependable and honest about what it can deliver. Trust is what we build, and what travels with every order.' })}
+${hero({ h1: 'Built in Gujarat to carry India’s best to the world', lead: 'ZAPAX ENTERPRISE began with a simple belief: international buyers deserve an Indian export partner who is clear, dependable and honest about what it can deliver. Trust is what we build, and what travels with every order.' })}
 ${split('<h2>Our story</h2>', prose(`
-  <p>ZAPAX GLOBAL was founded in Gujarat, India, by Chetan Punani and Keval Chauhan. Gujarat is one of India’s great trading states, with major ports and a long tradition of commerce, and buyers around the world already depend on Indian products such as onion, garlic, ginger and spices.</p>
-  <p>The founders saw that buyers abroad often struggle to find an Indian supplier they can rely on, one that gives straight answers, agrees specifications properly and stays responsive after the order is placed. They started ZAPAX GLOBAL to fill that gap.</p>
+  <p>ZAPAX ENTERPRISE was founded in Gujarat, India, by Chetan Punani and Keval Chauhan. Gujarat is one of India’s great trading states, with major ports and a long tradition of commerce, and buyers around the world already depend on Indian products such as onion, garlic, ginger and spices.</p>
+  <p>The founders saw that buyers abroad often struggle to find an Indian supplier they can rely on, one that gives straight answers, agrees specifications properly and stays responsive after the order is placed. They started ZAPAX ENTERPRISE to fill that gap.</p>
   <p>We are a young company, and we are open about it. We do not own processing facilities. Instead, we work with producing partners chosen for each product, and we take responsibility for coordination, communication and export execution. We began with dehydrated food products, and we are building a company that will export many more of India’s products.</p>`))}
 <section class="section tint">
   <div class="wrap split">
@@ -217,8 +217,8 @@ ${split('<h2>Our story</h2>', prose(`
 </section>
 <section class="section">
   <div class="wrap">
-    ${head('Founders', 'ZAPAX GLOBAL is led by its two founders, who are personally involved in every buyer relationship.')}
-    <ul class="founders">${site.people.map((pp) => `<li><span class="founder-mark" aria-hidden="true">${pp.name.split(' ').map((w) => w[0]).join('')}</span><div><h3>${pp.name}</h3><p>${pp.role}, ZAPAX GLOBAL</p></div></li>`).join('')}</ul>
+    ${head('Founders', 'ZAPAX ENTERPRISE is led by its two founders, who are personally involved in every buyer relationship.')}
+    <ul class="founders">${site.people.map((pp) => `<li><span class="founder-mark" aria-hidden="true">${pp.name.split(' ').map((w) => w[0]).join('')}</span><div><h3>${pp.name}</h3><p>${pp.role}, ZAPAX ENTERPRISE</p></div></li>`).join('')}</ul>
     <p class="founders-note">Their long-term goal is to build an export company that buyers return to for years, across shipments and product categories, because every deal is handled on clear, written terms.</p>
   </div>
 </section>
@@ -236,7 +236,7 @@ ${split('<h2>Our story</h2>', prose(`
 </section>
 <section class="section tint">
   <div class="wrap">
-    ${head('Our goals', 'The commitments that guide how we are building ZAPAX GLOBAL.')}
+    ${head('Our goals', 'The commitments that guide how we are building ZAPAX ENTERPRISE.')}
     ${list([
       'Establish a recognised international export brand from India',
       'Build lasting relationships with buyers around the world',
@@ -297,7 +297,7 @@ const productPages = products.map((p) => {
   ];
   return {
     path: `/products/${p.slug}/`,
-    waText: `Hello ZAPAX GLOBAL, I am interested in ${p.name}. Please share details.`,
+    waText: `Hello ZAPAX ENTERPRISE, I am interested in ${p.name}. Please share details.`,
     title: p.title,
     description: p.description,
     trail: [home, ['/products/', 'Products'], [`/products/${p.slug}/`, p.name]],
@@ -357,7 +357,7 @@ ${cta(`Request a quote for ${p.name.toLowerCase()}`, 'Share your form, specifica
 const qualityPage = {
   path: '/quality/',
   title: 'Quality Assurance | How We Source, Check and Ship',
-  description: 'How ZAPAX GLOBAL handles product selection, sourcing standards, inspection, packaging, transport, documentation and traceability for exports from India.',
+  description: 'How ZAPAX ENTERPRISE handles product selection, sourcing standards, inspection, packaging, transport, documentation and traceability for exports from India.',
   trail: [home, ['/quality/', 'Quality']],
   body: `
 ${hero({ h1: 'Quality you can check, not just a promise', lead: 'Quality in export trade means the product that arrives matches the product that was agreed. Here is how we make sure the trust you place in an order travels with it, stage by stage, and what we can and cannot claim.' })}
@@ -386,7 +386,7 @@ ${hero({ h1: 'Quality you can check, not just a promise', lead: 'Quality in expo
     <h2>About certifications</h2>
     <div class="prose">
       <p>Food safety and quality certifications are held by the facilities that process the product. When you consider a product, we share the producing partner’s relevant certificates and test reports for your review.</p>
-      <p>ZAPAX GLOBAL does not display certification logos on this website, and we will never present a partner’s certification as our own. If your market requires a specific certification, tell us early and we will confirm whether we can supply from a certified source.</p>
+      <p>ZAPAX ENTERPRISE does not display certification logos on this website, and we will never present a partner’s certification as our own. If your market requires a specific certification, tell us early and we will confirm whether we can supply from a certified source.</p>
     </div>
   </div>
 </section>
@@ -398,7 +398,7 @@ ${cta('Have a specific quality requirement?', 'Send us your specification sheet 
 const exportPage = {
   path: '/export/',
   title: 'Export Capabilities | Bulk Supply from India',
-  description: 'How ZAPAX GLOBAL coordinates bulk exports from India: product handling, packaging, buyer requirements, shipping, documents and communication.',
+  description: 'How ZAPAX ENTERPRISE coordinates bulk exports from India: product handling, packaging, buyer requirements, shipping, documents and communication.',
   trail: [home, ['/export/', 'Export capabilities']],
   body: `
 ${hero({ h1: 'Export coordination from inquiry to arrival', lead: 'We handle the practical work of exporting from India, so you deal with one trusted partner who understands both the product and the paperwork, wherever your goods are travelling.' })}
@@ -496,7 +496,7 @@ ${cta('Have specific documentation requirements?')}
 const shippingPage = {
   path: '/shipping/',
   title: 'Shipping and Delivery Information',
-  description: 'How shipping and delivery work for ZAPAX GLOBAL export orders: Incoterms, sea and air freight, transit times, risk transfer and what affects delivery dates.',
+  description: 'How shipping and delivery work for ZAPAX ENTERPRISE export orders: Incoterms, sea and air freight, transit times, risk transfer and what affects delivery dates.',
   trail: [home, ['/export/', 'Export'], ['/shipping/', 'Shipping and delivery']],
   body: `
 ${hero({ h1: 'Shipping and delivery', lead: 'How we arrange shipments and what to expect. The specific terms of each order are set out in its quotation and sales contract, which take precedence over this general information.' })}
@@ -522,7 +522,7 @@ ${cta()}
 const sustainabilityPage = {
   path: '/sustainability/',
   title: 'Sustainability and Responsible Sourcing',
-  description: 'ZAPAX GLOBAL’s practical approach to responsible sourcing, reducing food waste, using resources efficiently and building a sustainable export business.',
+  description: 'ZAPAX ENTERPRISE’s practical approach to responsible sourcing, reducing food waste, using resources efficiently and building a sustainable export business.',
   trail: [home, ['/sustainability/', 'Sustainability']],
   body: `
 ${hero({ h1: 'Responsible trade, one practical step at a time', lead: 'We are a young company, so we focus on what we can influence today, and we report honestly on it. We make no environmental claims we cannot support.' })}
@@ -542,7 +542,7 @@ ${hero({ h1: 'Responsible trade, one practical step at a time', lead: 'We are a 
     <h2>Growing sustainably</h2>
     <div class="prose">
       <p>For us, a sustainable business also means steady growth: adding products only when we can supply them reliably, building long-term relationships rather than one-off trades, and improving our processes with every order.</p>
-      <p>As ZAPAX GLOBAL grows, we intend to set measurable goals and report on them openly. Buyers with specific sustainability requirements, such as sourcing documentation or packaging preferences, are welcome to discuss them with us.</p>
+      <p>As ZAPAX ENTERPRISE grows, we intend to set measurable goals and report on them openly. Buyers with specific sustainability requirements, such as sourcing documentation or packaging preferences, are welcome to discuss them with us.</p>
     </div>
   </div>
 </section>
@@ -552,8 +552,8 @@ ${cta('Have sustainability requirements for your supply chain?', 'Tell us what y
 
 // ---------- FAQ ----------
 const faqs = [
-  ['Is ZAPAX GLOBAL a manufacturer?', 'No. ZAPAX GLOBAL is a sourcing and export company. We work with producing partners selected for each product, and we coordinate specifications, packing, documents and shipment. We are always transparent about this.'],
-  ['Where is ZAPAX GLOBAL based?', `We are based in ${site.region}, India. Our full office address is on our <a href="/contact/">contact page</a>.`],
+  ['Is ZAPAX ENTERPRISE a manufacturer?', 'No. ZAPAX ENTERPRISE is a sourcing and export company. We work with producing partners selected for each product, and we coordinate specifications, packing, documents and shipment. We are always transparent about this.'],
+  ['Where is ZAPAX ENTERPRISE based?', `We are based in ${site.region}, India. Our full office address is on our <a href="/contact/">contact page</a>.`],
   ['What products do you export?', `We currently export ${productNames}. We do not export fresh produce. Our range is growing, so ask us about other products from India.`],
   ['Do you plan to export other products from India?', 'Yes. Dehydrated food products are our starting point. We plan to expand into many more categories of products from India, adding each one only when we can supply it reliably. If you are sourcing something else from India, tell us and we will tell you honestly whether we can help.'],
   ['What is your minimum order quantity?', 'It depends on the product and packing. Many buyers order by the container, but tell us the volume you need and we will confirm what is possible.'],
@@ -569,7 +569,7 @@ const faqs = [
 const faqPage = {
   path: '/faq/',
   title: 'Frequently Asked Questions',
-  description: 'Answers to common questions from international buyers about ZAPAX GLOBAL: business model, products, minimum orders, samples, Incoterms, certifications and documents.',
+  description: 'Answers to common questions from international buyers about ZAPAX ENTERPRISE: business model, products, minimum orders, samples, Incoterms, certifications and documents.',
   trail: [home, ['/faq/', 'FAQ']],
   schema: [faqSchema(faqs)],
   body: `
@@ -618,7 +618,7 @@ ${hero({ h1: 'Request a quote', lead: 'Tell us what you need. We read every inqu
         <div class="span-2">${field('message', 'Message or specifications', `<textarea id="f-message" name="message" rows="6" maxlength="4000" ${describedBy('message', 1)}></textarea>`, { hint: 'Form or cut, mesh size, packaging, documents and target shipment date.' })}</div>
       </div>
       <div class="hp" aria-hidden="true"><label for="f-website">Leave this field empty</label><input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
-      <input type="hidden" name="_subject" value="New ZAPAX GLOBAL website inquiry">${netlifyForm ? '\n      <input type="hidden" name="form-name" value="inquiry">' : ''}
+      <input type="hidden" name="_subject" value="New ZAPAX ENTERPRISE website inquiry">${netlifyForm ? '\n      <input type="hidden" name="form-name" value="inquiry">' : ''}
       <p class="form-legal">Fields marked <span class="req">*</span> are required. We use your details only to respond to your inquiry. See our <a href="/privacy/">privacy policy</a>.</p>
       <button class="btn btn-primary btn-lg" type="submit">Send inquiry</button>
       <div class="form-status" role="status" aria-live="polite" tabindex="-1"></div>
@@ -642,7 +642,7 @@ ${hero({ h1: 'Request a quote', lead: 'Tell us what you need. We read every inqu
       </ul>
       <p><a class="link" href="${site.mapsUrl}" target="_blank" rel="noopener">View on Google Maps ${icon('arrow')}</a></p>
       <p class="small">Our team works on India Standard Time (UTC+5:30).</p>
-      <p class="notice">${icon('check')}<span>ZAPAX GLOBAL only uses the phone number above${site.emailDomain ? ` and <strong>@${site.emailDomain}</strong> email addresses` : ''}. Bank details are never changed by email or chat. <a href="/trade-terms/">How we prevent fraud</a></span></p>
+      <p class="notice">${icon('check')}<span>ZAPAX ENTERPRISE only uses the phone number above${site.emailDomain ? ` and <strong>@${site.emailDomain}</strong> email addresses` : ''}. Bank details are never changed by email or chat. <a href="/trade-terms/">How we prevent fraud</a></span></p>
     </aside>
   </div>
 </section>
@@ -653,10 +653,10 @@ ${hero({ h1: 'Request a quote', lead: 'Tell us what you need. We read every inqu
 const tradeTermsPage = {
   path: '/trade-terms/',
   title: 'Trade Terms and Fraud Prevention',
-  description: 'Every ZAPAX GLOBAL deal follows pre-agreed written terms. How we protect buyers and our business from fraud, and how to verify genuine ZAPAX GLOBAL communication.',
+  description: 'Every ZAPAX ENTERPRISE deal follows pre-agreed written terms. How we protect buyers and our business from fraud, and how to verify genuine ZAPAX ENTERPRISE communication.',
   trail: [home, ['/export/', 'Export'], ['/trade-terms/', 'Trade terms and fraud prevention']],
   body: `
-${hero({ h1: 'Every deal on agreed terms, in writing', lead: 'International trade only works when both sides can trust each other. That is why every ZAPAX GLOBAL deal, first or repeat, large or small, in any product category, follows the same pre-agreed written terms. They protect you, protect us, and keep the relationship strong for the long term.' })}
+${hero({ h1: 'Every deal on agreed terms, in writing', lead: 'International trade only works when both sides can trust each other. That is why every ZAPAX ENTERPRISE deal, first or repeat, large or small, in any product category, follows the same pre-agreed written terms. They protect you, protect us, and keep the relationship strong for the long term.' })}
 <section class="section">
   <div class="wrap split">
     <div><h2>Agreed before any order</h2><p>No order is confirmed until both parties have accepted these points in writing, in the proforma invoice or sales contract.</p></div>
@@ -681,9 +681,9 @@ ${hero({ h1: 'Every deal on agreed terms, in writing', lead: 'International trad
 </section>
 <section class="section">
   <div class="wrap">
-    ${head('How to recognise genuine ZAPAX GLOBAL communication', 'Fraudsters sometimes impersonate exporters. These checks protect you.')}
+    ${head('How to recognise genuine ZAPAX ENTERPRISE communication', 'Fraudsters sometimes impersonate exporters. These checks protect you.')}
     ${features([
-      ['phone', 'Official phone and WhatsApp', `We contact you from <a href="${telHref}">${site.phone}</a>. If someone claims to represent ZAPAX GLOBAL from another number, verify with us on this number first.`],
+      ['phone', 'Official phone and WhatsApp', `We contact you from <a href="${telHref}">${site.phone}</a>. If someone claims to represent ZAPAX ENTERPRISE from another number, verify with us on this number first.`],
       ['mail', 'Official email', site.emailDomain ? `Our team writes only from <strong>@${site.emailDomain}</strong> addresses. Treat look-alike domains or free email accounts as suspicious.` : 'Our team writes only from our official company email domain. Treat look-alike domains or free email accounts as suspicious.'],
       ['doc', 'Bank details never change by message', 'Our bank account is in the company’s name and appears on the official proforma invoice. We never change bank details by email or chat. If you receive such a request, call us before paying.'],
       ['doc', 'Registered company', `Payments go only to ${esc(site.legalName)}. You can check our registrations on the <a href="/company-registrations/">company registrations page</a>.`],
@@ -697,7 +697,7 @@ ${hero({ h1: 'Every deal on agreed terms, in writing', lead: 'International trad
     <div class="prose">
       <p>To protect both sides, before confirming a first order we may ask for your company name and registration details, import licence or registration where your country requires one, an official business email address, and the delivery address and port.</p>
       <p>Payment terms are agreed for each contract. Common international options include advance payment, letter of credit (LC) and documents against payment (D/P).</p>
-      <p>If you ever suspect that someone is misusing the ZAPAX GLOBAL name, contact us on <a href="${telHref}">${site.phone}</a> or through our <a href="/contact/">contact page</a>.</p>
+      <p>If you ever suspect that someone is misusing the ZAPAX ENTERPRISE name, contact us on <a href="${telHref}">${site.phone}</a> or through our <a href="/contact/">contact page</a>.</p>
     </div>
   </div>
 </section>
@@ -709,7 +709,7 @@ ${cta('Start a relationship built on clear terms')}
 const visionPage = {
   path: '/vision/',
   title: 'Our Vision | Exporting the Best of India to the World',
-  description: 'The vision and mission of ZAPAX GLOBAL: starting with dehydrated food products and growing into a wide range of products from India, built on trust.',
+  description: 'The vision and mission of ZAPAX ENTERPRISE: starting with dehydrated food products and growing into a wide range of products from India, built on trust.',
   trail: [home, ['/vision/', 'Our vision']],
   body: `
 ${hero({ kicker: 'Our vision', h1: 'Carrying the best of India to the world, on trust', lead: site.vision })}
@@ -776,7 +776,7 @@ const updated = 'November 2026';
 const privacyPage = {
   path: '/privacy/',
   title: 'Privacy Policy',
-  description: 'How ZAPAX GLOBAL collects, uses and protects personal information submitted through this website.',
+  description: 'How ZAPAX ENTERPRISE collects, uses and protects personal information submitted through this website.',
   trail: [home, ['/privacy/', 'Privacy policy']],
   body: `
 ${hero({ h1: 'Privacy policy', lead: `Last updated ${updated}. This policy explains what personal information we collect through this website and how we use it.` })}
@@ -804,7 +804,7 @@ ${hero({ h1: 'Privacy policy', lead: `Last updated ${updated}. This policy expla
 const termsPage = {
   path: '/terms/',
   title: 'Terms of Use',
-  description: 'The terms that apply to using the ZAPAX GLOBAL website, including the status of product information and intellectual property.',
+  description: 'The terms that apply to using the ZAPAX ENTERPRISE website, including the status of product information and intellectual property.',
   trail: [home, ['/terms/', 'Terms of use']],
   body: `
 ${hero({ h1: 'Terms of use', lead: `Last updated ${updated}. By using this website you agree to these terms.` })}
@@ -814,9 +814,9 @@ ${hero({ h1: 'Terms of use', lead: `Last updated ${updated}. By using this websi
   <h2>Product information</h2>
   <p>Product descriptions, forms, reference sizes and packaging information on this website are for general guidance only. They are not an offer to sell and do not form part of any contract. Availability, specifications, prices and terms are confirmed in writing for each order, and the quotation and sales contract for that order take precedence over anything on this website.</p>
   <h2>Inquiries and orders</h2>
-  <p>Submitting an inquiry does not create a contract. A contract exists only when both parties have agreed and confirmed the order terms in writing. How ZAPAX GLOBAL agrees and protects every deal is described in our <a href="/trade-terms/">trade terms and fraud prevention</a> page.</p>
+  <p>Submitting an inquiry does not create a contract. A contract exists only when both parties have agreed and confirmed the order terms in writing. How ZAPAX ENTERPRISE agrees and protects every deal is described in our <a href="/trade-terms/">trade terms and fraud prevention</a> page.</p>
   <h2>Intellectual property</h2>
-  <p>The content, text, illustrations and design of this website belong to ${esc(site.legalName)} unless stated otherwise. You may view and print pages for your own business use, but you may not copy or republish content without our written permission. The ZAPAX GLOBAL name and logo are our brand identifiers.</p>
+  <p>The content, text, illustrations and design of this website belong to ${esc(site.legalName)} unless stated otherwise. You may view and print pages for your own business use, but you may not copy or republish content without our written permission. The ZAPAX ENTERPRISE name and logo are our brand identifiers.</p>
   <h2>Links</h2>
   <p>Links to other websites are provided for convenience. We are not responsible for the content of those websites.</p>
   <h2>Liability</h2>
@@ -831,7 +831,7 @@ ${hero({ h1: 'Terms of use', lead: `Last updated ${updated}. By using this websi
 const notFound = {
   path: '/404',
   title: 'Page not found',
-  description: 'The page you were looking for could not be found. Browse ZAPAX GLOBAL products or contact our export team in Gujarat, India.',
+  description: 'The page you were looking for could not be found. Browse ZAPAX ENTERPRISE products or contact our export team in Gujarat, India.',
   noindex: true,
   body: `
 ${hero({ h1: 'This page could not be found', lead: 'The link may be out of date, or the page may have moved. These pages may help.', actions: `<a class="btn btn-primary" href="/">Go to the homepage</a><a class="btn btn-ghost" href="/products/">Browse products</a><a class="btn btn-ghost" href="/contact/">Contact us</a>` })}`,

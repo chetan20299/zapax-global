@@ -1,6 +1,6 @@
 // Inquiry handler shared by the Netlify and Cloudflare adapters (and the local dev server).
 // Validates input, blocks bots, emails the team (reply-to = buyer) and sends the buyer a confirmation via the Resend API.
-// Runtime env: RESEND_API_KEY (secret), MAIL_FROM ("ZAPAX GLOBAL <inquiries@yourdomain>"), MAIL_TO (team inbox, comma-separated allowed).
+// Runtime env: RESEND_API_KEY (secret), MAIL_FROM ("ZAPAX ENTERPRISE <inquiries@yourdomain>"), MAIL_TO (team inbox, comma-separated allowed).
 // Uses only web-standard APIs (Request, Response, fetch, FormData) so it runs on Node 18+, Netlify and Cloudflare Workers.
 
 const MAX = { name: 100, company: 150, email: 150, country: 80, phone: 30, product: 80, quantity: 100, destination_port: 100, message: 4000 };

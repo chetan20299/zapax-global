@@ -22,7 +22,7 @@ async function dryRunFetch(url, init) {
 async function inquiry(req, res, port) {
   const templates = JSON.parse(await readFile('server/generated/email-templates.json', 'utf8'));
   const live = !!process.env.RESEND_API_KEY;
-  const env = live ? process.env : { RESEND_API_KEY: 'dry-run', MAIL_FROM: 'ZAPAX GLOBAL <dev@localhost>', MAIL_TO: 'team@localhost', ...process.env, RESEND_API_KEY: 'dry-run' };
+  const env = live ? process.env : { RESEND_API_KEY: 'dry-run', MAIL_FROM: 'ZAPAX ENTERPRISE <dev@localhost>', MAIL_TO: 'team@localhost', ...process.env, RESEND_API_KEY: 'dry-run' };
   env.ALLOWED_ORIGIN = `http://localhost:${port}`;
   const request = new Request(`http://localhost:${port}${req.url}`, { method: req.method, headers: req.headers, body: Readable.toWeb(req), duplex: 'half' });
   const response = await handleInquiry(request, env, templates, live ? fetch : dryRunFetch);
@@ -46,7 +46,7 @@ export function createDevServer(port) {
       res.end(body);
     } catch {
       res.writeHead(404, { 'Content-Type': types['.html'] });
-      res.end(await readFile(join(root, '404.html')));
+      res.end(await readFile(join(root, '404.html')).catch(() => 'Not found. dist/ is incomplete: run "npm run build".'));
     }
   });
 }

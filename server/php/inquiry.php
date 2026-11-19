@@ -1,7 +1,7 @@
 <?php
-// ZAPAX GLOBAL inquiry handler for Apache/cPanel hosting (POST /api/inquiry, rewritten by .htaccess).
+// ZAPAX ENTERPRISE inquiry handler for Apache/cPanel hosting (POST /api/inquiry, rewritten by .htaccess).
 // Mirrors server/inquiry-core.mjs. Secrets live OUTSIDE public_html in zapax-mail-config.php:
-//   <?php return ['RESEND_API_KEY' => 're_...', 'MAIL_FROM' => 'ZAPAX GLOBAL <inquiries@yourdomain>', 'MAIL_TO' => 'info@yourdomain'];
+//   <?php return ['RESEND_API_KEY' => 're_...', 'MAIL_FROM' => 'ZAPAX ENTERPRISE <inquiries@yourdomain>', 'MAIL_TO' => 'info@yourdomain'];
 declare(strict_types=1);
 header('Content-Type: application/json');
 header('Cache-Control: no-store');
@@ -50,18 +50,18 @@ $d['port'] = $d['destination_port'];
 
 $cfgFile = dirname(__DIR__, 2) . '/zapax-mail-config.php';
 $cfg = is_file($cfgFile) ? require $cfgFile : [];
-if (empty($cfg['RESEND_API_KEY']) || empty($cfg['MAIL_FROM']) || empty($cfg['MAIL_TO'])) { error_log('ZAPAX GLOBAL inquiry: mail config missing'); respond(500, ['ok' => false, 'error' => 'config']); }
+if (empty($cfg['RESEND_API_KEY']) || empty($cfg['MAIL_FROM']) || empty($cfg['MAIL_TO'])) { error_log('ZAPAX ENTERPRISE inquiry: mail config missing'); respond(500, ['ok' => false, 'error' => 'config']); }
 $to = array_values(array_filter(array_map('trim', explode(',', $cfg['MAIL_TO']))));
 $subject = fn(string $t) => mb_substr(preg_replace('/[\r\n]+/', ' ', render($t, $d, false)) ?? '', 0, 200);
 
 try {
   send_mail($cfg['RESEND_API_KEY'], ['from' => $cfg['MAIL_FROM'], 'to' => $to, 'reply_to' => $d['email'],
     'subject' => $subject($templates['team']['subject']), 'html' => render($templates['team']['html'], $d, true), 'text' => render($templates['team']['text'], $d, false)]);
-} catch (Throwable $e) { error_log('ZAPAX GLOBAL team email failed: ' . $e->getMessage()); respond(502, ['ok' => false, 'error' => 'send']); }
+} catch (Throwable $e) { error_log('ZAPAX ENTERPRISE team email failed: ' . $e->getMessage()); respond(502, ['ok' => false, 'error' => 'send']); }
 
 try {
   send_mail($cfg['RESEND_API_KEY'], ['from' => $cfg['MAIL_FROM'], 'to' => [$d['email']], 'reply_to' => $to[0],
     'subject' => $subject($templates['reply']['subject']), 'html' => render($templates['reply']['html'], $d, true), 'text' => render($templates['reply']['text'], $d, false)]);
-} catch (Throwable $e) { error_log('ZAPAX GLOBAL confirmation email failed: ' . $e->getMessage()); respond(200, ['ok' => true, 'confirmation' => false]); }
+} catch (Throwable $e) { error_log('ZAPAX ENTERPRISE confirmation email failed: ' . $e->getMessage()); respond(200, ['ok' => true, 'confirmation' => false]); }
 
 respond(200, ['ok' => true, 'confirmation' => true]);

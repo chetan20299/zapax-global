@@ -3,3 +3,4 @@ dist/
 qa-shots/
 .env
 server/generated/
+hostinger-upload.zip

@@ -1,5 +1,5 @@
-// Website brand assets in the ZAPAX GLOBAL identity: npm run assets
-// → public/og-image.png, public/apple-touch-icon.png, public/brand/logo-symbol-512.png, public/ZAPAX-GLOBAL-product-overview.pdf
+// Website brand assets in the ZAPAX ENTERPRISE identity: npm run assets
+// → public/og-image.png, public/apple-touch-icon.png, public/brand/logo-symbol-512.png, public/ZAPAX-ENTERPRISE-product-overview.pdf
 import { mkdir, readFile } from 'node:fs/promises';
 import puppeteer from 'puppeteer-core';
 import { executablePath, launchArgs } from './chrome.mjs';
@@ -58,7 +58,7 @@ table{width:100%;border-collapse:collapse;font-size:9.5pt}th,td{text-align:left;
 <div class="pg">${logo('primary', '62mm')}<h1>Products from India, prepared to your specification</h1>
 <p>A starting point for importers, food manufacturers, seasoning blenders and distributors exploring bulk supply from India. Exact specifications, availability and documents are confirmed for each inquiry.</p>
 <h2>Products and forms</h2><table><thead><tr><th>Product</th><th>Forms</th><th>Varieties</th></tr></thead><tbody>${rows}</tbody></table>
-<h2>A partner-led supply model</h2><p>ZAPAX GLOBAL is a sourcing and export company, not a manufacturer. We work with producing partners selected for each product, agree the specification with you in writing, and coordinate packing, documents and shipment.</p>
+<h2>A partner-led supply model</h2><p>ZAPAX ENTERPRISE is a sourcing and export company, not a manufacturer. We work with producing partners selected for each product, agree the specification with you in writing, and coordinate packing, documents and shipment.</p>
 <h2>Every deal on written terms</h2><p>Specification, price, Incoterms, payment terms and documents are agreed in writing in the proforma invoice or contract before any order, for every shipment and every product category. Bank details are never changed by email or chat.</p>
 <div class="band"><span>${site.legalName} · ${site.region}, ${site.country}</span><b>${slogan}</b></div></div>
 <div class="pg">${logo('primary', '40mm')}<h2 style="margin-top:10mm">Specification at a glance</h2><table><thead><tr><th>Item</th><th>What we agree with you</th></tr></thead><tbody>
@@ -68,10 +68,10 @@ table{width:100%;border-collapse:collapse;font-size:9.5pt}th,td{text-align:left;
 <tr><th>Quality documents</th><td>Microbiological, chemical, physical and other documents your destination requires.</td></tr></tbody></table>
 <h2>Packaging options</h2><div class="cards"><div><strong>Bulk cartons</strong>Poly-lined corrugated cartons. Commonly requested net weights include 10, 20 and 25 kg, subject to product and agreement.</div><div><strong>Barrier bags</strong>Aluminium foil vacuum bags for products and markets that need extra moisture protection.</div><div><strong>Retail formats</strong>Stand-up pouches, where product, labelling and order size allow.</div></div>
 <h2>To prepare a useful inquiry</h2><ol><li>Product and intended application</li><li>Required form, cut or mesh, and preferred packaging</li><li>Estimated quantity in metric tons or container loads</li><li>Destination port, target timing and document requirements</li></ol>
-<div class="cta"><strong>Talk to ZAPAX GLOBAL about your requirement</strong><br>${contactLine}<br>${fullAddress}${host ? `<br>Request a quote online: ${host}/contact/` : ''}</div>
+<div class="cta"><strong>Talk to ZAPAX ENTERPRISE about your requirement</strong><br>${contactLine}<br>${fullAddress}${host ? `<br>Request a quote online: ${host}/contact/` : ''}</div>
 <p class="note">Important: product availability, origin, processing method, analytical values, shelf life, certification and packaging depend on the specific item, producing partner and order. Confirm current specifications and documents before purchase. This overview is for initial discussion and is not a batch-specific technical data sheet.</p>
 <div class="band"><span>${host || contactLine}</span><b>${slogan}</b></div></div></body></html>`);
 await page.evaluate(() => document.fonts.ready);
-await page.pdf({ path: 'public/ZAPAX-GLOBAL-product-overview.pdf', format: 'A4', printBackground: true });
+await page.pdf({ path: 'public/ZAPAX-ENTERPRISE-product-overview.pdf', format: 'A4', printBackground: true });
 await browser.close();
-console.log('Generated og-image.png, apple-touch-icon.png, brand/logo-symbol-512.png, ZAPAX-GLOBAL-product-overview.pdf');
+console.log('Generated og-image.png, apple-touch-icon.png, brand/logo-symbol-512.png, ZAPAX-ENTERPRISE-product-overview.pdf');

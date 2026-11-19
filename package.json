@@ -11,7 +11,9 @@
     "verify": "node --env-file-if-exists=.env scripts/verify.mjs",
     "assets": "node --env-file-if-exists=.env scripts/assets.mjs",
     "brand": "node --env-file-if-exists=.env scripts/brand.mjs",
-    "test": "node scripts/test-inquiry.mjs"
+    "test": "node scripts/test-inquiry.mjs",
+    "package:hostinger": "node scripts/package-hostinger.mjs",
+    "package:hostinger-node": "node scripts/package-hostinger.mjs --node"
   },
   "devDependencies": {
     "esbuild": "^0.25.12",

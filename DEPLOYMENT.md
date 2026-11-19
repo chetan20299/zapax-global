@@ -1,4 +1,4 @@
-# Deployment guide: ZAPAX GLOBAL on your own domain
+# Deployment guide: ZAPAX ENTERPRISE on your own domain
 
 The site is a static, production-ready build with a small serverless inquiry backend. `npm run build:production` creates `dist/`, a complete website with every URL, canonical tag, sitemap entry and redirect generated from one setting: `SITE_URL`. There are no hardcoded preview or development URLs. Internal links are root-relative, so the same build works on any domain.
 
@@ -14,19 +14,19 @@ The site can go live today on a free `*.netlify.app` address. Nothing needs to b
 
 Steps (about 10 minutes):
 
-1. Create a free GitHub account and an empty **private** repository, e.g. `zapax-global-website`.
+1. Create a free GitHub account and an empty **private** repository, e.g. `zapax-enterprise-website`.
 2. Push this folder (Git for Windows is installed):
    ```bash
    cd D:\ZAPAX
    git init -b main
    git add .
-   git commit -m "ZAPAX GLOBAL website"
-   git remote add origin https://github.com/<your-account>/zapax-global-website.git
+   git commit -m "ZAPAX ENTERPRISE website"
+   git remote add origin https://github.com/<your-account>/zapax-enterprise-website.git
    git push -u origin main
    ```
    `.gitignore` already excludes `node_modules/`, `dist/`, `.env` and screenshots.
 3. Sign up at **netlify.com** (log in with GitHub) → **Add new project → Import an existing project** → GitHub → pick the repository. Leave every build setting as detected (`netlify.toml` supplies them) → **Deploy**.
-4. **Project configuration → General → Project details → Change project name**, e.g. `zapax-global`, which gives `https://zapax-global.netlify.app`. Then **Deploys → Trigger deploy → Deploy project** so the pages use the new address.
+4. **Project configuration → General → Project details → Change project name**, e.g. `zapax-enterprise`, which gives `https://zapax-enterprise.netlify.app`. Then **Deploys → Trigger deploy → Deploy project** so the pages use the new address.
 5. **Forms → Enable form detection**, then **Trigger deploy** once more. The `inquiry` form then appears under Forms.
 6. **Forms → Form notifications → Add notification → Email notification** → form `inquiry` → the inbox that should receive inquiries (add one per founder if both should get them).
 7. Send a test inquiry from the live Contact page and confirm it arrives in the dashboard and by email.
@@ -39,7 +39,7 @@ Every later `git push` redeploys automatically.
 
 **`zapax.com` is not available.** On 8 November 2026 it was a parked domain listed for sale on a domain marketplace (atom.com). Do not use it, and do not print any `@zapax.com` address.
 
-1. Choose and register a domain in the company's name, for example a `.com` or `.in` variant of ZAPAX GLOBAL. Registration must be done by ZAPAX GLOBAL through a registrar (GoDaddy, Hostinger, BigRock, Namecheap and so on).
+1. Choose and register a domain in the company's name, for example a `.com` or `.in` variant of ZAPAX ENTERPRISE. Registration must be done by ZAPAX ENTERPRISE through a registrar (GoDaddy, Hostinger, BigRock, Namecheap and so on).
 2. Pick **one** canonical address, for example `https://www.yourdomain.com`. The other form is redirected to it automatically.
 
 The examples below use `yourdomain.com`.
@@ -70,7 +70,7 @@ Setup (about 15 minutes):
 1. Create a free account at **Resend** (resend.com) → Domains → add `yourdomain.com` (or a sending subdomain such as `mail.yourdomain.com`).
 2. Add the DNS records Resend shows (SPF/DKIM TXT and MX) at your registrar, then wait for **Verified**. Adding a DMARC record (`_dmarc` TXT `v=DMARC1; p=none; rua=mailto:info@yourdomain.com`) improves inbox placement.
 3. Create an API key (sending access only).
-4. Set the runtime variables on your host (section 4): `RESEND_API_KEY` (secret), `MAIL_FROM` = `ZAPAX GLOBAL <inquiries@yourdomain.com>`, `MAIL_TO` = `info@yourdomain.com` (add more addresses separated by commas).
+4. Set the runtime variables on your host (section 4): `RESEND_API_KEY` (secret), `MAIL_FROM` = `ZAPAX ENTERPRISE <inquiries@yourdomain.com>`, `MAIL_TO` = `info@yourdomain.com` (add more addresses separated by commas).
 5. After deploying, **send a real test inquiry** with your own email: confirm the team email arrives (Reply goes to the buyer) and the confirmation arrives in the buyer inbox (check spam).
 
 Local testing: `npm run build && npm run serve` runs the same backend in dry-run mode and saves both emails as HTML files in `qa-shots/emails/` for preview. With `RESEND_API_KEY` set in `.env`, it sends for real.
@@ -134,11 +134,13 @@ All three options give free automatic SSL and work with any registrar.
 
 ### Option C: cPanel / shared hosting (Hostinger, GoDaddy, Bluehost and similar)
 
+**Hostinger:** follow [HOSTINGER-DEPLOYMENT.md](HOSTINGER-DEPLOYMENT.md). Single Web Hosting: `npm run package:hostinger` (extract into public_html). Node.js app plans: `npm run package:hostinger-node`.
+
 1. On your computer, with `.env` filled in and `DEPLOY_TARGET=cpanel`: `npm ci && npm run build:production`.
 2. Upload the **contents** of `dist/` (including the hidden `.htaccess` and the `api/` folder) to `public_html/`. Turn on "show hidden files".
 3. Create `zapax-mail-config.php` **one level above** `public_html` (so it can never be downloaded):
    ```php
-   <?php return ['RESEND_API_KEY' => 're_...', 'MAIL_FROM' => 'ZAPAX GLOBAL <inquiries@yourdomain.com>', 'MAIL_TO' => 'info@yourdomain.com'];
+   <?php return ['RESEND_API_KEY' => 're_...', 'MAIL_FROM' => 'ZAPAX ENTERPRISE <inquiries@yourdomain.com>', 'MAIL_TO' => 'info@yourdomain.com'];
    ```
    The handler needs PHP 8 with the `curl` and `mbstring` extensions (standard on these hosts).
 4. In cPanel → SSL/TLS Status, issue the free **AutoSSL / Let's Encrypt** certificate for both `yourdomain.com` and `www.yourdomain.com`.

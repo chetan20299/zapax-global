@@ -60,7 +60,7 @@ function nav(current) {
   <header class="site-header">
     <a class="skip" href="#main">Skip to content</a>
     <nav class="nav wrap" aria-label="Main">
-      <a class="brand" href="/" aria-label="ZAPAX GLOBAL home">${inlineLogo('primary', 'brand-logo')}</a>
+      <a class="brand" href="/" aria-label="ZAPAX ENTERPRISE home">${inlineLogo('primary', 'brand-logo')}</a>
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-list"><span class="sr-only">Menu</span>${icon('menu')}${icon('close')}</button>
       <ul class="nav-list" id="nav-list">
         ${menu('menu-products', 'Products', [['/products/', 'All products'], ...navProducts], '/products/')}
@@ -96,7 +96,7 @@ function footer() {
       </div>
       ${col('Products', navProducts)}
       ${col('Export', [...exportPages, ['/quality/', 'Quality assurance']])}
-      ${col('Company', [['/about/', 'About ZAPAX GLOBAL'], ['/vision/', 'Our vision'],['/company-registrations/', 'Company registrations'], ['/sustainability/', 'Sustainability'], ['/trade-terms/', 'Trade terms and fraud prevention'], ['/faq/', 'FAQ'], ['/contact/', 'Contact and quotes'], ['/ZAPAX-GLOBAL-product-overview.pdf', 'Product overview (PDF)']])}
+      ${col('Company', [['/about/', 'About ZAPAX ENTERPRISE'], ['/vision/', 'Our vision'],['/company-registrations/', 'Company registrations'], ['/sustainability/', 'Sustainability'], ['/trade-terms/', 'Trade terms and fraud prevention'], ['/faq/', 'FAQ'], ['/contact/', 'Contact and quotes'], ['/ZAPAX-ENTERPRISE-product-overview.pdf', 'Product overview (PDF)']])}
     </div>
     <div class="wrap footer-base">
       <p>© <span data-year>${new Date().getFullYear()}</span> ${esc(site.legalName)}. All rights reserved.</p>
@@ -117,7 +117,7 @@ const loaderFacts = [
   `Registered as ${site.legalName}`,
 ];
 const loaderHtml = `
-<div class="loader" id="loader" role="status" aria-label="Loading ZAPAX GLOBAL" hidden>
+<div class="loader" id="loader" role="status" aria-label="Loading ZAPAX ENTERPRISE" hidden>
   <div class="sk" aria-hidden="true">
     <div class="sk-head"><div class="wrap"><span class="sk-b sk-logo"></span><span class="sk-b sk-nav"></span></div></div>
     <div class="wrap sk-body">
@@ -128,7 +128,7 @@ const loaderHtml = `
     </div>
   </div>
   <div class="loader-card">
-    <div class="loader-logo">${lockup('horizontal', 'primary').svg.replace(/ width="[^"]*" height="[^"]*"/, ' aria-hidden="true" focusable="false"').replace(/ role="img" aria-label="ZAPAX GLOBAL"/, '').replace(/<title>.*?<\/title>/, '')}</div>
+    <div class="loader-logo">${lockup('horizontal', 'primary').svg.replace(/ width="[^"]*" height="[^"]*"/, ' aria-hidden="true" focusable="false"').replace(/ role="img" aria-label="ZAPAX ENTERPRISE"/, '').replace(/<title>.*?<\/title>/, '')}</div>
     <p class="loader-slogan">${site.slogan}</p>
     <ul class="loader-facts">${loaderFacts.map((f) => `<li>${f}</li>`).join('')}</ul>
     <div class="loader-progress" aria-hidden="true"><span></span></div>
@@ -141,7 +141,7 @@ const floating = (page) => `
 <div class="nav-progress" aria-hidden="true"></div>
 <div class="fabs">
   <button class="to-top" type="button" aria-label="Back to top" hidden>${icon('up')}</button>
-  <a class="fab-wa" href="${waHref(page.waText)}" target="_blank" rel="noopener" aria-label="Chat with ZAPAX GLOBAL on WhatsApp, ${site.phone}">${icon('whatsapp')}<span class="fab-label">Chat on WhatsApp</span></a>
+  <a class="fab-wa" href="${waHref(page.waText)}" target="_blank" rel="noopener" aria-label="Chat with ZAPAX ENTERPRISE on WhatsApp, ${site.phone}">${icon('whatsapp')}<span class="fab-label">Chat on WhatsApp</span></a>
 </div>`;
 
 function breadcrumbHtml(trail) {
@@ -181,7 +181,7 @@ ${site.googleSiteVerification ? `<meta name="google-site-verification" content="
 <meta property="og:url" content="${url}">
 <meta property="og:image" content="${abs('/og-image.png')}">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="ZAPAX GLOBAL: exports from India. Where trust travels.">
+<meta property="og:image:alt" content="ZAPAX ENTERPRISE: exports from India. Where trust travels.">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -260,7 +260,7 @@ const csp = [
 // Netlify: canonical host + HTTPS (Cloudflare Pages ignores domain rules; see DEPLOYMENT.md), plus retired URLs.
 await writeFile(
   `${OUT}/_redirects`,
-  `http://${altHost}/* ${site.domain}/:splat 301!\nhttps://${altHost}/* ${site.domain}/:splat 301!\nhttp://${host}/* ${site.domain}/:splat 301!\n/about.html /about/ 301\n/products/fresh-fruits/* /products/ 301\n/products/fresh-vegetables/* /products/ 301\n/ZAPAX-product-overview.pdf /ZAPAX-GLOBAL-product-overview.pdf 301\n`,
+  `http://${altHost}/* ${site.domain}/:splat 301!\nhttps://${altHost}/* ${site.domain}/:splat 301!\nhttp://${host}/* ${site.domain}/:splat 301!\n/about.html /about/ 301\n/products/fresh-fruits/* /products/ 301\n/products/fresh-vegetables/* /products/ 301\n/ZAPAX-product-overview.pdf /ZAPAX-ENTERPRISE-product-overview.pdf 301\n`,
 );
 // Apache / cPanel shared hosting (e.g. Hostinger, GoDaddy, Bluehost): HTTPS, canonical host, errors, caching, headers.
 await writeFile(
@@ -284,7 +284,7 @@ ErrorDocument 404 /404.html
   # 4. Retired URLs from the previous site
   RewriteRule ^about\\.html$ /about/ [L,R=301]
   RewriteRule ^products/fresh-(fruits|vegetables)/?$ /products/ [L,R=301]
-  RewriteRule ^ZAPAX-product-overview\\.pdf$ /ZAPAX-GLOBAL-product-overview.pdf [L,R=301]
+  RewriteRule ^ZAPAX-product-overview\\.pdf$ /ZAPAX-ENTERPRISE-product-overview.pdf [L,R=301]
 </IfModule>
 
 <IfModule mod_headers.c>

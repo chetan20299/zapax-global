@@ -39,7 +39,7 @@ const variants = [
   ['wordmark-dark', 'wordmark', 'dark', false, 4000, 100],
 ];
 for (const [name, kind, mode, tag, px, mm] of variants) {
-  const l = lockup(kind, mode, { taglinePath: tag ? taglinePath : undefined, title: tag ? `ZAPAX GLOBAL: ${slogan}` : 'ZAPAX GLOBAL' });
+  const l = lockup(kind, mode, { taglinePath: tag ? taglinePath : undefined, title: tag ? `ZAPAX ENTERPRISE: ${slogan}` : 'ZAPAX ENTERPRISE' });
   await writeFile(`${OUT}/logo/svg/${name}.svg`, xml(l.svg));
   const h = Math.round((px * l.height) / l.width);
   await svgToPng(page, l.svg, px, h, `${OUT}/logo/png/${name}.png`);
@@ -65,7 +65,7 @@ await svgToPng(page, banner, 1584, 396, `${OUT}/logo/social/linkedin-banner-1584
     body += `${bg}<g id="${kind}-${mode}${tag ? '-slogan' : ''}" transform="translate(80 ${y}) scale(${s})">${inner}</g>`;
     y += l.height * s + 120;
   }
-  await writeFile(`${OUT}/logo/zapax-logo-master-editable.svg`, xml(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 ${y}" width="1600" height="${y}"><title>ZAPAX GLOBAL logo master</title><rect width="1600" height="${y}" fill="#FFFFFF"/>${body}</svg>`));
+  await writeFile(`${OUT}/logo/zapax-logo-master-editable.svg`, xml(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 ${y}" width="1600" height="${y}"><title>ZAPAX ENTERPRISE logo master</title><rect width="1600" height="${y}" fill="#FFFFFF"/>${body}</svg>`));
 }
 
 // ---------- 2. Business cards (90 × 54 mm trim, 3 mm bleed, 4 mm safe area) ----------
@@ -195,7 +195,7 @@ const cmyk = (h) => {
 const lum = (h) => { const c = hexRgb(h).map((v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; };
 const contrast = (a, bb) => { const [l1, l2] = [lum(a), lum(bb)].sort((x, y) => y - x); return ((l1 + 0.05) / (l2 + 0.05)).toFixed(1); };
 const palette = [
-  ['ZAPAX GLOBAL Indigo', colors.indigo, 'Primary. Logo, headings, body text, buttons, dark backgrounds.'],
+  ['ZAPAX ENTERPRISE Indigo', colors.indigo, 'Primary. Logo, headings, body text, buttons, dark backgrounds.'],
   ['Turmeric', colors.turmeric, 'Accent. The origin point, highlights, buttons on indigo. Never for text on white.'],
   ['White', colors.white, 'Base. Backgrounds and text on indigo.'],
 ];
@@ -214,14 +214,14 @@ const doc = (title, body) => `<!doctype html><html><head><meta charset="utf-8"><
 .grid{display:grid;gap:6mm}.muted{color:rgb(46 50 119 / .78)}table{border-collapse:collapse;width:100%;font-size:9.5pt}td,th{text-align:left;padding:2mm 3mm;border-bottom:.3mm solid rgb(46 50 119 / .16);vertical-align:top}th{color:${colors.indigo}}
 .box{border-radius:3mm;display:flex;align-items:center;justify-content:center}.small{font-size:8.5pt}
 </style></head><body>${body}</body></html>`;
-const footer = (t) => `<div class="ft"><span>ZAPAX GLOBAL brand guidelines · ${t}</span><span>${slogan}</span></div>`;
+const footer = (t) => `<div class="ft"><span>ZAPAX ENTERPRISE brand guidelines · ${t}</span><span>${slogan}</span></div>`;
 modes['x-turmeric'] = { knockout: colors.turmeric, word: colors.turmeric, tag: colors.turmeric };
 modes['x-dot'] = { tile: colors.indigo, mark: colors.white, dot: colors.white, word: colors.indigo, tag: colors.indigo };
 const L = (k, m, t) => inner(lockup(k, m, t ? { taglinePath } : {}).svg);
 const svgWrap = (k, m, t, w) => { const l = lockup(k, m, t ? { taglinePath } : {}); return `<svg viewBox="0 0 ${l.width} ${l.height}" style="width:${w};height:auto;display:block">${inner(l.svg)}</svg>`; };
 
 const colorsDoc = doc('Colours', `
-<div class="pg"><h1>Brand colours</h1><p>ZAPAX GLOBAL uses exactly three colours: indigo and turmeric, two dyes with deep roots in Gujarat’s textile tradition, and white. No other colours are used in the logo, website, stationery, packaging or presentations.</p>
+<div class="pg"><h1>Brand colours</h1><p>ZAPAX ENTERPRISE uses exactly three colours: indigo and turmeric, two dyes with deep roots in Gujarat’s textile tradition, and white. No other colours are used in the logo, website, stationery, packaging or presentations.</p>
 <div class="grid" style="grid-template-columns:repeat(3,1fr);margin-top:8mm;gap:8mm">${palette.map(([n, h, u]) => `<div><div class="box" style="height:52mm;background:${h};border:${h === colors.white ? '.3mm solid rgb(46 50 119 / .16)' : '0'}"></div><p style="margin-top:3mm"><strong style="font-size:13pt">${n}</strong><br>HEX ${h} · RGB ${hexRgb(h).join(' ')} · CMYK ${cmyk(h).join(' ')}<br><span class="small muted">${u}</span></p></div>`).join('')}</div>
 <p class="small muted" style="max-width:none">CMYK values are mathematical starting points. Colour on paper depends on stock and press, so always approve a printed proof. Ask the printer to match HEX ${colors.indigo} and ${colors.turmeric} on the chosen stock (and, if a Pantone spot colour is used, choose it from a physical swatch book against these values).</p>${footer('Colours')}</div>
 <div class="pg"><h1>Tints: the only softer shades</h1><p>When a lighter shade is needed, use transparency of indigo, turmeric or white over white (or over indigo for the white tint). Never introduce greys, blacks, greens, reds or any other colour.</p>
@@ -232,7 +232,7 @@ const colorsDoc = doc('Colours', `
 ${[[colors.indigo, colors.white, 'Headings, body text, links, buttons'], [blend(colors.indigo, 0.78), colors.white, 'Secondary text (indigo 78%)'], [colors.white, colors.indigo, 'Text on indigo'], [colors.turmeric, colors.indigo, 'Accent text on indigo'], [colors.indigo, colors.turmeric, 'Text on turmeric buttons'], [colors.turmeric, colors.white, 'Avoid for text (graphics only)']].map(([f, bgc, u]) => `<tr><td><span style="display:inline-block;padding:1mm 3mm;border-radius:1mm;background:${bgc};color:${f};border:.3mm solid rgb(46 50 119 / .16)">Aa ${f.toUpperCase()} on ${bgc.toUpperCase()}</span></td><td>${contrast(f, bgc)}:1</td><td>${u}</td></tr>`).join('')}</table><p class="small muted">4.5:1 or higher is required for body text, 3:1 for large text and graphics.</p></div></div>${footer('Colours')}</div>`);
 
 const typeDoc = doc('Typography', `
-<div class="pg"><h1>Typography</h1><p>ZAPAX GLOBAL uses one typeface family, <strong>Archivo</strong>, a grotesque with a variable width axis. Expanded widths echo the wide letterforms of the ZAPAX GLOBAL wordmark; normal width keeps body text compact and readable.</p>
+<div class="pg"><h1>Typography</h1><p>ZAPAX ENTERPRISE uses one typeface family, <strong>Archivo</strong>, a grotesque with a variable width axis. Expanded widths echo the wide letterforms of the ZAPAX ENTERPRISE wordmark; normal width keeps body text compact and readable.</p>
 <div style="font-size:54pt;font-weight:700;color:${colors.indigo};font-stretch:118%;line-height:1;margin:8mm 0 2mm">Aa Bb Cc 123</div><div style="font-size:16pt;margin-bottom:8mm">ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 & ₹ $ € %</div>
 <table><tr><th>Role</th><th>Weight</th><th>Width</th><th>Size (print / web)</th><th>Sample</th></tr>
 <tr><td>Display headline</td><td>Bold 700–760</td><td>Expanded 112–118%</td><td>28–48 pt / 40–96 px</td><td style="font-weight:700;font-size:16pt;color:${colors.indigo}">Indian produce</td></tr>
@@ -240,11 +240,11 @@ const typeDoc = doc('Typography', `
 <tr><td>Subheading</td><td>SemiBold 600–680</td><td>Normal–105%</td><td>11–14 pt / 18–20 px</td><td style="font-weight:600">Specification parameters</td></tr>
 <tr><td>Body</td><td>Regular 400</td><td>Normal 100%</td><td>9.5–11 pt / 16–17 px</td><td>We agree every detail in writing.</td></tr>
 <tr><td>Labels, captions</td><td>Medium–SemiBold 500–600</td><td>Normal 100%</td><td>7–8.5 pt / 13–14 px</td><td style="font-weight:600;font-size:8.5pt">Mobile · Email</td></tr></table>${footer('Typography')}</div>
-<div class="pg"><h1>Rules and files</h1><div class="grid" style="grid-template-columns:1fr 1fr;gap:12mm"><div><h2>Do</h2><p>Use sentence case for headings and buttons.<br>Left-align text; centre only short lockups.<br>Keep body lines under about 75 characters.<br>Use line height 1.5–1.65 for body, 1.05–1.2 for headlines.<br>Minimum print size 6 pt; minimum web size 13 px.</p><h2>Avoid</h2><p>All-caps paragraphs or long all-caps labels.<br>Synthetic italics, outlines or shadows on text.<br>Mixing additional typefaces in brand materials.<br>Setting the word “ZAPAX GLOBAL” in Archivo as a logo. Always use the logo artwork.</p></div>
+<div class="pg"><h1>Rules and files</h1><div class="grid" style="grid-template-columns:1fr 1fr;gap:12mm"><div><h2>Do</h2><p>Use sentence case for headings and buttons.<br>Left-align text; centre only short lockups.<br>Keep body lines under about 75 characters.<br>Use line height 1.5–1.65 for body, 1.05–1.2 for headlines.<br>Minimum print size 6 pt; minimum web size 13 px.</p><h2>Avoid</h2><p>All-caps paragraphs or long all-caps labels.<br>Synthetic italics, outlines or shadows on text.<br>Mixing additional typefaces in brand materials.<br>Setting the word “ZAPAX ENTERPRISE” in Archivo as a logo. Always use the logo artwork.</p></div>
 <div><h2>Font files</h2><p>Archivo is licensed under the SIL Open Font License 1.1: free for commercial use, embedding and redistribution. Files are in <strong>brand-assets/fonts/</strong>: static Regular, Medium, SemiBold and Bold (best for Office, Canva and print vendors) and the variable font with width and weight axes (for Figma, Illustrator, InDesign and the web). Source: fonts.google.com/specimen/Archivo.</p><h2>Fallbacks</h2><p>If Archivo is unavailable (for example in plain email), use Arial or Helvetica. In Microsoft Office documents, embed fonts or export to PDF.</p></div></div>${footer('Typography')}</div>`);
 
 const logoDoc = doc('Logo usage', `
-<div class="pg"><h1>The ZAPAX GLOBAL logo</h1><div class="grid" style="grid-template-columns:1.25fr 1fr;gap:14mm;align-items:center"><div>${svgWrap('horizontal', 'primary', 1, '150mm')}</div><div><h2>The Route Z</h2><p>The symbol traces a Z as a trade route. It begins at the turmeric <strong>origin point</strong>, the source of every product we supply, and travels in three decisive strokes, <strong>source, prepare, deliver</strong>, to its destination. The rounded indigo tile works like a seal of quality: a contained, accountable promise.</p><p>The wordmark keeps the wide, geometric ZAPAX GLOBAL letterforms. The A is drawn without a crossbar, an open upward form that reads as ascent and growth.</p><p><strong>Slogan:</strong> ${slogan}</p></div></div>${footer('Logo usage')}</div>
+<div class="pg"><h1>The ZAPAX ENTERPRISE logo</h1><div class="grid" style="grid-template-columns:1.25fr 1fr;gap:14mm;align-items:center"><div>${svgWrap('horizontal', 'primary', 1, '150mm')}</div><div><h2>The Route Z</h2><p>The symbol traces a Z as a trade route. It begins at the turmeric <strong>origin point</strong>, the source of every product we supply, and travels in three decisive strokes, <strong>source, prepare, deliver</strong>, to its destination. The rounded indigo tile works like a seal of quality: a contained, accountable promise.</p><p>The wordmark keeps the wide, geometric ZAPAX ENTERPRISE letterforms. The A is drawn without a crossbar, an open upward form that reads as ascent and growth.</p><p><strong>Slogan:</strong> ${slogan}</p></div></div>${footer('Logo usage')}</div>
 <div class="pg"><h1>Logo versions</h1><div class="grid" style="grid-template-columns:repeat(3,1fr);gap:6mm">
 <div class="box" style="height:42mm;border:.3mm solid rgb(46 50 119 / .16)">${svgWrap('horizontal', 'primary', 0, '62mm')}</div>
 <div class="box" style="height:42mm;background:${colors.indigo}">${svgWrap('horizontal', 'white', 0, '62mm')}</div>
@@ -252,7 +252,7 @@ const logoDoc = doc('Logo usage', `
 <div class="box" style="height:56mm;border:.3mm solid rgb(46 50 119 / .16)">${svgWrap('stacked', 'primary', 1, '38mm')}</div>
 <div class="box" style="height:56mm;background:${colors.indigo}">${svgWrap('stacked', 'white', 1, '38mm')}</div>
 <div class="box" style="height:56mm;border:.3mm solid rgb(46 50 119 / .16);gap:8mm">${svgWrap('symbol', 'primary', 0, '22mm')}${svgWrap('symbol', 'dark', 0, '22mm')}</div></div>
-<p class="small" style="max-width:none;margin-top:5mm"><strong>Primary</strong> (full colour) on white or light indigo tints. <strong>White</strong> (one colour) on indigo or dark photography. <strong>Dark</strong> (one-colour indigo) for single-colour print, stamps, invoices and embossing on light stock. Use the <strong>horizontal</strong> logo by default, <strong>stacked</strong> where space is square or tall, and the <strong>symbol</strong> alone only where ZAPAX GLOBAL is already established (app icons, social avatars, packaging seals, favicons).</p>${footer('Logo usage')}</div>
+<p class="small" style="max-width:none;margin-top:5mm"><strong>Primary</strong> (full colour) on white or light indigo tints. <strong>White</strong> (one colour) on indigo or dark photography. <strong>Dark</strong> (one-colour indigo) for single-colour print, stamps, invoices and embossing on light stock. Use the <strong>horizontal</strong> logo by default, <strong>stacked</strong> where space is square or tall, and the <strong>symbol</strong> alone only where ZAPAX ENTERPRISE is already established (app icons, social avatars, packaging seals, favicons).</p>${footer('Logo usage')}</div>
 <div class="pg"><h1>Clear space and minimum size</h1><div class="grid" style="grid-template-columns:1.2fr 1fr;gap:14mm;align-items:start">
 <div><div style="position:relative;display:inline-block;padding:15mm;background:repeating-linear-gradient(45deg,rgb(46 50 119 / .08) 0 2mm,#fff 2mm 4mm);border:.3mm dashed ${colors.indigo}">${svgWrap('horizontal', 'primary', 0, '110mm')}</div><p class="small" style="margin-top:3mm">Clear space on every side = <strong>half the symbol height</strong> (shown hatched). Keep text, edges and other graphics out of this area.</p></div>
 <div><table><tr><th>Version</th><th>Print min.</th><th>Screen min.</th></tr><tr><td>Horizontal logo</td><td>30 mm wide</td><td>120 px wide</td></tr><tr><td>Horizontal with slogan</td><td>45 mm wide</td><td>200 px wide</td></tr><tr><td>Stacked logo</td><td>20 mm wide</td><td>80 px wide</td></tr><tr><td>Symbol</td><td>6 mm</td><td>16 px</td></tr></table><p class="small" style="margin-top:4mm">Below the slogan minimum, use the logo without the slogan.</p></div></div>${footer('Logo usage')}</div>

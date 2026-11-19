@@ -1,4 +1,4 @@
-// Original SVG artwork for ZAPAX GLOBAL. Colours come from CSS classes, brand palette only: .s indigo line, .ft turmeric, .fl pale turmeric, .fc pale indigo, .fw white, .fm mist, .fi indigo, .sw white line.
+// Original SVG artwork for ZAPAX ENTERPRISE. Colours come from CSS classes, brand palette only: .s indigo line, .ft turmeric, .fl pale turmeric, .fc pale indigo, .fw white, .fm mist, .fi indigo, .sw white line.
 
 // Deterministic pseudo-random numbers so builds are stable.
 const rng = (seed) => () => ((seed = (seed * 16807) % 2147483647) / 2147483647);

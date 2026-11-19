@@ -4,7 +4,7 @@ import { handleInquiry } from '../server/inquiry-core.mjs';
 import { buildTemplates } from '../server/email-templates.mjs';
 
 const templates = buildTemplates();
-const env = { RESEND_API_KEY: 're_test', MAIL_FROM: 'ZAPAX GLOBAL <inquiries@example.in>', MAIL_TO: 'info@example.in' };
+const env = { RESEND_API_KEY: 're_test', MAIL_FROM: 'ZAPAX ENTERPRISE <inquiries@example.in>', MAIL_TO: 'info@example.in' };
 const ORIGIN = templates.allowedOrigin;
 
 function req(fields = {}, { method = 'POST', origin = ORIGIN } = {}) {

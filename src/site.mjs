@@ -1,5 +1,5 @@
 // Company facts and product catalog. This is the single source of truth for the site.
-// Confirmed by ZAPAX GLOBAL: founders, address, phone/WhatsApp. Domain and email domain come from environment variables.
+// Confirmed by ZAPAX ENTERPRISE: founders, address, phone/WhatsApp. Domain and email domain come from environment variables.
 
 // Deployment settings come from environment variables (.env locally, host dashboard in production).
 // See .env.example for documentation. Empty values are hidden on the site, never shown as fake links.
@@ -22,9 +22,9 @@ const emailDomain = env('EMAIL_DOMAIN') || (process.env.SITE_URL ? new URL(siteU
 const mailbox = (local) => (emailDomain ? `${local}@${emailDomain}` : '');
 
 export const site = {
-  brand: 'ZAPAX GLOBAL',
+  brand: 'ZAPAX ENTERPRISE',
   slogan: 'Where trust travels.',
-  legalName: env('LEGAL_NAME', 'ZAPAX GLOBAL LLP'),
+  legalName: env('LEGAL_NAME', 'ZAPAX ENTERPRISE LLP'),
   domain: siteUrl(),
   domainConfirmed: !!process.env.SITE_URL,
   emailDomain,
@@ -70,7 +70,7 @@ export const site = {
 };
 export const fullAddress = `${site.street}, ${site.locality} ${site.postalCode}, ${site.region}, ${site.country}`;
 export const telHref = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
-export const waHref = (text = 'Hello ZAPAX GLOBAL, I would like to discuss an export inquiry.') => `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(text)}`;
+export const waHref = (text = 'Hello ZAPAX ENTERPRISE, I would like to discuss an export inquiry.') => `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(text)}`;
 
 // Reference size bands commonly used in the dehydrated-vegetable trade. Shown as reference only.
 export const sizeGuide = [
@@ -110,11 +110,11 @@ export const products = [
     art: 'onion',
     title: 'Dehydrated Onion Exporter | Flakes, Granules, Powder',
     description:
-      'Dehydrated white and red onion from India: kibbled, chopped, minced, granules and powder. Specifications and packing agreed with ZAPAX GLOBAL before every order.',
+      'Dehydrated white and red onion from India: kibbled, chopped, minced, granules and powder. Specifications and packing agreed with ZAPAX ENTERPRISE before every order.',
     h1: 'Dehydrated onion from India, from flakes to powder',
     summary: 'White and red onion in every common cut, from kibbled flakes to fine powder.',
     intro: [
-      'Onion is the backbone of savoury food manufacturing, and dehydrated onion gives processors that flavour in a stable, lightweight form that is easy to store and dose. Gujarat, where ZAPAX GLOBAL is based, is one of India’s main centres of onion dehydration.',
+      'Onion is the backbone of savoury food manufacturing, and dehydrated onion gives processors that flavour in a stable, lightweight form that is easy to store and dose. Gujarat, where ZAPAX ENTERPRISE is based, is one of India’s main centres of onion dehydration.',
       'We work with producing partners to supply white and red dehydrated onion in the cut and mesh your recipe needs, with the specification agreed in writing before you place an order.',
     ],
     varieties: ['White onion', 'Red onion'],
@@ -143,12 +143,12 @@ export const products = [
     art: 'garlic',
     title: 'Dehydrated Garlic Exporter | Flakes, Granules, Powder',
     description:
-      'Dehydrated garlic from India as cloves, chopped, minced, granules and pure powder. Specifications, packing and export documents coordinated by ZAPAX GLOBAL.',
+      'Dehydrated garlic from India as cloves, chopped, minced, granules and pure powder. Specifications, packing and export documents coordinated by ZAPAX ENTERPRISE.',
     h1: 'Dehydrated garlic for seasoning and food manufacturing',
     summary: 'Cloves, chopped, minced, granules and pure garlic powder.',
     intro: [
       'Dehydrated garlic gives food manufacturers a consistent, measurable garlic flavour without the peeling, waste and short shelf life of fresh bulbs.',
-      'ZAPAX GLOBAL coordinates supply from producing partners in the forms below. Each order starts with a written specification covering cut size, moisture, colour and microbiological limits.',
+      'ZAPAX ENTERPRISE coordinates supply from producing partners in the forms below. Each order starts with a written specification covering cut size, moisture, colour and microbiological limits.',
     ],
     varieties: ['White garlic'],
     forms: [
@@ -176,12 +176,12 @@ export const products = [
     art: 'blackgarlic',
     title: 'Black Garlic Exporter | Bulbs, Peeled Cloves, Powder',
     description:
-      'Black garlic from India as whole bulbs, peeled cloves and powder, for gourmet, food service and health food brands. Specifications agreed by ZAPAX GLOBAL.',
+      'Black garlic from India as whole bulbs, peeled cloves and powder, for gourmet, food service and health food brands. Specifications agreed by ZAPAX ENTERPRISE.',
     h1: 'Black garlic: whole bulbs, peeled cloves and powder',
     summary: 'Slow-aged garlic with a sweet, mellow flavour, as whole bulbs, peeled cloves or powder.',
     intro: [
       'Black garlic is made by slowly ageing whole garlic bulbs under controlled heat and humidity over several weeks. The cloves turn black and soft, and the sharp bite of raw garlic gives way to a sweet, mellow, balsamic-like flavour that chefs and food brands value.',
-      'ZAPAX GLOBAL coordinates black garlic supply through producing partners. The ageing process, moisture, texture and packing are confirmed on a written specification before you place an order.',
+      'ZAPAX ENTERPRISE coordinates black garlic supply through producing partners. The ageing process, moisture, texture and packing are confirmed on a written specification before you place an order.',
     ],
     varieties: ['Multi-clove black garlic', 'Single-clove (solo) black garlic'],
     forms: [
@@ -211,12 +211,12 @@ export const products = [
     art: 'ginger',
     title: 'Dehydrated Ginger Exporter | Slices, Crushed, Powder',
     description:
-      'Dried ginger slices, crushed bits and ginger powder from India for food, beverage and seasoning applications. Specifications confirmed per order by ZAPAX GLOBAL.',
+      'Dried ginger slices, crushed bits and ginger powder from India for food, beverage and seasoning applications. Specifications confirmed per order by ZAPAX ENTERPRISE.',
     h1: 'Dried ginger in slices, crushed bits and powder',
     summary: 'Dried slices, crushed bits and ginger powder.',
     intro: [
       'India is one of the world’s largest ginger producers, and dried ginger is a staple in spice blends, bakery, beverages and traditional remedies around the world.',
-      'ZAPAX GLOBAL supplies dried ginger through producing partners in three forms. We agree parameters such as moisture, volatile oil content and particle size with you before an order is confirmed.',
+      'ZAPAX ENTERPRISE supplies dried ginger through producing partners in three forms. We agree parameters such as moisture, volatile oil content and particle size with you before an order is confirmed.',
     ],
     varieties: ['Dried ginger'],
     forms: [
@@ -246,7 +246,7 @@ export const products = [
     summary: 'Tomato, carrot, green chilli and spinach as powder, flakes or cubes.',
     intro: [
       'Dehydrated vegetables add colour, flavour and nutrition to products that need a long shelf life, from instant soups to snack seasonings.',
-      'ZAPAX GLOBAL currently coordinates the vegetables below in the forms that suit each one. If you need a vegetable that is not listed, ask us. Our range is growing with our partner network.',
+      'ZAPAX ENTERPRISE currently coordinates the vegetables below in the forms that suit each one. If you need a vegetable that is not listed, ask us. Our range is growing with our partner network.',
     ],
     varieties: ['Tomato', 'Carrot', 'Green chilli', 'Spinach'],
     forms: [
@@ -271,12 +271,12 @@ export const products = [
     art: 'driedfruit',
     title: 'Dehydrated Fruit Powders and Chunks from India',
     description:
-      'Mango, banana, lemon and strawberry as spray-dried or freeze-dried powders and chunks, sourced in India and coordinated for export by ZAPAX GLOBAL.',
+      'Mango, banana, lemon and strawberry as spray-dried or freeze-dried powders and chunks, sourced in India and coordinated for export by ZAPAX ENTERPRISE.',
     h1: 'Fruit powders and dried fruit chunks',
     summary: 'Mango, banana, lemon and strawberry as powders and chunks.',
     intro: [
       'Fruit powders and dried chunks bring natural fruit flavour and colour to beverages, dairy, bakery and confectionery without the handling challenges of fresh fruit.',
-      'ZAPAX GLOBAL coordinates spray-dried and freeze-dried options through producing partners. The drying method, carrier content and particle size are confirmed for each product before you order.',
+      'ZAPAX ENTERPRISE coordinates spray-dried and freeze-dried options through producing partners. The drying method, carrier content and particle size are confirmed for each product before you order.',
     ],
     varieties: ['Mango', 'Banana', 'Lemon', 'Strawberry'],
     forms: [
