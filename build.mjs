@@ -254,7 +254,7 @@ if (process.env.DEPLOY_TARGET === 'cpanel') {
 const indexable = pages.filter((p) => !p.noindex);
 // Image sitemap entries (Google Images): each product/packaging photo on the page, at its largest JPEG size.
 const photoMax = Object.fromEntries(Object.entries(JSON.parse(await readFile('src/photos.json', 'utf8'))).map(([id, v]) => [id, v.w]));
-const pagePhotos = (p) => [...new Set([...p.body.matchAll(/src="(\/photos\/[^"]+?\/([^/"]+?))-\d+\.jpg"/g)].map(([, base, id]) => `${base}-${photoMax[id]}.jpg`))];
+const pagePhotos = (p) => [...new Set([...p.body.matchAll(/src="(\/photos\/[^"]+?\/([^/"]+?))-\d+\.jpg(?:\?[^"]*)?"/g)].map(([, base, id]) => `${base}-${photoMax[id]}.jpg`))];
 await writeFile(
   `${OUT}/sitemap.xml`,
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${indexable.map((p) => `  <url><loc>${abs(p.path)}</loc><lastmod>${today}</lastmod>${pagePhotos(p).map((s) => `<image:image><image:loc>${abs(s)}</image:loc></image:image>`).join('')}</url>`).join('\n')}\n</urlset>\n`,

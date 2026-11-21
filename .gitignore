@@ -3,8 +3,9 @@ dist/
 qa-shots/
 .env
 server/generated/
-hostinger-upload.zip
+hostinger-upload*
 
 # source masters (222 MB) - kept locally, back up to Drive; build output lives in public/photos
 product-images/masters/
 product-images/packaging/
+.deploy-state.json

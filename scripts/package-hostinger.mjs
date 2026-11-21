@@ -34,10 +34,33 @@ if (NODE) {
   cpSync('dist', stage, { recursive: true, filter: (src) => !/[\\/]_(headers|redirects)$/.test(src) }); // Netlify-only files
 }
 
-const zip = resolve('hostinger-upload.zip');
-rmSync(zip, { force: true });
-// Windows 10+ ships bsdtar (System32\tar.exe), which writes real .zip files with forward-slash paths.
-if (process.platform === 'win32') execFileSync(`${process.env.SystemRoot}\\System32\\tar.exe`, ['-a', '-c', '-f', zip, ...readdirSync(stage)], { cwd: stage, stdio: 'inherit' });
-else execFileSync('zip', ['-r', zip, ...readdirSync(stage)], { cwd: stage, stdio: 'inherit' });
+for (const f of readdirSync('.')) if (/^hostinger-upload(-\d+)?\.zip$/.test(f)) rmSync(f); // zips from earlier runs
+const tarZip = (name, files) => {
+  const zip = resolve(name), list = `${stage}.txt`;
+  writeFileSync(list, files.join('\n'));
+  // Windows 10+ ships bsdtar (System32\tar.exe), which writes real .zip files with forward-slash paths.
+  if (process.platform === 'win32') execFileSync(`${process.env.SystemRoot}\\System32\\tar.exe`, ['-a', '-c', '-f', zip, '-T', list], { cwd: stage, stdio: 'inherit' });
+  else execFileSync('zip', ['-q', zip, '-@'], { cwd: stage, input: files.join('\n') });
+  rmSync(list);
+  console.log(`✓ ${name} (${(statSync(zip).size / 1048576).toFixed(1)} MB, ${files.length} files)`);
+};
+if (NODE) tarZip('hostinger-upload.zip', readdirSync(stage));
+else {
+  // One 66 MB zip got cut off during upload/extract in hPanel (half of photos/ and all of products/ never went live).
+  // hPanel also silently drops files from 20 MB zips, so: pages first, then photos in parts of at most 8 MB.
+  // hostinger-upload-parts.json maps each file to its part, so scripts/check-live.mjs can name the part to extract again.
+  const walk = (d) => readdirSync(join(stage, d), { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(`${d}${e.name}/`) : [`${d}${e.name}`]));
+  const all = walk('');
+  const parts = [all.filter((p) => !p.startsWith('photos/'))];
+  let size = Infinity;
+  for (const p of all.filter((p) => p.startsWith('photos/'))) {
+    const n = statSync(join(stage, p)).size;
+    if (size + n > 8 * 1048576) { parts.push([]); size = 0; }
+    parts.at(-1).push(p); size += n;
+  }
+  parts.forEach((files, i) => tarZip(`hostinger-upload-${i + 1}.zip`, files));
+  writeFileSync('hostinger-upload-parts.json', JSON.stringify(Object.fromEntries(parts.flatMap((f, i) => f.map((p) => [p, i + 1])))));
+}
 rmSync(stage, { recursive: true, force: true });
-console.log(`\n✓ ${zip} (${(statSync(zip).size / 1048576).toFixed(1)} MB) for ${NODE ? 'a Hostinger Node.js app' : 'public_html (Single Web Hosting)'}. See HOSTINGER-DEPLOYMENT.md.`);
+console.log(NODE ? '\nFor a Hostinger Node.js app. See HOSTINGER-DEPLOYMENT.md.'
+  : '\nFor public_html: upload and extract EVERY hostinger-upload-N.zip into public_html, then run: node scripts/check-live.mjs');

@@ -10,9 +10,9 @@ Two Hostinger plan types, two zips:
 No Node.js runs on the server. You build on your PC; Hostinger serves plain files, and `api/inquiry.php` handles the quote form.
 
 - [ ] **0.1** In `D:\software\ZAPAX\.env` set `SITE_URL=https://zapaxenterprise.com` (already set).
-- [ ] **0.2** Run `npm run package:hostinger`. It writes `hostinger-upload.zip`: the contents of `dist/` (23 pages, `assets/`, `fonts/`, `.htaccess`, `api/inquiry.php`). Nothing else from the project goes on the server.
+- [ ] **0.2** Run `npm run package:hostinger`. It writes `hostinger-upload-1.zip` (pages, `assets/`, `fonts/`, `.htaccess`, `api/inquiry.php`) and `hostinger-upload-2.zip`, `-3`, ... (photos, max 8 MB each). Together they are the contents of `dist/`. Nothing else from the project goes on the server.
 - [ ] **0.3** hPanel → **Files → File Manager** → `public_html`. Delete Hostinger's placeholder (`default.php` / `index.php`) and any project files uploaded earlier (`src`, `public`, `server`, `server.mjs`, `package.json`, `node_modules` ...).
-- [ ] **0.4** Upload `hostinger-upload.zip` into `public_html` → right-click → **Extract** → extract **into `public_html` itself**, then delete the zip. `index.html` and `.htaccess` must sit directly in `public_html` (turn on **Show hidden files** to see `.htaccess`).
+- [ ] **0.4** Upload **every** `hostinger-upload-N.zip` into `public_html`. For each one: right-click → **Extract** → extract **into `public_html` itself**, wait until it finishes, then delete that zip. Skipping or interrupting one leaves pages or photos missing (404). `index.html` and `.htaccess` must sit directly in `public_html` (turn on **Show hidden files** to see `.htaccess`).
 - [ ] **0.5** Quote form secrets: in File Manager go **one level up** from `public_html` (the folder `domains/zapaxenterprise.com/`) and create `zapax-mail-config.php` there, **not** inside `public_html`:
 
   ```php
@@ -50,18 +50,34 @@ Use this every time you change the live website after the first setup (Part 0). 
 
 - [ ] **B.1** Make your changes in the files from section A.
 - [ ] **B.2** Preview locally: run `npm run build`, then `npm run serve`, and open <http://localhost:8080>. Check every page you changed. Press **Ctrl + C** to stop the preview.
-- [ ] **B.3** Run `npm run package:hostinger`. It writes a new `hostinger-upload.zip` for `https://zapaxenterprise.com`. If it prints an error, fix it first and do not upload.
+- [ ] **B.3** Run `npm run package:hostinger`. It writes new `hostinger-upload-N.zip` files for `https://zapaxenterprise.com`. If it prints an error, fix it first and do not upload.
 - [ ] **B.4** Recommended: save a backup copy of the change in Git: `git add -A`, then `git commit -m "Update website: <what changed>"`.
 
-### C. Redeploy on Hostinger (hPanel → Files → File Manager)
+### Recommended: one command, `npm run deploy` (no zips, no File Manager)
+
+File Manager's **Extract** silently drops files from large zips (missing photos and pages). `npm run deploy` uploads directly over encrypted FTP instead, and only what changed.
+
+One-time setup:
+1. hPanel → **Files → FTP Accounts**: note the **FTP host**, **username**, and set a **password**.
+2. Put them in `D:\software\ZAPAX\.env` (never committed): `FTP_HOST=`, `FTP_USER=`, `FTP_PASS=`, `FTP_DIR=public_html`. If the FTP account opens directly inside `public_html`, leave `FTP_DIR=` empty. If `FTP_HOST` is an IP address, also set `FTP_TLS_INSECURE=1`.
+
+Every update:
+1. Edit, preview (`npm run build`, `npm run serve`).
+2. `npm run deploy`. It builds the production site, then uploads **only new or changed files**. It remembers what is on the server in `.deploy-state.json`, so unchanged photos are never uploaded again. It also re-uploads anything the live site is missing, then checks every uploaded file on the live site (3 tries). It ends with `✓ Live site matches dist/`.
+3. Optional: `npm run deploy -- --dry` lists what would be uploaded without uploading.
+
+Photo URLs carry a version (`?v=...`) that changes when a photo is regenerated, so visitors always get the new image, never a cached old one.
+
+### C. Manual redeploy with zips (fallback; hPanel → Files → File Manager)
 
 - [ ] **C.1** Open `public_html`, turn on **Show hidden files**, select **everything** inside `public_html` (including `.htaccess`) and delete it.
   This is safe because `zapax-mail-config.php` sits one folder **above** `public_html` and is not touched. Never delete that file. Clearing the folder first also removes pages you deleted from the site and old CSS/JS files.
-- [ ] **C.2** Upload the new `hostinger-upload.zip` into `public_html`.
-- [ ] **C.3** Right-click the zip → **Extract** → extract **into `public_html` itself** (not a new subfolder) → delete the zip.
+- [ ] **C.2** Upload **all** new `hostinger-upload-N.zip` files into `public_html`. Wait until each upload reaches 100%.
+- [ ] **C.3** For each zip: right-click → **Extract** → extract **into `public_html` itself** (not a new subfolder) → wait until it finishes → delete the zip.
 - [ ] **C.4** Check that `index.html`, `.htaccess` and the `api` folder sit directly in `public_html`.
-- [ ] **C.5** Open <https://zapaxenterprise.com> and press **Ctrl + F5** to skip the cached copy. Check the pages you changed.
-- [ ] **C.6** If you changed anything near the quote form, send one test inquiry (wait at least 5 seconds before submitting).
+- [ ] **C.5** On your PC run `node scripts/check-live.mjs`. It must print `N/N files OK`; any 404 means hPanel did not fully extract a zip; it then names the exact zips to upload and extract again.
+- [ ] **C.6** Open <https://zapaxenterprise.com> and press **Ctrl + F5** to skip the cached copy. Check the pages you changed.
+- [ ] **C.7** If you changed anything near the quote form, send one test inquiry (wait at least 5 seconds before submitting).
 
 ### D. Changes that need no new zip
 
@@ -240,7 +256,7 @@ hPanel labels change from time to time; if a name differs slightly, pick the clo
 
 1. Make your edits.
 2. To preview, run `npm run build` and then `npm run serve`, and open http://localhost:8080. Check the pages you changed. Press Ctrl+C to stop.
-3. Run `npm run package:hostinger`. This makes a new `hostinger-upload.zip` for `https://zapaxenterprise.com`. If it prints an error, fix that first and don't upload.
+3. Run `npm run package:hostinger`. This makes new `hostinger-upload-N.zip` files for `https://zapaxenterprise.com`. If it prints an error, fix that first and don't upload.
 4. Optional but recommended: save a backup in git with `git add -A` and then `git commit -m "Update website"`.
 
 **In hPanel (File Manager)**
@@ -248,8 +264,8 @@ hPanel labels change from time to time; if a name differs slightly, pick the clo
 5. Open `public_html` and select everything in it. Turn on **Show hidden files** so `.htaccess` is included, then delete it all.
    - This is safe because your email settings file, `zapax-mail-config.php`, is one folder up, outside `public_html`. Don't delete that file.
    - Deleting first also removes any pages you've removed from the site and old CSS/JS files.
-6. Upload the new `hostinger-upload.zip` into `public_html`. Right-click it, choose **Extract**, and extract it into `public_html` itself (not into a new folder). Then delete the zip.
-7. Check that `index.html`, `.htaccess` and the `api` folder sit directly in `public_html`.
+6. Upload all new `hostinger-upload-N.zip` files into `public_html`. Right-click each, choose **Extract**, and extract it into `public_html` itself (not into a new folder). Wait for it to finish, then delete the zip.
+7. Check that `index.html`, `.htaccess` and the `api` folder sit directly in `public_html`, then run `node scripts/check-live.mjs` on your PC: every file must be OK.
 
 **Check the live site**
 

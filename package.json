@@ -14,7 +14,8 @@
     "test": "node scripts/test-inquiry.mjs",
     "package:hostinger": "node scripts/package-hostinger.mjs",
     "package:hostinger-node": "node scripts/package-hostinger.mjs --node",
-    "photos": "node scripts/photos.mjs"
+    "photos": "node scripts/photos.mjs",
+    "deploy": "node --env-file-if-exists=.env scripts/deploy.mjs"
   },
   "devDependencies": {
     "esbuild": "^0.25.12",

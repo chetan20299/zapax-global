@@ -22,7 +22,8 @@ export const hasPhoto = (id) => !!manifest[id];
 export function photo(id, alt, { sizes = '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw', eager = false, doodle = '', caption = '', interactive = true } = {}) {
   const p = manifest[id];
   if (!p) return doodle ? `<div class="shot-fallback">${doodle}</div>` : '';
-  const url = (w, ext) => `/photos/${p.group}/${id}-${w}.${ext}`;
+  // ?v= changes whenever the photo is regenerated, so browsers and the CDN never show an old copy.
+  const url = (w, ext) => `/photos/${p.group}/${id}-${w}.${ext}?v=${Math.round(p.mtime).toString(36)}`;
   const set = (ext) => p.widths.map((w) => `${url(w, ext)} ${w}w`).join(', ');
   const load = eager ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"';
   const data = interactive ? ` data-full="${url(p.w, 'webp')}" data-srcset="${set('webp')}" data-thumb="${url(p.widths[0], 'webp')}" data-caption="${esc(caption || alt)}"` : '';
