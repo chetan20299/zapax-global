@@ -1,14 +1,15 @@
 // Page content. Each page: { path, title, description, h1 in body, trail (breadcrumbs), body, schema? }
-import { site, products, sizeGuide, telHref, waHref } from './site.mjs';
-import { productArt, glyph, formScale, routeArt, icon } from './art.mjs';
+import { site, products, productGroups, sizeGuide, telHref, waHref } from './site.mjs';
+import { productArt, glyph, routeArt, icon } from './art.mjs';
+import { photo } from './photo.mjs';
 
 const esc = (s = '') => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const home = ['/', 'Home'];
 const quote = (slug, label = 'Request a quote') => `<a class="btn btn-primary" href="/contact/${slug ? `?product=${slug}` : ''}">${label}</a>`;
 
-const hero = ({ h1, lead, actions = '', art = '', kicker = '' }) => `
+const hero = ({ h1, lead, actions = '', art = '', kicker = '', photo: isPhoto = false }) => `
 <section class="page-hero">
-  <div class="wrap page-hero-grid${art ? '' : ' no-art'}">
+  <div class="wrap page-hero-grid${art ? '' : ' no-art'}${isPhoto ? ' has-photo' : ''}">
     <div>
       ${kicker ? `<p class="kicker">${kicker}</p>` : ''}
       <h1>${h1}</h1>
@@ -17,6 +18,7 @@ const hero = ({ h1, lead, actions = '', art = '', kicker = '' }) => `
     </div>
     ${art ? `<div class="page-hero-art">${art}</div>` : ''}
   </div>
+  <div class="band" aria-hidden="true"></div>
 </section>`;
 
 const cta = (title = 'Start with your requirement', text = 'Tell us the product, form, quantity and destination. We will come back with available options and the questions we need answered to quote accurately.') => `
@@ -51,19 +53,28 @@ const regCards = (items) => `<ul class="regs">${items.map((r) => `
   </li>`).join('')}
 </ul>`;
 
-const productRows = (group) => `
-<ul class="product-rows">${products.filter((p) => !group || p.group === group).map((p) => `
+const cardSizes = '(max-width: 640px) 100vw, (max-width: 1100px) 50vw, 420px';
+const productCards = (items) => `
+<ul class="cards">${items.map((p) => `
   <li>
-    <a class="product-row" href="/products/${p.slug}/">
-      <span class="product-row-art">${productArt(p.art)}</span>
-      <span class="product-row-text"><strong>${p.name}</strong><span>${p.summary}</span></span>
-      <span class="product-row-forms">${p.forms.map(([g, t]) => `<span class="form-chip">${glyph(g)}${t}</span>`).join('')}</span>
-      <span class="product-row-go">${icon('arrow')}<span class="sr-only">View ${p.name}</span></span>
+    <a class="card" href="/products/${p.slug}/">
+      ${photo(p.photos[0][0], p.photos[0][1], { interactive: false, sizes: cardSizes, doodle: productArt(p.art) })}
+      <span class="card-body">
+        <strong class="card-title">${p.name}${icon('arrow')}</strong>
+        <span class="card-text">${p.summary}</span>
+        <span class="card-forms">${[...new Set(p.forms.map(([, t]) => t))].map((t) => `<span class="form-chip">${t}</span>`).join('')}</span>
+      </span>
     </a>
   </li>`).join('')}
 </ul>`;
+// h = heading level for category titles ('h2' on /products/, 'h3' under the home section heading)
+const catalog = (h = 'h2') => productGroups.map((g) => `
+<div class="cat" id="${g.id}">
+  <div class="cat-head"><${h} class="cat-title">${g.label}<span class="cat-count">${g.items.length}</span></${h}><p>${g.blurb}</p></div>
+  ${productCards(g.items)}
+</div>`).join('');
 
-const productNames = 'dehydrated onion, garlic, black garlic, ginger, vegetables and fruits';
+const productNames = 'dehydrated onion, garlic, ginger, potato, vegetables and fruits, plus black garlic, moringa and starch';
 const visionGrowth = `Today we export ${productNames}. This is our starting point, not our limit. We plan to grow into a wide range of products made and grown across India, adding each new category only when we can supply it to the standard our buyers trust.`;
 
 const processSteps = [
@@ -76,22 +87,25 @@ const processSteps = [
 ];
 
 // ---------- Home ----------
+// Hero collage: [product slug, photo index]. First tile is large and loads first (LCP); the others fill the column.
+const heroTiles = [['dehydrated-onion', 0], ['dehydrated-vegetables', 1], ['dehydrated-fruits', 0]];
 const homePage = {
   path: '/',
-  title: 'ZAPAX ENTERPRISE | Dehydrated Onion, Garlic and Ginger Exporter from India',
-  description: 'ZAPAX ENTERPRISE exports dehydrated onion, garlic, black garlic, ginger, vegetables and fruits from India, with every specification agreed in writing before shipment.',
+  title: 'ZAPAX ENTERPRISE | Dehydrated Food Exporter from India',
+  description: `ZAPAX ENTERPRISE exports ${productNames} from India, on written terms.`,
   bodyClass: 'is-home',
   body: `
 <section class="home-hero">
-  <div class="wrap">
-    <p class="kicker">Export company · Gujarat, India</p>
-    <h1>Indian exports, carried on trust.</h1>
-    <div class="home-hero-row">
-      <p class="lead">ZAPAX ENTERPRISE exports dehydrated onion, garlic, black garlic, ginger, vegetables and fruits from India, sourced through trusted producing partners. Every detail is agreed with you in writing, so the trust built at the first inquiry travels with your order all the way to your port.</p>
+  <div class="wrap home-hero-grid">
+    <div class="home-hero-text">
+      <p class="kicker">Export company · Gujarat, India</p>
+      <h1>Indian exports, carried on trust.</h1>
+      <p class="lead">ZAPAX ENTERPRISE exports ${productNames} from India, sourced through trusted producing partners. Every detail is agreed with you in writing, so the trust built at the first inquiry travels with your order all the way to your port.</p>
       <div class="actions">${quote()}<a class="btn btn-ghost" href="/products/">Browse products</a></div>
     </div>
+    <div class="home-hero-media">${heroTiles.map(([slug, i], n) => { const p = products.find((x) => x.slug === slug); return `<a class="hm hm-${n + 1}" href="/products/${slug}/">${photo(p.photos[i][0], p.photos[i][1], { interactive: false, eager: n === 0, doodle: productArt(p.art), sizes: n === 0 ? '(max-width: 1024px) 64vw, 32vw' : '(max-width: 1024px) 32vw, 16vw' })}<span class="sr-only">${p.name}</span></a>`; }).join('')}</div>
   </div>
-  <div class="wrap form-scale-wrap">${formScale()}</div>
+  <div class="band" aria-hidden="true"></div>
 </section>
 
 <section class="section intro">
@@ -107,8 +121,8 @@ const homePage = {
 
 <section class="section tint" id="products">
   <div class="wrap">
-    ${head('What we export today', 'Dehydrated and speciality food products, each available in the forms shown. Exact specifications and current availability are confirmed against your brief.')}
-    ${productRows()}
+    ${head('What we export today', 'Dehydrated products and other products from India, each available in the forms shown. Every photo shows the full range of forms for that product. Exact specifications and current availability are confirmed against your brief.')}
+    ${catalog('h3')}
     <p class="note">This is where we start, not where we stop. We plan to export many more products from India. If you are sourcing something that is not listed, <a href="/contact/">tell us what you need</a>.</p>
   </div>
 </section>
@@ -264,17 +278,16 @@ ${cta('Let’s talk about your requirements')}
 // ---------- Products index ----------
 const productsPage = {
   path: '/products/',
-  title: 'Dehydrated Onion, Garlic, Ginger and More from India',
-  description: 'Dehydrated onion, garlic, black garlic, ginger, vegetables and fruits from India. Available forms, specification parameters and export packaging for each product.',
+  title: 'Dehydrated Foods, Moringa and Starch from India',
+  description: 'Dehydrated onion, garlic, ginger, potato, vegetables and fruits, plus black garlic, moringa and starch from India: forms, specifications and packaging.',
   schemaType: 'CollectionPage',
   trail: [home, ['/products/', 'Products']],
-  schema: [{ '@type': 'ItemList', itemListElement: products.map((p, i) => ({ '@type': 'ListItem', position: i + 1, name: p.name, url: `${site.domain}/products/${p.slug}/` })) }],
+  schema: [{ '@type': 'ItemList', itemListElement: productGroups.flatMap((g) => g.items).map((p, i) => ({ '@type': 'ListItem', position: i + 1, name: p.name, url: `${site.domain}/products/${p.slug}/` })) }],
   body: `
 ${hero({ h1: 'Products from India, ready to travel', lead: 'Browse our current range. Every product page lists available forms, the parameters we agree on the specification sheet, packaging options and how the product travels.' })}
 <section class="section">
   <div class="wrap">
-    <h2 class="group-h">Our current range</h2>
-    ${productRows()}
+    ${catalog('h2')}
   </div>
 </section>
 <section class="section tint" id="size-guide">
@@ -289,7 +302,9 @@ ${cta('Looking for something not listed?', 'Our range is growing beyond what you
 
 // ---------- Product detail pages ----------
 const productPages = products.map((p) => {
-  const others = products.filter((o) => o !== p).slice(0, 3);
+  const others = [...products.filter((o) => o !== p && o.group === p.group), ...products.filter((o) => o.group !== p.group)].slice(0, 3);
+  const [main, ...more] = p.photos;
+  const shot = (ph, o) => photo(ph[0], ph[1], { caption: ph[2], doodle: productArt(p.art), ...o });
   const faqs = [
     ...p.faq,
     ['What information should I include in my inquiry?', 'Include the product and form, required specification or grade, estimated quantity, preferred packaging, destination port and target shipment date.'],
@@ -298,12 +313,14 @@ const productPages = products.map((p) => {
   return {
     path: `/products/${p.slug}/`,
     waText: `Hello ZAPAX ENTERPRISE, I am interested in ${p.name}. Please share details.`,
+    ogImage: { src: `/photos/products/${main[0]}-1200.jpg`, w: 1200, h: 800, alt: main[1] },
     title: p.title,
     description: p.description,
     trail: [home, ['/products/', 'Products'], [`/products/${p.slug}/`, p.name]],
     schema: [faqSchema(faqs)],
     body: `
-${hero({ kicker: `${p.group} products`, h1: p.h1, lead: p.intro[0], actions: `${quote(p.slug, `Request a ${p.name.toLowerCase()} quote`)}<a class="btn btn-ghost" href="#specification">View specification</a>`, art: productArt(p.art, `Illustration of ${p.name.toLowerCase()}`) })}
+${hero({ kicker: productGroups.find((g) => g.key === p.group).label, h1: p.h1, lead: p.intro[0], actions: `${quote(p.slug, `Request a ${p.name.toLowerCase()} quote`)}<a class="btn btn-ghost" href="#specification">View specification</a>`, art: shot(main, { eager: true, sizes: '(max-width: 860px) 100vw, 560px' }), photo: true })}
+${more.length ? `<section class="section gallery-section"><div class="wrap">${head('More from the range', 'Each photo shows every form side by side. Open a photo to zoom in on any bowl.')}<div class="gallery">${more.map((ph) => shot(ph, { sizes: '(max-width: 860px) 100vw, 50vw' })).join('')}</div></div></section>` : ''}
 <section class="section">
   <div class="wrap split">
     <div><h2>Overview</h2></div>
@@ -426,24 +443,48 @@ ${cta()}
 };
 
 // ---------- Packaging ----------
+const packShots = [
+  ['packaging-range', 'ZAPAX ENTERPRISE export packaging range: cartons, pouches, kraft and PP sacks and a jumbo bag', 'The packaging range: cartons, pouches, sacks and jumbo bags'],
+  ['pack-carton-25kg', 'Strapped 25 kg export carton with ZAPAX ENTERPRISE shipping marks', 'Export carton, 25 kg net, strapped and marked'],
+  ['pack-carton-open', 'Open carton showing dehydrated onion flakes in a food-grade poly liner', 'Poly-lined carton with food-grade liner'],
+  ['pack-vacuum-bulk', 'Foil barrier bags of garlic powder with a 25 kg master carton', 'Foil barrier bags in a master carton'],
+  ['pack-pouch-range', 'Retail stand-up pouches of dehydrated onion flakes in 250 g, 500 g and 1 kg', 'Retail stand-up pouches: 250 g, 500 g, 1 kg'],
+  ['pack-jar', 'Black garlic in 250 g retail jars with a 12-jar shipper carton', 'Retail jars with a 12 × 250 g shipper carton'],
+  ['pack-kraft-sack', 'Multi-wall kraft paper sack of potato starch, 25 kg net', 'Multi-wall kraft paper sack, 25 kg'],
+  ['pack-pp-sack', 'PP woven sack of dehydrated onion powder, 25 kg net', 'PP woven sack, 25 kg'],
+  ['pack-jumbo-bag', 'Jumbo bag of dehydrated onion granules, 1,000 kg net, on a pallet', 'Jumbo bag, around 1,000 kg, palletised'],
+  ['pack-pallet', 'Stretch-wrapped and strapped pallet of export cartons with shipment label', 'Palletised, wrapped and strapped cartons'],
+  ['pack-container-2', 'Wrapped pallets of cartons staged in a warehouse before loading', 'Pallets staged for container loading'],
+  ['pack-container', 'Shipping container loaded with palletised ZAPAX ENTERPRISE cartons', 'Container loading of palletised cartons'],
+];
+const packGallery = `<div class="gallery gallery-3">${packShots.map(([id, alt, cap]) => photo(id, alt, { caption: cap, doodle: icon('box'), sizes: '(max-width: 640px) 100vw, (max-width: 1100px) 50vw, 400px' })).join('')}</div>`;
+
 const packagingPage = {
   path: '/packaging/',
   title: 'Export Packaging for Dehydrated Products',
-  description: 'Export packaging for dehydrated products: poly-lined cartons, foil vacuum bags and retail pouches, plus labelling, palletisation and container loading.',
+  description: 'Export packaging for dehydrated products and starch: lined cartons, foil bags, pouches, jars, sacks, jumbo bags, pallets and container loading.',
   trail: [home, ['/export/', 'Export'], ['/packaging/', 'Packaging']],
   body: `
 ${hero({ h1: 'Packaging built for the journey', lead: 'The right packing depends on the product, the destination climate, transit time and how you handle goods at the other end. We agree it with you before the order is confirmed.' })}
 <section class="section">
-  <div class="wrap split">
-    <h2>Dehydrated products</h2>
-    <dl class="defs">
-      <div><dt>Poly-lined corrugated cartons</dt><dd>Food-grade polyethylene liner inside a corrugated carton. Commonly requested net weights include 10 kg, 20 kg and 25 kg, subject to product and agreement.</dd></div>
-      <div><dt>Aluminium foil vacuum bags</dt><dd>Extra protection against moisture, oxygen and aroma loss for sensitive products such as powders. Available to discuss for suitable products.</dd></div>
-      <div><dt>Retail stand-up pouches</dt><dd>Customised retail packs can be explored where the product, labelling requirements and order size allow.</dd></div>
-    </dl>
+  <div class="wrap">
+    ${head('Packed for export', 'From retail pouches to full container loads. Open any photo to see the detail.')}
+    ${packGallery}
   </div>
 </section>
 <section class="section tint">
+  <div class="wrap split">
+    <h2>Packing formats</h2>
+    <dl class="defs">
+      <div><dt>Poly-lined corrugated cartons</dt><dd>Food-grade polyethylene liner inside a corrugated carton. Commonly requested net weights include 10 kg, 20 kg and 25 kg, subject to product and agreement.</dd></div>
+      <div><dt>Aluminium foil vacuum bags</dt><dd>Extra protection against moisture, oxygen and aroma loss for sensitive products such as powders. Available to discuss for suitable products.</dd></div>
+      <div><dt>Retail stand-up pouches and jars</dt><dd>Customised retail packs can be explored where the product, labelling requirements and order size allow.</dd></div>
+      <div><dt>Kraft paper and PP woven sacks</dt><dd>Commonly 25 kg net with a poly liner, used for starch and powders.</dd></div>
+      <div><dt>Jumbo bags</dt><dd>Around 500 kg to 1,000 kg for bulk buyers with suitable handling, subject to agreement.</dd></div>
+    </dl>
+  </div>
+</section>
+<section class="section">
   <div class="wrap split">
     <h2>Labelling and loading</h2>
     <div class="prose">
@@ -554,7 +595,7 @@ ${cta('Have sustainability requirements for your supply chain?', 'Tell us what y
 const faqs = [
   ['Is ZAPAX ENTERPRISE a manufacturer?', 'No. ZAPAX ENTERPRISE is a sourcing and export company. We work with producing partners selected for each product, and we coordinate specifications, packing, documents and shipment. We are always transparent about this.'],
   ['Where is ZAPAX ENTERPRISE based?', `We are based in ${site.region}, India. Our full office address is on our <a href="/contact/">contact page</a>.`],
-  ['What products do you export?', `We currently export ${productNames}. We do not export fresh produce. Our range is growing, so ask us about other products from India.`],
+  ['What products do you export?', `We currently export ${productNames}. Our range is growing, so ask us about other products from India.`],
   ['Do you plan to export other products from India?', 'Yes. Dehydrated food products are our starting point. We plan to expand into many more categories of products from India, adding each one only when we can supply it reliably. If you are sourcing something else from India, tell us and we will tell you honestly whether we can help.'],
   ['What is your minimum order quantity?', 'It depends on the product and packing. Many buyers order by the container, but tell us the volume you need and we will confirm what is possible.'],
   ['Can I get samples?', 'Samples can be arranged for many products, depending on the product and the producing partner. Request them in your inquiry along with your specification.'],
@@ -569,7 +610,7 @@ const faqs = [
 const faqPage = {
   path: '/faq/',
   title: 'Frequently Asked Questions',
-  description: 'Answers to common questions from international buyers about ZAPAX ENTERPRISE: business model, products, minimum orders, samples, Incoterms, certifications and documents.',
+  description: 'Answers for international buyers about ZAPAX ENTERPRISE: business model, products, minimum orders, samples, Incoterms, certifications and documents.',
   trail: [home, ['/faq/', 'FAQ']],
   schema: [faqSchema(faqs)],
   body: `
@@ -587,8 +628,8 @@ const countries = countryCodes.map((c) => regionName.of(c)).sort((a, b) => a.loc
 const field = (name, label, input, { required, hint } = {}) => `
 <div class="field">
   <label for="f-${name}">${label}${required ? ' <span class="req" aria-hidden="true">*</span>' : ' <span class="opt">(optional)</span>'}</label>
-  ${hint ? `<p class="hint" id="f-${name}-hint">${hint}</p>` : ''}
   ${input}
+  ${hint ? `<p class="hint" id="f-${name}-hint">${hint}</p>` : '<p class="hint" aria-hidden="true"></p>'}
   <p class="error" id="f-${name}-error" hidden></p>
 </div>`;
 const netlifyForm = site.formEndpoint === 'netlify';
@@ -597,7 +638,7 @@ const describedBy = (name, hint) => `aria-describedby="${hint ? `f-${name}-hint 
 const contactPage = {
   path: '/contact/',
   title: 'Contact Us | Request a Quote',
-  description: 'Request a quote for dehydrated onion, garlic, black garlic, ginger, vegetables or fruits from India. Share the product, quantity and destination port.',
+  description: 'Request a quote for dehydrated onion, garlic, ginger, potato, vegetables, fruits, black garlic, moringa or starch from India. Share product, quantity and port.',
   schemaType: 'ContactPage',
   bodyClass: 'is-contact',
   trail: [home, ['/contact/', 'Contact']],
@@ -612,7 +653,7 @@ ${hero({ h1: 'Request a quote', lead: 'Tell us what you need. We read every inqu
         ${field('email', 'Business email', `<input id="f-email" name="email" type="email" autocomplete="email" required maxlength="150" ${describedBy('email')}>`, { required: true })}
         ${field('country', 'Country', `<select id="f-country" name="country" autocomplete="country-name" required ${describedBy('country')}><option value="">Select your country</option>${countries.map((c) => `<option>${esc(c)}</option>`).join('')}</select>`, { required: true })}
         ${field('phone', 'Phone or WhatsApp', `<input id="f-phone" name="phone" type="tel" autocomplete="tel" maxlength="30" inputmode="tel" ${describedBy('phone', 1)}>`, { hint: 'Include your country code, for example +44.' })}
-        ${field('product', 'Product of interest', `<select id="f-product" name="product" required ${describedBy('product')}><option value="">Select a product</option>${products.map((p) => `<option value="${p.name}" data-slug="${p.slug}">${p.name}</option>`).join('')}<option>Several products</option><option>Other product</option></select>`, { required: true })}
+        ${field('product', 'Product of interest', `<select id="f-product" name="product" required ${describedBy('product')}><option value="">Select a product</option>${productGroups.map((g) => `<optgroup label="${g.label}">${g.items.map((p) => `<option value="${p.name}" data-slug="${p.slug}">${p.name}</option>`).join('')}</optgroup>`).join('')}<optgroup label="More"><option>Several products</option><option>Other product</option></optgroup></select>`, { required: true })}
         ${field('quantity', 'Required quantity', `<input id="f-quantity" name="quantity" type="text" maxlength="100" ${describedBy('quantity', 1)}>`, { hint: 'For example 10 MT, or one 20 ft container per month.' })}
         ${field('port', 'Destination port', `<input id="f-port" name="destination_port" type="text" maxlength="100" ${describedBy('port')}>`)}
         <div class="span-2">${field('message', 'Message or specifications', `<textarea id="f-message" name="message" rows="6" maxlength="4000" ${describedBy('message', 1)}></textarea>`, { hint: 'Form or cut, mesh size, packaging, documents and target shipment date.' })}</div>
@@ -634,13 +675,14 @@ ${hero({ h1: 'Request a quote', lead: 'Tell us what you need. We read every inqu
       <ul class="contact-list">
         <li>${icon('phone')}<a href="${telHref}">${site.phone}</a></li>
         <li>${icon('whatsapp')}<a href="${waHref()}" target="_blank" rel="noopener">Chat on WhatsApp</a></li>
-        ${site.email ? `<li>${icon('mail')}<a href="mailto:${site.email}">${site.email}</a></li>` : ''}
       </ul>
+      ${site.emails.length ? `<h2 class="h3">Email us</h2>
+      <dl class="email-list">${site.emails.map(([label, e]) => `<div><dt>${label}</dt><dd>${icon('mail')}<a href="mailto:${e}">${e}</a></dd></div>`).join('')}</dl>` : ''}
       <h2 class="h3">Our office</h2>
       <ul class="contact-list">
         <li>${icon('pin')}<span>${esc(site.legalName)}<br>${site.addressLines.join('<br>')}</span></li>
       </ul>
-      <p><a class="link" href="${site.mapsUrl}" target="_blank" rel="noopener">View on Google Maps ${icon('arrow')}</a></p>
+      <p><a class="link" href="${site.mapsUrl}" target="_blank" rel="noopener">Open location in Google Maps ${icon('arrow')}</a></p>
       <p class="small">Our team works on India Standard Time (UTC+5:30).</p>
       <p class="notice">${icon('check')}<span>ZAPAX ENTERPRISE only uses the phone number above${site.emailDomain ? ` and <strong>@${site.emailDomain}</strong> email addresses` : ''}. Bank details are never changed by email or chat. <a href="/trade-terms/">How we prevent fraud</a></span></p>
     </aside>
@@ -653,7 +695,7 @@ ${hero({ h1: 'Request a quote', lead: 'Tell us what you need. We read every inqu
 const tradeTermsPage = {
   path: '/trade-terms/',
   title: 'Trade Terms and Fraud Prevention',
-  description: 'Every ZAPAX ENTERPRISE deal follows pre-agreed written terms. How we protect buyers and our business from fraud, and how to verify genuine ZAPAX ENTERPRISE communication.',
+  description: 'Every ZAPAX ENTERPRISE deal follows pre-agreed written terms. How we protect buyers from fraud, and how to verify genuine ZAPAX ENTERPRISE messages.',
   trail: [home, ['/export/', 'Export'], ['/trade-terms/', 'Trade terms and fraud prevention']],
   body: `
 ${hero({ h1: 'Every deal on agreed terms, in writing', lead: 'International trade only works when both sides can trust each other. That is why every ZAPAX ENTERPRISE deal, first or repeat, large or small, in any product category, follows the same pre-agreed written terms. They protect you, protect us, and keep the relationship strong for the long term.' })}
@@ -708,7 +750,7 @@ ${cta('Start a relationship built on clear terms')}
 // ---------- Vision ----------
 const visionPage = {
   path: '/vision/',
-  title: 'Our Vision | Exporting the Best of India to the World',
+  title: 'Our Vision | The Best of India to the World',
   description: 'The vision and mission of ZAPAX ENTERPRISE: starting with dehydrated food products and growing into a wide range of products from India, built on trust.',
   trail: [home, ['/vision/', 'Our vision']],
   body: `

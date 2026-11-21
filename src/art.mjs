@@ -52,6 +52,22 @@ const art = {
     <path class="fi" d="M120 116c-6-8-6-18 2-24 4 8 10 12 10 20 0 6-6 9-12 4z"/>
     <path class="s" d="M120 116c-6-8-6-18 2-24 4 8 10 12 10 20 0 6-6 9-12 4z"/>
     <circle class="ft" cx="126" cy="72" r="5"/>`,
+  potato: `
+    <path class="ft o" d="M34 92c-4-26 16-46 44-50 30-4 52 12 50 40-2 30-26 46-52 46-24 0-38-14-42-36z"/>
+    <path class="s" d="M34 92c-4-26 16-46 44-50 30-4 52 12 50 40-2 30-26 46-52 46-24 0-38-14-42-36z"/>
+    <path class="s" d="M60 72c2 3 5 3 7 0M96 66c2 3 5 3 7 0M80 98c2 3 5 3 7 0M52 106c2 3 5 3 7 0M108 98c2 3 5 3 7 0"/>
+    <path class="fw" d="M112 30l14 4-4 14-14-4z"/><path class="s" d="M112 30l14 4-4 14-14-4z"/>`,
+  moringa: (() => {
+    const leaf = (x, y, a) => `<ellipse class="fl o" cx="0" cy="0" rx="10" ry="5" transform="translate(${x} ${y}) rotate(${a})"/><ellipse class="s" cx="0" cy="0" rx="10" ry="5" transform="translate(${x} ${y}) rotate(${a})"/>`;
+    const pts = [0.12, 0.26, 0.4, 0.54, 0.68, 0.82].map((t) => [40 + 84 * t, 136 - 112 * t]);
+    return `<path class="s" d="M36 142L128 20"/>${pts.map(([x, y]) => leaf(x - 11, y - 8, -20) + leaf(x + 11, y + 8, -20)).join('')}${leaf(130, 14, -55)}`;
+  })(),
+  starch: `
+    <path class="fw" d="M50 52h60l10 86H40z"/>
+    <path class="s" d="M50 52h60l10 86H40zM50 52c-2-12 4-20 12-24h36c8 4 14 12 12 24"/>
+    <path class="s" d="M62 28c6 6 30 6 36 0"/>
+    <path class="ft o" d="M46 86h68l3 30H43z"/><path class="s" d="M46 86h68M43 116h74"/>
+    <path class="ft o" d="M112 140c4-12 10-18 18-18s14 6 18 18z"/><path class="s" d="M112 140c4-12 10-18 18-18s14 6 18 18z"/>`,
 };
 
 export const productArt = (key, label = '') => svg('0 0 160 160', art[key], { cls: 'art', label });
@@ -72,43 +88,6 @@ const glyphs = {
 };
 export const glyph = (key) => svg('0 0 48 48', glyphs[key] || glyphs.whole, { cls: 'glyph' });
 
-// ---------- Hero: the form scale, from whole bulb to powder ----------
-export function formScale() {
-  const g = rng(2026);
-  // Each particle group is one <path> to keep the DOM small and rendering cheap.
-  const flakes = Array.from({ length: 15 }, () => {
-    const x = 470 + g() * 150, y = 150 + g() * 110, s = 10 + g() * 9, a = g() * Math.PI * 2;
-    const p = (dx, dy) => [x + dx * Math.cos(a) - dy * Math.sin(a), y + dx * Math.sin(a) + dy * Math.cos(a)].map(r1).join(' ');
-    return `M${p(0, 0)}Q${p(s * 0.6, -s * 0.7)} ${p(s * 1.4, -s * 0.1)}Q${p(s * 1.2, s * 0.7)} ${p(0, 0)}Z`;
-  }).join('');
-  const granules = Array.from({ length: 60 }, () => {
-    const x = 690 + g() * 150, y = 170 + g() * 95, a = g() * Math.PI / 2, h = 3;
-    const pt = (dx, dy) => [x + dx * Math.cos(a) - dy * Math.sin(a), y + dx * Math.sin(a) + dy * Math.cos(a)].map(r1).join(' ');
-    return `M${pt(-h, -h)}L${pt(h, -h)} ${pt(h, h)} ${pt(-h, h)}Z`;
-  }).join('');
-  const powder = Array.from({ length: 220 }, () => {
-    const t = g(), x = 905 + t * 170, hh = Math.sin(t * Math.PI) * 85, y = 268 - g() * hh;
-    return `M${r1(x - 1.4)} ${r1(y)}a1.4 1.4 0 1 0 2.8 0a1.4 1.4 0 1 0-2.8 0`;
-  }).join('');
-  const label = (x, t) => `<text x="${x}" y="338" text-anchor="middle">${t}</text>`;
-  const ticks = Array.from({ length: 57 }, (_, i) => `<path d="M${40 + i * 20} 290v${i % 5 ? 6 : 12}"/>`).join('');
-  return svg(
-    '0 40 1160 320',
-    `
-    <g class="fs-stage fs-1" transform="translate(40 70) scale(1.35)">${onionBody}</g>
-    <g class="fs-stage fs-2 s">
-      ${[0, 1, 2].map((i) => `<g transform="translate(${310 + i * 44} ${190 + (i % 2) * 18}) rotate(${-14 + i * 12})"><ellipse class="ft o" rx="34" ry="46"/><ellipse rx="34" ry="46"/><ellipse rx="24" ry="33"/><ellipse rx="13" ry="19"/></g>`).join('')}
-    </g>
-    <path class="fs-stage fs-3 ft s" d="${flakes}"/>
-    <path class="fs-stage fs-4 ft s thin" d="${granules}"/>
-    <path class="fs-stage fs-5 ft" d="${powder}"/>
-    <g class="s ruler"><path d="M40 290h1120"/>${ticks}</g>
-    <g class="fs-labels">${label(150, 'Whole')}${label(355, 'Sliced')}${label(545, 'Flakes')}${label(765, 'Granules')}${label(990, 'Powder')}</g>
-    `,
-    { cls: 'form-scale', label: 'An onion shown at five stages: whole, sliced, flakes, granules and powder' },
-  );
-}
-
 // ---------- Route doodle: Gujarat outward ----------
 export function routeArt() {
   const arcs = [
@@ -125,6 +104,8 @@ export function routeArt() {
 
 // ---------- Ajrakh-inspired lattice tile (original geometry) ----------
 export const patternTile = `<svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 56 56"><g fill="none" stroke="#E0A526" stroke-opacity=".35" stroke-width="1.2"><path d="M28 6l6 16 16 6-16 6-6 16-6-16-16-6 16-6z"/><circle cx="28" cy="28" r="4"/><path d="M0 0l8 8M56 0l-8 8M0 56l8-8M56 56l-8-8"/></g></svg>`;
+// Same lattice in faint indigo, for dividers on white.
+export const patternTileInk = patternTile.replace('stroke="#E0A526" stroke-opacity=".35"', 'stroke="#2E3277" stroke-opacity=".16"');
 
 // ---------- Line icons (24px) ----------
 const icons = {
@@ -149,5 +130,8 @@ const icons = {
   whatsapp: '<path d="M4 20l1.3-4A8 8 0 1112 20a8 8 0 01-4-1z"/><path d="M9 9c0 3 3 6 6 6l1-1.5-2-1-1 1c-1-.5-2-1.5-2.5-2.5l1-1-1-2z"/>',
   file: '<path d="M6 3h8l4 4v14H6zM14 3v4h4M12 11v6M9 14l3 3 3-3"/>',
   up: '<path d="M12 19V5M6 11l6-6 6 6"/>',
+  left: '<path d="M15 6l-6 6 6 6"/>',
+  right: '<path d="M9 6l6 6-6 6"/>',
+  zoom: '<circle cx="11" cy="11" r="6.5"/><path d="M16 16l5 5M8.5 11h5M11 8.5v5"/>',
 };
 export const icon = (k) => `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${icons[k]}</g></svg>`;

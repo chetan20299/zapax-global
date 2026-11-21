@@ -39,7 +39,7 @@ for (const path of paths) {
       const wide = [...document.querySelectorAll('body *')]
         .filter((e) => {
           const b = e.getBoundingClientRect();
-          return b.right > innerWidth + 1 && getComputedStyle(e).position !== 'fixed' && !e.closest('.form-scale-wrap,.table-wrap,.sr-only,.hp,.skip');
+          return b.right > innerWidth + 1 && getComputedStyle(e).position !== 'fixed' && !e.closest('.table-wrap,.sr-only,.hp,.skip');
         })
         .map((e) => `${e.tagName}.${e.className.baseVal ?? e.className}`)
         .slice(0, 3);

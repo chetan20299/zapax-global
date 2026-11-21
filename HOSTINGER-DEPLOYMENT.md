@@ -2,7 +2,7 @@
 
 Two Hostinger plan types, two zips:
 
-- **Single / Premium Web Hosting** (no Node.js): follow **Part 0** below, plus Parts 2, 3 and 5.
+- **Single / Premium Web Hosting** (no Node.js): follow **Part 0** below, plus Parts 2, 3 and 5. For later changes, use **Update and redeploy (Single Web Hosting)**.
 - **Business / Cloud with Node.js Apps**: skip Part 0 and follow Parts 1–7.
 
 ## Part 0. Single Web Hosting (static site + PHP form)
@@ -25,9 +25,50 @@ No Node.js runs on the server. You build on your PC; Hostinger serves plain file
 - [ ] **0.6** hPanel → **Advanced → PHP Configuration**: PHP **8.1 or newer**, with the `curl` and `mbstring` extensions enabled (they usually are).
 - [ ] **0.7** hPanel → **Security → SSL**: the certificate must be **Active**. Leave hPanel's **Force HTTPS** off: `.htaccess` already redirects to https and to the main address, and having both on can cause redirect loops.
 - [ ] **0.8** **www**: hPanel → **Domains → DNS**: there must be a `CNAME` named `www` pointing to `zapaxenterprise.com` (or an `A` record `www` with the same IP as `@`). The SSL certificate must cover `www` too. `.htaccess` sends www visitors to `https://zapaxenterprise.com`.
-- [ ] **0.9** Test as in Part 5. Updating later: edit → `npm run package:hostinger` → upload and extract again (overwrite).
+- [ ] **0.9** Test as in Part 5. To change the site later, follow **Update and redeploy** below.
 
 > Not needed: an SPA "rewrite everything to index.html" rule. This is not a React/Vite single-page app: every page is its own `index.html` in its own folder, and that rule would break the 404 page.
+
+---
+
+## Update and redeploy (Single Web Hosting)
+
+Use this every time you change the live website after the first setup (Part 0). Hostinger only serves the built files, so every change is made and built on your PC and then uploaded again.
+
+### A. Where to make the change
+
+| What you want to change | Where |
+|-------------------------|-------|
+| Products, contact details, address, company info | `src/site.mjs` |
+| Page text (About, FAQ, Shipping and so on) | `src/pages.mjs` |
+| Colours, fonts, layout | `src/styles.css` |
+| Images, product PDF, fonts | `public/` |
+| Domain, phone, WhatsApp, contact email, Google Analytics | `.env` (all options are listed in `.env.example`) |
+| Resend key, sender or receiving inbox for the quote form | `zapax-mail-config.php` on Hostinger (see section D). No rebuild needed |
+
+### B. Update the website (on your PC, in `D:\software\ZAPAX`)
+
+- [ ] **B.1** Make your changes in the files from section A.
+- [ ] **B.2** Preview locally: run `npm run build`, then `npm run serve`, and open <http://localhost:8080>. Check every page you changed. Press **Ctrl + C** to stop the preview.
+- [ ] **B.3** Run `npm run package:hostinger`. It writes a new `hostinger-upload.zip` for `https://zapaxenterprise.com`. If it prints an error, fix it first and do not upload.
+- [ ] **B.4** Recommended: save a backup copy of the change in Git: `git add -A`, then `git commit -m "Update website: <what changed>"`.
+
+### C. Redeploy on Hostinger (hPanel → Files → File Manager)
+
+- [ ] **C.1** Open `public_html`, turn on **Show hidden files**, select **everything** inside `public_html` (including `.htaccess`) and delete it.
+  This is safe because `zapax-mail-config.php` sits one folder **above** `public_html` and is not touched. Never delete that file. Clearing the folder first also removes pages you deleted from the site and old CSS/JS files.
+- [ ] **C.2** Upload the new `hostinger-upload.zip` into `public_html`.
+- [ ] **C.3** Right-click the zip → **Extract** → extract **into `public_html` itself** (not a new subfolder) → delete the zip.
+- [ ] **C.4** Check that `index.html`, `.htaccess` and the `api` folder sit directly in `public_html`.
+- [ ] **C.5** Open <https://zapaxenterprise.com> and press **Ctrl + F5** to skip the cached copy. Check the pages you changed.
+- [ ] **C.6** If you changed anything near the quote form, send one test inquiry (wait at least 5 seconds before submitting).
+
+### D. Changes that need no new zip
+
+- **Quote form email settings:** edit `zapax-mail-config.php` (one folder above `public_html`) in File Manager and save. It takes effect immediately.
+- **One-time settings stay as they are:** the `www` DNS record, SSL certificate and PHP version are not affected by redeploys.
+
+> Changing anything in `.env` (domain, phone, email) **does** need steps B.3 and C again: those values are written into the pages when they are built on your PC.
 
 ---
 
@@ -190,3 +231,27 @@ hPanel labels change from time to time; if a name differs slightly, pick the clo
 | Old content after redeploy | Browser cache | **Ctrl + F5** |
 
 **Still stuck?** Hostinger live chat (hPanel, bottom-right) can read the Node.js app logs with you. Tell them: *"Node.js app, entry file server.mjs, Node 20+, it builds itself at start and listens on process.env.PORT"*.
+
+---
+
+## Update procedure
+
+**On your PC (in `D:\software\ZAPAX`)**
+
+1. Make your edits.
+2. To preview, run `npm run build` and then `npm run serve`, and open http://localhost:8080. Check the pages you changed. Press Ctrl+C to stop.
+3. Run `npm run package:hostinger`. This makes a new `hostinger-upload.zip` for `https://zapaxenterprise.com`. If it prints an error, fix that first and don't upload.
+4. Optional but recommended: save a backup in git with `git add -A` and then `git commit -m "Update website"`.
+
+**In hPanel (File Manager)**
+
+5. Open `public_html` and select everything in it. Turn on **Show hidden files** so `.htaccess` is included, then delete it all.
+   - This is safe because your email settings file, `zapax-mail-config.php`, is one folder up, outside `public_html`. Don't delete that file.
+   - Deleting first also removes any pages you've removed from the site and old CSS/JS files.
+6. Upload the new `hostinger-upload.zip` into `public_html`. Right-click it, choose **Extract**, and extract it into `public_html` itself (not into a new folder). Then delete the zip.
+7. Check that `index.html`, `.htaccess` and the `api` folder sit directly in `public_html`.
+
+**Check the live site**
+
+8. Open https://zapaxenterprise.com and press **Ctrl+F5** to skip the old cached copy. Check the pages you changed.
+9. If you changed anything about the contact form, send one test inquiry.

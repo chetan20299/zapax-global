@@ -2,10 +2,10 @@
 import { mkdir, writeFile, readFile, rm, cp } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { transform } from 'esbuild';
-import { site, products, exportPages, fullAddress, telHref, waHref } from './src/site.mjs';
+import { site, productGroups, exportPages, fullAddress, telHref, waHref } from './src/site.mjs';
 import { buildTemplates } from './server/email-templates.mjs';
 import { pages } from './src/pages.mjs';
-import { icon, patternTile } from './src/art.mjs';
+import { icon, patternTile, patternTileInk } from './src/art.mjs';
 import { lockup, symbol, modes } from './src/brand.mjs';
 
 // Inline vector logos (no image request, crisp at any size)
@@ -33,21 +33,23 @@ const organization = {
   url: abs('/'),
   logo: abs('/brand/logo-symbol-512.png'),
   slogan: site.slogan,
-  description: 'India-based export company for dehydrated onion, garlic, black garlic, ginger, vegetables and fruits, growing into a wide range of products from India.',
-  slogan: site.slogan,
+  description: 'India-based export company for dehydrated onion, garlic, ginger, potato, vegetables and fruits, plus black garlic, moringa and starch, growing into a wide range of products from India.',
   founder: site.people.map((p) => ({ '@type': 'Person', name: p.name, jobTitle: p.role })),
   address: { '@type': 'PostalAddress', streetAddress: site.street, addressLocality: site.locality, postalCode: site.postalCode, addressRegion: site.region, addressCountry: 'IN' },
+  location: { '@type': 'Place', geo: { '@type': 'GeoCoordinates', latitude: site.geo.lat, longitude: site.geo.lng }, hasMap: site.mapsUrl },
   areaServed: 'Worldwide',
   ...(site.email && { email: site.email }),
   ...(site.phone && { telephone: site.phone }),
   ...((site.email || site.phone) && {
-    contactPoint: { '@type': 'ContactPoint', contactType: 'sales', availableLanguage: ['English', 'Hindi', 'Gujarati'], ...(site.email && { email: site.email }), ...(site.phone && { telephone: site.phone }) },
+    contactPoint: site.emails.length
+      ? site.emails.map(([label, email]) => ({ '@type': 'ContactPoint', contactType: label, email, availableLanguage: ['English', 'Hindi', 'Gujarati'], ...(site.phone && { telephone: site.phone }) }))
+      : { '@type': 'ContactPoint', contactType: 'sales', availableLanguage: ['English', 'Hindi', 'Gujarati'], ...(site.phone && { telephone: site.phone }) },
   }),
   ...(site.social.length && { sameAs: site.social.map((s) => s.url) }),
 };
 
 // ---------- Layout ----------
-const navProducts = products.map((p) => [`/products/${p.slug}/`, p.name]);
+const link = (p) => [`/products/${p.slug}/`, p.name];
 
 function nav(current) {
   const is = (p) => (current === p || (p !== '/' && current.startsWith(p)) ? ' aria-current="page"' : '');
@@ -63,7 +65,13 @@ function nav(current) {
       <a class="brand" href="/" aria-label="ZAPAX ENTERPRISE home">${inlineLogo('primary', 'brand-logo')}</a>
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-list"><span class="sr-only">Menu</span>${icon('menu')}${icon('close')}</button>
       <ul class="nav-list" id="nav-list">
-        ${menu('menu-products', 'Products', [['/products/', 'All products'], ...navProducts], '/products/')}
+        <li class="has-menu">
+          <button class="nav-link menu-btn" type="button" aria-expanded="false" aria-controls="menu-products"${current.startsWith('/products/') ? ' data-current' : ''}>Products${icon('down')}</button>
+          <div class="dropdown mega" id="menu-products">
+            ${productGroups.map((g) => `<div class="mega-col"><a class="mega-h" href="/products/#${g.id}">${g.label}</a><ul>${g.items.map(link).map(([href, t]) => `<li><a href="${href}"${is(href)}>${t}</a></li>`).join('')}</ul></div>`).join('')}
+            <a class="mega-all" href="/products/"${current === '/products/' ? ' aria-current="page"' : ''}>All products ${icon('arrow')}</a>
+          </div>
+        </li>
         <li><a class="nav-link" href="/quality/"${is('/quality/')}>Quality</a></li>
         ${menu('menu-export', 'Export', exportPages, '/export/')}
         <li><a class="nav-link" href="/vision/"${is('/vision/')}>Our vision</a></li>
@@ -80,7 +88,8 @@ function footer() {
     `<li>${icon('pin')}<span>${site.addressLines.join('<br>')}</span></li>`,
     `<li>${icon('phone')}<a href="${telHref}">${site.phone}</a></li>`,
     `<li>${icon('whatsapp')}<a href="${waHref()}" target="_blank" rel="noopener">WhatsApp ${site.phone}</a></li>`,
-    site.email && `<li>${icon('mail')}<a href="mailto:${site.email}">${site.email}</a></li>`,
+    // All mailboxes in one compact block: one icon, one line each, short label + address
+    site.emails.length && `<li>${icon('mail')}<dl class="footer-mails">${site.emails.map(([, e, short]) => `<div><dt>${short}</dt><dd><a href="mailto:${e}">${e}</a></dd></div>`).join('')}</dl></li>`,
   ].filter(Boolean).join('');
   const col = (title, links) => `<div><h2 class="footer-h">${title}</h2><ul>${links.map(([h, t]) => `<li><a href="${h}">${t}</a></li>`).join('')}</ul></div>`;
   return `
@@ -94,13 +103,13 @@ function footer() {
         <ul class="footer-contact">${contactLines}</ul>
         ${site.social.length ? `<ul class="footer-social">${site.social.map((s) => `<li><a href="${s.url}" rel="noopener" target="_blank">${esc(s.name)}</a></li>`).join('')}</ul>` : ''}
       </div>
-      ${col('Products', navProducts)}
+      <div>${productGroups.map((g) => `<h2 class="footer-h">${g.label}</h2><ul class="footer-products">${g.items.map(link).map(([h, t]) => `<li><a href="${h}">${t}</a></li>`).join('')}</ul>`).join('')}</div>
       ${col('Export', [...exportPages, ['/quality/', 'Quality assurance']])}
       ${col('Company', [['/about/', 'About ZAPAX ENTERPRISE'], ['/vision/', 'Our vision'],['/company-registrations/', 'Company registrations'], ['/sustainability/', 'Sustainability'], ['/trade-terms/', 'Trade terms and fraud prevention'], ['/faq/', 'FAQ'], ['/contact/', 'Contact and quotes'], ['/ZAPAX-ENTERPRISE-product-overview.pdf', 'Product overview (PDF)']])}
     </div>
     <div class="wrap footer-base">
       <p>© <span data-year>${new Date().getFullYear()}</span> ${esc(site.legalName)}. All rights reserved.</p>
-      <ul><li><a href="/privacy/">Privacy policy</a></li><li><a href="/terms/">Terms of use</a></li><li><a href="/sitemap.xml">Sitemap</a></li></ul>
+      <ul><li><a href="/privacy/">Privacy policy</a></li><li><a href="/terms/">Terms of use</a></li></ul>
     </div>
   </footer>
   <div class="mobile-bar">
@@ -112,7 +121,7 @@ function footer() {
 // Hidden by default (no-JS visitors never see it); the inline script shows it once per session.
 const loaderFacts = [
   `Export company from ${site.region}, ${site.country}`,
-  'Dehydrated onion, garlic, black garlic, ginger, vegetables and fruits',
+  'Dehydrated onion, garlic, ginger, potato, vegetables and fruits, plus black garlic, moringa and starch',
   'Every deal on pre-agreed written terms',
   `Registered as ${site.legalName}`,
 ];
@@ -152,10 +161,11 @@ function breadcrumbHtml(trail) {
 function layout(page, assets) {
   const url = abs(page.path);
   const title = page.path === '/' ? page.title : `${page.title} | ${site.brand}`;
+  const og = page.ogImage || { src: '/og-image.png', w: 1200, h: 630, alt: 'ZAPAX ENTERPRISE: exports from India. Where trust travels.' };
   const graph = [
     organization,
     page.path === '/' && { '@type': 'WebSite', '@id': abs('/#website'), url: abs('/'), name: site.brand, publisher: { '@id': orgId }, inLanguage: 'en' },
-    { '@type': page.schemaType || 'WebPage', '@id': url + '#webpage', url, name: title, description: page.description, isPartOf: { '@id': abs('/#website') }, about: { '@id': orgId }, inLanguage: 'en' },
+    { '@type': page.schemaType || 'WebPage', '@id': url + '#webpage', url, name: title, description: page.description, isPartOf: { '@id': abs('/#website') }, about: { '@id': orgId }, inLanguage: 'en', ...(page.ogImage && { primaryImageOfPage: { '@type': 'ImageObject', url: abs(page.ogImage.src), width: page.ogImage.w, height: page.ogImage.h, caption: page.ogImage.alt } }) },
     page.trail && { '@type': 'BreadcrumbList', itemListElement: page.trail.map(([href, name], i) => ({ '@type': 'ListItem', position: i + 1, name, item: abs(href) })) },
     ...(page.schema || []),
   ].filter(Boolean);
@@ -179,9 +189,9 @@ ${site.googleSiteVerification ? `<meta name="google-site-verification" content="
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(page.description)}">
 <meta property="og:url" content="${url}">
-<meta property="og:image" content="${abs('/og-image.png')}">
-<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="ZAPAX ENTERPRISE: exports from India. Where trust travels.">
+<meta property="og:image" content="${abs(og.src)}">
+<meta property="og:image:width" content="${og.w}"><meta property="og:image:height" content="${og.h}">
+<meta property="og:image:alt" content="${esc(og.alt)}">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -220,6 +230,7 @@ await rm(OUT, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
 await mkdir(`${OUT}/assets`, { recursive: true });
 await cp('public', OUT, { recursive: true });
 await writeFile(`${OUT}/assets/pattern.svg`, patternTile);
+await writeFile(`${OUT}/assets/pattern-ink.svg`, patternTileInk);
 await writeFile(`${OUT}/favicon.svg`, `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">${symbol(modes.primary)}</svg>`);
 const assets = { css: await asset('src/styles.css', 'css'), js: await asset('src/app.js', 'js') };
 
@@ -241,9 +252,12 @@ if (process.env.DEPLOY_TARGET === 'cpanel') {
 }
 
 const indexable = pages.filter((p) => !p.noindex);
+// Image sitemap entries (Google Images): each product/packaging photo on the page, at its largest JPEG size.
+const photoMax = Object.fromEntries(Object.entries(JSON.parse(await readFile('src/photos.json', 'utf8'))).map(([id, v]) => [id, v.w]));
+const pagePhotos = (p) => [...new Set([...p.body.matchAll(/src="(\/photos\/[^"]+?\/([^/"]+?))-\d+\.jpg"/g)].map(([, base, id]) => `${base}-${photoMax[id]}.jpg`))];
 await writeFile(
   `${OUT}/sitemap.xml`,
-  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${indexable.map((p) => `  <url><loc>${abs(p.path)}</loc><lastmod>${today}</lastmod></url>`).join('\n')}\n</urlset>\n`,
+  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${indexable.map((p) => `  <url><loc>${abs(p.path)}</loc><lastmod>${today}</lastmod>${pagePhotos(p).map((s) => `<image:image><image:loc>${abs(s)}</image:loc></image:image>`).join('')}</url>`).join('\n')}\n</urlset>\n`,
 );
 await writeFile(`${OUT}/robots.txt`, `User-agent: *\nAllow: /\n\nSitemap: ${abs('/sitemap.xml')}\n`);
 // Netlify / Cloudflare Pages conventions. See DEPLOYMENT.md for other hosts.
@@ -314,6 +328,7 @@ ErrorDocument 404 /404.html
 </FilesMatch>
 
 AddType font/woff2 .woff2
+AddType image/avif .avif
 AddType image/svg+xml .svg
 `,
 );
@@ -330,6 +345,8 @@ await writeFile(
   Cache-Control: public, max-age=31536000, immutable
 /fonts/*
   Cache-Control: public, max-age=31536000, immutable
+/photos/*
+  Cache-Control: public, max-age=2592000
 `,
 );
 

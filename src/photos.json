@@ -1,0 +1,380 @@
+{
+ "black-garlic-range": {
+  "group": "products",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ],
+  "w": 2400,
+  "h": 1600,
+  "mtime": 1795254229984.138,
+  "lqip": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAAAwBACdASoYABAAPtFYpEuoJSOhsAgBABoJZwDG9CHfh++DAqy2UtRngAAA/vCHTgNKsvmHh3a+r0h5nQoyQxxVZyZwyEUNxvWfDfRve9m/V4zTA3D516P1t+KUVN0bHN0Sms8T8gsgudPRAgMFfUAA"
+ },
+ "fruit-pieces-range": {
+  "group": "products",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ],
+  "w": 2400,
+  "h": 1600,
+  "mtime": 1795254641038.7756,
+  "lqip": "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAACwAwCdASoYABAAPtFUpEuoJKOhsAgBABoJZQCdAB6Q/9q6PyxgUAD+8ivO4uUjylIyWe64YNT3OMkClKq0cY22eSrjf1fL0QZBn4WrdUIJG9hVLLUVznnUevxAVZE+pzbu+lIAAAA="
+ },
+ "fruit-powders-range": {
+  "group": "products",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ],
+  "w": 2400,
+  "h": 1600,
+  "mtime": 1795254665907.5974,
+  "lqip": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAACQBACdASoYABAAPtFUo0uoJKMhsAgBABoJQBOmUABqokgCRnMbgeD3auY4IMAA/uuDztRdKQzJAfki0p6CF1p5A/1okaluhQnVSoHy40yIQ2R9w8OJTWu57UoZ1tQ0yNIVSJlza/WG4iO1WJYJhoH6GocjTgKzKRDyAAAA"
+ },
+ "garlic-range": {
+  "group": "products",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ],
+  "w": 2400,
+  "h": 1600,
+  "mtime": 1795254189576.4731,
+  "lqip": "data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAACQBACdASoYABAAPtFWo0uoJKMhsAgBABoJZQC7ACP6xERtKkZoY8AFojxcfgAA/uJLdLgMtrohWfNQCQWTVh1DW2m5d0YnftAYXv7cKBGMO0yRPCXBfSYobY9FF9eSMAL8/b0aLsYY+mpzptJADnpOzKgAAA=="
+ },
+ "ginger-range": {
+  "group": "products",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ],
+  "w": 2400,
+  "h": 1600,
+  "mtime": 1795254288139.7798,
+  "lqip": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAAAwBACdASoYABAAPtFUpEuoJKOhsAgBABoJZQCw7ywBoSujgxctXHe5siAA/uus/5MEBbiWmgmrUYrBlCehNXxklxD9CexDhGM76sILBEdeR1w3dw6Rn33FSGD8RMF2uEk3nsVMp6NjWkiNLgPAAA=="
+ },
+ "moringa-range": {
+  "group": "products",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ],
+  "w": 2400,
+  "h": 1600,
+  "mtime": 1795254435896.553,
+  "lqip": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAAAQBACdASoYABAAPtFYpEwoJSOiMAgBABoJZQAAXKO3MUMzWAPA2FtQgAD+2B8mdtjQ7oK47vc8AyEqoyRYpWxFpMf7/173GBl3roEjUfzsRw+yZlg4EfOYzdPybKB6F0tVXXXywNom5L96C0zP62AA"
+ },
+ "okra-range": {
+  "group": "products",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ],
+  "w": 2400,
+  "h": 1600,
+  "mtime": 1795254473426.3684,
+  "lqip": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAADwAwCdASoYABAAPtFipk0oJiOiMAgBABoJZQAAQx2mBsSsfpuEfJoAAP7033JYosCcrR9prUoB2g6SbFoCi7T28S8vkXTDah6H/841JGhH6rjrCOoDPhu3U+QUPdm0AAA="
+ },
+ "onion-golden-range": {
+  "group": "products",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ],
+  "w": 2400,
+  "h": 1600,
+  "mtime": 1795254126122.2222,
+  "lqip": "data:image/webp;base64,UklGRoIAAABXRUJQVlA4IHYAAAAwBACdASoYABAAPtFYpEwoJSOiMAgBABoJYwCdMoACs9foHvyM2iGoDaAA/uihm89TUoLjrdniQ1Od9O2szIYLM0PrRLsLkCR089UC8P2IcIk6Ad7wJZ1njAXjx+Atv8ucFU1EnGOl+nXkpf5KeYJ2aWI5yAAA"
+ },
+ "onion-red-range": {
+  "group": "products",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ],
+  "w": 2400,
+  "h": 1600,
+  "mtime": 1795253901791.41,
+  "lqip": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAADwAwCdASoYABAAPtFYpkwoJSOiMAgBABoJYwAASb/U6v4izZ/e+vkAAP7ietlp1KpE9cI+hhwQ2trRx6U2J0ae5FfW2i/vX8n32SntboJWxz26M3lhEZ15ChdHlaqi5qqd9Ieb9YuaWAAA"
+ },
+ "onion-white-range": {
+  "group": "products",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ],
+  "w": 2400,
+  "h": 1600,
+  "mtime": 1795253843161.1018,
+  "lqip": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAABQBACdASoYABAAPtFWpkuoJKOhsAgBABoJZwDCgCIfvQlBF5zAxa8qqM0AAP7uNPIk/Nfhs3Q6fu17RxUhindobG58u3XhYa24cbN3ccCUxkoBZC0t7mLmWjGx7cLYbByMqIFCpL34AA=="
+ },
+ "potato-range": {
+  "group": "products",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ],
+  "w": 2400,
+  "h": 1600,
+  "mtime": 1795254331375.7642,
+  "lqip": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAABwBACdASoYABAAPtFUo0uoJKMhsAgBABoJZwC7ACHhc1iZ1W147wolgLgJAAD+64PKFqUqDb4IEetRuMv4cYNkRzHZvtyGptok7ZzCGGKJtUiW4kAgvpK7d0imVfyQdFDEKpoqv9k5T8MRPrWgAA=="
+ },
+ "starch-range": {
+  "group": "products",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ],
+  "w": 2400,
+  "h": 1600,
+  "mtime": 1795254379253.1692,
+  "lqip": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAABQBACdASoYABAAPtFYpkwoJSOiMAgBABoJZwDMHCHgVGCCJX63qWaPV0kAAP7whdGWnT/HX9dAnbhdlrBAA8ILPXK4ygiEbyo6NLliZ9feFD5g+mb/CtsF2ZJ3fcFgAAA="
+ },
+ "veg-pieces-range": {
+  "group": "products",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ],
+  "w": 2400,
+  "h": 1600,
+  "mtime": 1795254530975.6611,
+  "lqip": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAADQAwCdASoYABAAPtFYpEwoJSOiMAgBABoJZwC7AB6RnujvAbvibqgA/vTftdBLJqg5Y5fJvNQJ+X6qhbEVcOpiGbMpRUTQ6sCIvqU7qeYxQT6XyqLkjDAO0kL9PwU+mfIAAA=="
+ },
+ "veg-powders-range": {
+  "group": "products",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ],
+  "w": 2400,
+  "h": 1600,
+  "mtime": 1795254580007.3875,
+  "lqip": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAACwAwCdASoYABAAPtFWpUwoJKOiMAgBABoJYwCsAB6Q/sqv/SyqwAD+88FeSppdhstnpGIiEFIJCeYNVhPmMdcnO/UmWD8/p3T0HJCkwtGBezRtaqwXEmRbGfEyGNvoAAA="
+ },
+ "pack-carton-25kg": {
+  "group": "packaging",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ],
+  "w": 2400,
+  "h": 1600,
+  "mtime": 1795255606797.7478,
+  "lqip": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAAAwBACdASoYABAAPtFapEwoJSOiMAgBABoJYwAAUrlx2+EsHeUZ8D59OgAA/uc/BavYSykGVzxeNWsA1ediHSy09toVMg/jZjKRwXJE+guiIt7aLBOoBz4ws5BQlZnlScesBTgA"
+ },
+ "pack-carton-open": {
+  "group": "packaging",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ],
+  "w": 2400,
+  "h": 1600,
+  "mtime": 1795255668645.288,
+  "lqip": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAAAwBACdASoYABAAPtFYpEuoJSOhsAgBABoJQBOgA9DxOfGNN1H/vh9EOcAA/t7sL+4qWowYd8W8MbV8B+ub3fBAC4mqMmV91cwK3Ttu2vxo7nMx7fjLS0ecptYAAA=="
+ },
+ "pack-container-2": {
+  "group": "packaging",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ],
+  "w": 2400,
+  "h": 1600,
+  "mtime": 1795256987053.5205,
+  "lqip": "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAACwAwCdASoYABAAPtFYpEuoJSOhsAgBABoJZQCdMoADY+w7k/RigAD+zf4fTSV/mV8sEfyKpGYxspW7AWPAgVETpYGG63nnttRYYDvOXp/bBoDxCdu0PFXkAAA="
+ },
+ "pack-container": {
+  "group": "packaging",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ],
+  "w": 2400,
+  "h": 1600,
+  "mtime": 1795256724542.153,
+  "lqip": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAABQAwCdASoYABAALplotFoiqCgoCACYSygABKPXpzKAPWPggAD2Q7grVteHypPPuEvDSuzW1eITdYnD8dty3OsGIFGQHbbxgwgJ6NqLoAA="
+ },
+ "pack-jar": {
+  "group": "packaging",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ],
+  "w": 2400,
+  "h": 1600,
+  "mtime": 1795256600025.5093,
+  "lqip": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAAAQBACdASoYABAAPtFYpEuoJSOhsAgBABoJZwAAW9LqE1Vu3q3zShYs4AD+6oH0u9XDfqMXFdV/7LdnQNPtXys+b8BigfkoyUtXFGDwJm6Mqps6bIkWcxMlWwoAAA=="
+ },
+ "pack-jumbo-bag": {
+  "group": "packaging",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ],
+  "w": 2400,
+  "h": 1600,
+  "mtime": 1795255932928.3777,
+  "lqip": "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAADwAwCdASoYABAAPtFYpEuoJSOhsAgBABoJZQAAUWIauQrbQKQfT8gQAP7e7HEcy0YtRSF2WXJ4uSfa2wb7Spn9uTLcK7vZR5mHmZ6TD+mLkfwA"
+ },
+ "pack-kraft-sack": {
+  "group": "packaging",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ],
+  "w": 2400,
+  "h": 1600,
+  "mtime": 1795255805644.087,
+  "lqip": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADQAwCdASoYABAAPtFapkyoJSOiMAgBABoJZQAAW/AZxLLqKPFeEAAA/t60locXaI/vJWwL+HhoX+JLoLhqHry3TakxfrHAAAA="
+ },
+ "pack-pallet": {
+  "group": "packaging",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ],
+  "w": 2400,
+  "h": 1600,
+  "mtime": 1795256663198.0242,
+  "lqip": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAAAQBACdASoYABAAPtFipk0oJiOiMAgBABoJZQC+SBodBoYYTiM3QAnKAAD92PV6xUNfLiukuGLmyItfwQaR+ROKWyOIZhZEqP0PVskT1U5AAA=="
+ },
+ "pack-pouch-range": {
+  "group": "packaging",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ],
+  "w": 2400,
+  "h": 1600,
+  "mtime": 1795256390361.498,
+  "lqip": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAACwAwCdASoYABAAPtFWpEuoJKOhsAgBABoJYwAAW9OUa4FVSSm9AAD+6nRuvpK9Q3TNU0fhhjl96S99UjstRwtXhPK2uDP/4mKdO+4qMo7ugbgG8uUX4fmou6D/AAAA"
+ },
+ "pack-pp-sack": {
+  "group": "packaging",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ],
+  "w": 2400,
+  "h": 1600,
+  "mtime": 1795255869434.5825,
+  "lqip": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAADQAwCdASoYABAAPtFipk0oJiOiMAgBABoJZQAAW++1t+HDufWdDgAA/uqEgvM0LeuaxnWn+A12WWD9uCv51a2OP2wBHUyjdY+XOFAA"
+ },
+ "pack-sample-kit": {
+  "group": "packaging",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ],
+  "w": 2400,
+  "h": 1600,
+  "mtime": 1795256876100.3428,
+  "lqip": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAADwAwCdASoYABAAPtFUo0uoJKMhsAgBABoJZQAAW+fx/fahi4CBG3VwAP7n+nGb7ag2WZKH2FO1uWlEJ0LFFurAEsBLAwufJ/nuun7DUUUuRU9WkTq1dout4kHhpT3hNfMlF3rAVMAAAA=="
+ },
+ "pack-vacuum-bulk": {
+  "group": "packaging",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ],
+  "w": 2400,
+  "h": 1600,
+  "mtime": 1795255734397.87,
+  "lqip": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAABQBACdASoYABAAPtFWpkuoJKOhsAgBABoJYwC7IExDA3041233eA6AW7wAAP7tUQJo3QhoJjkYFtnuJ0jAHLhXCJRda7nifoKSpjShXxyeZh0WQ+gZjuuuh2zyQEl8iIsPj5zClqlX9oIddAAAAA=="
+ },
+ "packaging-range": {
+  "group": "packaging",
+  "widths": [
+   480,
+   800,
+   1200,
+   1600,
+   2400
+  ],
+  "w": 2400,
+  "h": 1600,
+  "mtime": 1795255535154.8867,
+  "lqip": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAACwAwCdASoYABAAPtFYpkwoJSOiMAgBABoJYwC+SCHe6bYoOVlcAAD+5znJXI8TYwj1BOgT/YWQmAq4O4IIk27kvDrdP0hLQw56gq3MZQQ7UA/mEy5gAA=="
+ }
+}
