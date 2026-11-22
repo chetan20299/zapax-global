@@ -303,17 +303,35 @@
     if (type && focus) status.focus();
   };
 
-  // EximFlow dashboard: save a copy of the inquiry (Firestore REST, create-only). Never blocks or breaks the
-  // normal email flow; keepalive lets it finish even if the page opens the email app or navigates away.
-  const CRM_FIELDS = { name: 150, company: 150, email: 150, country: 80, phone: 30, product: 120, quantity: 100, destination_port: 100, message: 4000 };
-  const saveToCrm = (url, data) => {
-    if (!url) return;
+  // Toast: success hides itself after 6 s; an error stays, with "Try again" (resends the same, still-filled form).
+  let toastEl, toastTimer;
+  const toast = (type, title, text) => {
+    if (!toastEl) {
+      toastEl = document.createElement('div');
+      toastEl.className = 'toast';
+      toastEl.innerHTML = '<div class="toast-body"><strong class="toast-title"></strong><p class="toast-text"></p></div><div class="toast-actions"><button type="button" class="btn btn-light toast-retry">Try again</button><button type="button" class="toast-close" aria-label="Close">×</button></div>';
+      document.body.append(toastEl);
+      $('.toast-close', toastEl).addEventListener('click', () => toastEl.classList.remove('is-open'));
+      $('.toast-retry', toastEl).addEventListener('click', () => { toastEl.classList.remove('is-open'); form.requestSubmit(); });
+    }
+    clearTimeout(toastTimer);
+    toastEl.className = `toast is-${type}`;
+    $('.toast-title', toastEl).textContent = title;
+    $('.toast-text', toastEl).textContent = text;
+    $('.toast-retry', toastEl).hidden = type !== 'error';
+    requestAnimationFrame(() => toastEl.classList.add('is-open'));
+    if (type === 'success') toastTimer = setTimeout(() => toastEl.classList.remove('is-open'), 6000);
+  };
+
+  // Inquiries are saved to the EximFlow lead dashboard (Firestore REST, create-only). No email is sent.
+  const FIELDS = { name: 150, company: 150, email: 150, country: 80, phone: 30, product: 120, quantity: 100, destination_port: 100, message: 4000 };
+  const toDoc = (data) => {
     const fields = { createdAt: { timestampValue: new Date().toISOString() }, source: { stringValue: location.hostname.slice(0, 100) }, page: { stringValue: location.pathname.slice(0, 300) } };
-    for (const [k, max] of Object.entries(CRM_FIELDS)) {
+    for (const [k, max] of Object.entries(FIELDS)) {
       const v = String(data.get(k) ?? '').trim().slice(0, max);
       if (v) fields[k === 'destination_port' ? 'port' : k] = { stringValue: v };
     }
-    fetch(url, { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fields }) }).catch(() => {});
+    return JSON.stringify({ fields });
   };
 
   form.addEventListener('submit', async (e) => {
@@ -326,17 +344,13 @@
     }
     // Spam checks: honeypot filled, or submitted faster than a person can type.
     if (form.website.value || Date.now() - startedAt < 3000) {
-      setStatus('success', '<h2>Inquiry sent</h2><p>Thank you. Our team will reply by email.</p>');
+      setStatus('success', '<h2>Inquiry sent</h2><p>Thank you. Our team will contact you shortly.</p>');
+      toast('success', 'Inquiry sent', 'Thank you. Our team will contact you shortly.');
       return;
     }
 
-    const endpoint = form.dataset.endpoint;
-    saveToCrm(form.dataset.crm, new FormData(form));
-    const email = form.dataset.email;
-    const phone = form.dataset.phone;
-    const wa = form.dataset.wa;
+    const { endpoint, email, phone, wa } = form.dataset;
     const data = new FormData(form);
-    data.set('started', String(startedAt));
     const fallback = [wa && `<a href="${wa}" target="_blank" rel="noopener">WhatsApp us</a>`, phone && `call ${phone}`, email && `email <a href="mailto:${email}">${email}</a>`].filter(Boolean).join(', ');
 
     if (!endpoint) {
@@ -344,35 +358,25 @@
         setStatus('error', '<p>Online inquiries are not available right now. Please try again later.</p>');
         return;
       }
-      const body = [...data].filter(([k]) => !k.startsWith('_')).map(([k, v]) => `${k.replace('_', ' ')}: ${v}`).join('\n');
+      const body = [...data].filter(([k]) => k !== 'website').map(([k, v]) => `${k.replace('_', ' ')}: ${v}`).join('\n');
       location.href = `mailto:${email}?subject=${encodeURIComponent(`Inquiry: ${data.get('product')}`)}&body=${encodeURIComponent(body)}`;
       setStatus('success', '<h2>Your email app is opening</h2><p>Your inquiry has been copied into a new email. Send it from your email app to reach our team.</p>');
       return;
     }
 
-    const buyer = String(data.get('email'));
     submit.disabled = true;
     submit.innerHTML = '<span class="spinner" aria-hidden="true"></span>Sending…';
     form.setAttribute('aria-busy', 'true');
     setStatus('', '');
     try {
-      // Netlify Forms: url-encoded POST to the site; it stores the submission and emails the team (no buyer confirmation).
-      const netlify = endpoint === 'netlify';
-      const res = netlify
-        ? await fetch('/', { method: 'POST', body: new URLSearchParams(data), headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
-        : await fetch(endpoint, { method: 'POST', body: data, headers: { Accept: 'application/json' } });
-      const body = netlify ? { confirmation: false } : await res.json().catch(() => ({}));
-      if (res.status === 400 && body.fields) {
-        body.fields.forEach((f) => { const el = form.elements[f === 'destination_port' ? 'destination_port' : f]; if (el) showError(el, messages[f] || 'Please check this field.'); });
-        setStatus('error', '<p>Please check the highlighted fields and send again.</p>');
-        return;
-      }
+      const res = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: toDoc(data), signal: AbortSignal.timeout(20000) });
       if (!res.ok) throw new Error(String(res.status));
       form.reset();
-      const esc = (t) => t.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
-      setStatus('success', `<h2>Inquiry sent</h2><p>Thank you. Our team will contact you shortly.${body.confirmation === false ? '' : ` A confirmation has been sent to <strong>${esc(buyer)}</strong>. Please check your spam folder if you do not see it.`}</p>`);
+      setStatus('success', '<h2>Inquiry sent</h2><p>Thank you. Our team will contact you shortly.</p>');
+      toast('success', 'Inquiry sent', 'Thank you. Our team will contact you shortly.');
     } catch {
       setStatus('error', `<p>Your inquiry could not be sent. Please try again${fallback ? `, or ${fallback}` : ''}.</p>`);
+      toast('error', 'Inquiry not sent', navigator.onLine ? 'Something went wrong on our side. Your details are still in the form.' : 'You appear to be offline. Your details are still in the form.');
     } finally {
       submit.disabled = false;
       submit.textContent = 'Send inquiry';

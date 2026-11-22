@@ -159,10 +159,15 @@ if (!(await page.$eval('#f-email-error', (e) => !e.hidden))) fail('form', 'inval
 async function submitWith(status, { honeypot = false } = {}) {
   await page.goto(`${base}/contact/`, { waitUntil: 'networkidle0' });
   await page.$eval('#inquiry', (f) => (f.dataset.endpoint = 'https://forms.test/submit'));
-  let posted = false;
+  let posted = false, sent = null;
   await page.setRequestInterception(true);
   const handler = (req) => {
-    if (req.url().startsWith('https://forms.test')) { posted = true; return req.respond({ status, contentType: 'application/json', headers: { 'Access-Control-Allow-Origin': '*' }, body: '{}' }); }
+    if (req.url().startsWith('https://forms.test')) {
+      const cors = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'content-type', 'Access-Control-Allow-Methods': 'POST' };
+      if (req.method() === 'OPTIONS') return req.respond({ status: 204, headers: cors }); // CORS preflight, as Firestore answers it
+      posted = true; sent = req.postData();
+      return req.respond({ status, contentType: 'application/json', headers: cors, body: '{}' });
+    }
     return req.continue();
   };
   page.on('request', handler);
@@ -171,6 +176,7 @@ async function submitWith(status, { honeypot = false } = {}) {
   await page.type('#f-email', 'buyer@testfoods.com');
   await page.select('#f-country', 'Germany');
   await page.select('#f-product', 'Dehydrated Onion');
+  await page.type('#f-port', 'Hamburg');
   if (honeypot) await page.$eval('#f-website', (e) => (e.value = 'spam'));
   await new Promise((r) => setTimeout(r, 3100));
   await page.click('button[type=submit]');
@@ -178,34 +184,49 @@ async function submitWith(status, { honeypot = false } = {}) {
   const cls = await page.$eval('.form-status', (e) => e.className);
   page.off('request', handler);
   await page.setRequestInterception(false);
-  return { cls, posted };
+  return { cls, posted, sent };
 }
 let res = await submitWith(200);
 if (!res.cls.includes('is-success') || !res.posted) fail('form', 'success state not shown on 200');
+// The form posts a Firestore document (EximFlow API): check the saved fields.
+const doc = JSON.parse(res.sent || '{}').fields || {};
+const want = { name: 'Test Buyer', company: 'Test Foods Ltd', email: 'buyer@testfoods.com', country: 'Germany', product: 'Dehydrated Onion', port: 'Hamburg' };
+for (const [k, v] of Object.entries(want)) if (doc[k]?.stringValue !== v) fail('form', `saved field ${k} = ${JSON.stringify(doc[k])}, expected "${v}"`);
+if (!doc.createdAt?.timestampValue || 'website' in doc) fail('form', 'saved document missing createdAt or includes the honeypot');
 res = await submitWith(500);
 if (!res.cls.includes('is-error')) fail('form', 'error state not shown on 500');
-res = await submitWith(200, { honeypot: true });
-if (res.posted) fail('form', 'honeypot submission was sent to endpoint');
-
-// End-to-end inquiry through the real handler (local dry run only, never against a live site)
-if (!LIVE) {
-  const { readdir } = await import('node:fs/promises');
-  const count = async () => (await readdir('qa-shots/emails').catch(() => [])).length;
-  const before = await count();
+// Toast: error toast with "Try again" keeps the form filled; retry posts again and shows the success toast.
+{
+  let status = 500, posts = 0;
   await page.goto(`${base}/contact/`, { waitUntil: 'networkidle0' });
-  await page.type('#f-name', 'E2E Buyer');
-  await page.type('#f-company', 'Test Import Co');
-  await page.type('#f-email', 'e2e@testimport.com');
-  await page.select('#f-country', 'Netherlands');
-  await page.select('#f-product', 'Dehydrated Ginger');
-  await page.type('#f-message', 'Crushed bits for tea blends');
+  await page.$eval('#inquiry', (f) => (f.dataset.endpoint = 'https://forms.test/submit'));
+  await page.setRequestInterception(true);
+  const h = (req) => {
+    if (!req.url().startsWith('https://forms.test')) return req.continue();
+    const cors = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'content-type', 'Access-Control-Allow-Methods': 'POST' };
+    if (req.method() === 'OPTIONS') return req.respond({ status: 204, headers: cors });
+    posts++;
+    return req.respond({ status, contentType: 'application/json', headers: cors, body: '{}' });
+  };
+  page.on('request', h);
+  await page.type('#f-name', 'Retry Buyer'); await page.type('#f-company', 'Retry Ltd'); await page.type('#f-email', 'retry@test.com');
+  await page.select('#f-country', 'Germany'); await page.select('#f-product', 'Moringa');
   await new Promise((r) => setTimeout(r, 3100));
   await page.click('button[type=submit]');
-  await page.waitForSelector('.form-status.is-success, .form-status.is-error', { timeout: 10000 });
-  const txt = await page.$eval('.form-status', (e) => e.className + ' ' + e.textContent);
-  if (!txt.includes('is-success') || !txt.includes('e2e@testimport.com')) fail('e2e inquiry', txt.trim());
-  if ((await count()) - before !== 2) fail('e2e inquiry', 'expected team email + confirmation email');
+  await page.waitForSelector('.toast.is-error.is-open .toast-retry:not([hidden])', { timeout: 5000 }).catch(() => fail('toast', 'error toast with Try again not shown'));
+  if ((await page.$eval('#f-name', (e) => e.value)) !== 'Retry Buyer') fail('toast', 'form was cleared after a failed send');
+  status = 200;
+  await page.click('.toast-retry');
+  await page.waitForSelector('.toast.is-success.is-open', { timeout: 5000 }).catch(() => fail('toast', 'success toast not shown after Try again'));
+  if (await page.$eval('.toast-retry', (b) => b.offsetParent !== null)) fail('toast', 'Try again shown on the success toast');
+  if (posts !== 2) fail('toast', `expected 2 posts (fail + retry), got ${posts}`);
+  if ((await page.$eval('#f-name', (e) => e.value)) !== '') fail('toast', 'form not cleared after success');
+  await page.screenshot({ path: 'qa-shots/toast-success.png' });
+  page.off('request', h);
+  await page.setRequestInterception(false);
 }
+res = await submitWith(200, { honeypot: true });
+if (res.posted) fail('form', 'honeypot submission was sent to endpoint');
 
 await browser.close();
 if (!LIVE) server.close();

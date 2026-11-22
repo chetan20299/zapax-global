@@ -5,27 +5,18 @@ Two Hostinger plan types, two zips:
 - **Single / Premium Web Hosting** (no Node.js): follow **Part 0** below, plus Parts 2, 3 and 5. For later changes, use **Update and redeploy (Single Web Hosting)**.
 - **Business / Cloud with Node.js Apps**: skip Part 0 and follow Parts 1–7.
 
-## Part 0. Single Web Hosting (static site + PHP form)
+## Part 0. Single Web Hosting (static site)
 
-No Node.js runs on the server. You build on your PC; Hostinger serves plain files, and `api/inquiry.php` handles the quote form.
+No Node.js runs on the server. You build on your PC; Hostinger serves plain files. The quote form saves each inquiry straight to the EximFlow lead dashboard (Enquiries tab) through its API, from the browser. **No email is sent**, so no mail settings are needed on Hostinger.
 
 - [ ] **0.1** In `D:\software\ZAPAX\.env` set `SITE_URL=https://zapaxenterprise.com` (already set).
-- [ ] **0.2** Run `npm run package:hostinger`. It writes `hostinger-upload-1.zip` (pages, `assets/`, `fonts/`, `.htaccess`, `api/inquiry.php`) and `hostinger-upload-2.zip`, `-3`, ... (photos, max 8 MB each). Together they are the contents of `dist/`. Nothing else from the project goes on the server.
+- [ ] **0.2** Run `npm run package:hostinger`. It writes `hostinger-upload-1.zip` (pages, `assets/`, `fonts/`, `.htaccess`) and `hostinger-upload-2.zip`, `-3`, ... (photos, max 8 MB each). Together they are the contents of `dist/`. Nothing else from the project goes on the server.
 - [ ] **0.3** hPanel → **Files → File Manager** → `public_html`. Delete Hostinger's placeholder (`default.php` / `index.php`) and any project files uploaded earlier (`src`, `public`, `server`, `server.mjs`, `package.json`, `node_modules` ...).
 - [ ] **0.4** Upload **every** `hostinger-upload-N.zip` into `public_html`. For each one: right-click → **Extract** → extract **into `public_html` itself**, wait until it finishes, then delete that zip. Skipping or interrupting one leaves pages or photos missing (404). `index.html` and `.htaccess` must sit directly in `public_html` (turn on **Show hidden files** to see `.htaccess`).
-- [ ] **0.5** Quote form secrets: in File Manager go **one level up** from `public_html` (the folder `domains/zapaxenterprise.com/`) and create `zapax-mail-config.php` there, **not** inside `public_html`:
-
-  ```php
-  <?php return [
-    'RESEND_API_KEY' => 're_your_key_here',
-    'MAIL_FROM' => 'ZAPAX ENTERPRISE <inquiries@zapaxenterprise.com>',
-    'MAIL_TO' => 'info@zapaxenterprise.com',
-  ];
-  ```
-- [ ] **0.6** hPanel → **Advanced → PHP Configuration**: PHP **8.1 or newer**, with the `curl` and `mbstring` extensions enabled (they usually are).
-- [ ] **0.7** hPanel → **Security → SSL**: the certificate must be **Active**. Leave hPanel's **Force HTTPS** off: `.htaccess` already redirects to https and to the main address, and having both on can cause redirect loops.
-- [ ] **0.8** **www**: hPanel → **Domains → DNS**: there must be a `CNAME` named `www` pointing to `zapaxenterprise.com` (or an `A` record `www` with the same IP as `@`). The SSL certificate must cover `www` too. `.htaccess` sends www visitors to `https://zapaxenterprise.com`.
-- [ ] **0.9** Test as in Part 5. To change the site later, follow **Update and redeploy** below.
+- [ ] **0.5** Quote form: `EXIMFLOW_API_KEY` must be set in `D:\software\ZAPAX\.env` (already set). It is built into the site; nothing to set on Hostinger. If the server still has an `api` folder in `public_html` or `zapax-mail-config.php` one folder above it (from the old email form), delete both.
+- [ ] **0.6** hPanel → **Security → SSL**: the certificate must be **Active**. Leave hPanel's **Force HTTPS** off: `.htaccess` already redirects to https and to the main address, and having both on can cause redirect loops.
+- [ ] **0.7** **www**: hPanel → **Domains → DNS**: there must be a `CNAME` named `www` pointing to `zapaxenterprise.com` (or an `A` record `www` with the same IP as `@`). The SSL certificate must cover `www` too. `.htaccess` sends www visitors to `https://zapaxenterprise.com`.
+- [ ] **0.8** Test as in Part 5. To change the site later, follow **Update and redeploy** below.
 
 > Not needed: an SPA "rewrite everything to index.html" rule. This is not a React/Vite single-page app: every page is its own `index.html` in its own folder, and that rule would break the 404 page.
 
@@ -44,7 +35,7 @@ Use this every time you change the live website after the first setup (Part 0). 
 | Colours, fonts, layout | `src/styles.css` |
 | Images, product PDF, fonts | `public/` |
 | Domain, phone, WhatsApp, contact email, Google Analytics | `.env` (all options are listed in `.env.example`) |
-| Resend key, sender or receiving inbox for the quote form | `zapax-mail-config.php` on Hostinger (see section D). No rebuild needed |
+| Quote form (inquiries saved to EximFlow) | `EXIMFLOW_API_KEY` in `.env`, then rebuild and deploy |
 
 ### B. Update the website (on your PC, in `D:\software\ZAPAX`)
 
@@ -59,7 +50,7 @@ File Manager's **Extract** silently drops files from large zips (missing photos 
 
 One-time setup:
 1. hPanel → **Files → FTP Accounts**: note the **FTP host**, **username**, and set a **password**.
-2. Put them in `D:\software\ZAPAX\.env` (never committed): `FTP_HOST=`, `FTP_USER=`, `FTP_PASS=`, `FTP_DIR=public_html`. If the FTP account opens directly inside `public_html`, leave `FTP_DIR=` empty. If `FTP_HOST` is an IP address, also set `FTP_TLS_INSECURE=1`.
+2. Put them in `D:\software\ZAPAX\.env` (never committed): `FTP_HOST=` (IP or name, **without** `ftp://`), `FTP_USER=`, `FTP_PASS=`, and `FTP_DIR=/domains/zapaxenterprise.com/public_html`. FTP_DIR must be this **full path**: the FTP login opens in its own `public_html`, which is **not** the website folder, so files uploaded there never appear on the site. An IP address is fine: the certificate is checked against Hostinger's `*.hstgr.io` name automatically.
 
 Every update:
 1. Edit, preview (`npm run build`, `npm run serve`).
@@ -71,7 +62,7 @@ Photo URLs carry a version (`?v=...`) that changes when a photo is regenerated, 
 ### C. Manual redeploy with zips (fallback; hPanel → Files → File Manager)
 
 - [ ] **C.1** Open `public_html`, turn on **Show hidden files**, select **everything** inside `public_html` (including `.htaccess`) and delete it.
-  This is safe because `zapax-mail-config.php` sits one folder **above** `public_html` and is not touched. Never delete that file. Clearing the folder first also removes pages you deleted from the site and old CSS/JS files.
+  Clearing the folder first also removes pages you deleted from the site and old CSS/JS files.
 - [ ] **C.2** Upload **all** new `hostinger-upload-N.zip` files into `public_html`. Wait until each upload reaches 100%.
 - [ ] **C.3** For each zip: right-click → **Extract** → extract **into `public_html` itself** (not a new subfolder) → wait until it finishes → delete the zip.
 - [ ] **C.4** Check that `index.html`, `.htaccess` and the `api` folder sit directly in `public_html`.
@@ -81,7 +72,6 @@ Photo URLs carry a version (`?v=...`) that changes when a photo is regenerated, 
 
 ### D. Changes that need no new zip
 
-- **Quote form email settings:** edit `zapax-mail-config.php` (one folder above `public_html`) in File Manager and save. It takes effect immediately.
 - **One-time settings stay as they are:** the `www` DNS record, SSL certificate and PHP version are not affected by redeploys.
 
 > Changing anything in `.env` (domain, phone, email) **does** need steps B.3 and C again: those values are written into the pages when they are built on your PC.
@@ -262,7 +252,6 @@ hPanel labels change from time to time; if a name differs slightly, pick the clo
 **In hPanel (File Manager)**
 
 5. Open `public_html` and select everything in it. Turn on **Show hidden files** so `.htaccess` is included, then delete it all.
-   - This is safe because your email settings file, `zapax-mail-config.php`, is one folder up, outside `public_html`. Don't delete that file.
    - Deleting first also removes any pages you've removed from the site and old CSS/JS files.
 6. Upload all new `hostinger-upload-N.zip` files into `public_html`. Right-click each, choose **Extract**, and extract it into `public_html` itself (not into a new folder). Wait for it to finish, then delete the zip.
 7. Check that `index.html`, `.htaccess` and the `api` folder sit directly in `public_html`, then run `node scripts/check-live.mjs` on your PC: every file must be OK.

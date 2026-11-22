@@ -1,6 +1,6 @@
 // npm run deploy: build, then upload ONLY new or changed files to Hostinger over FTPS, then verify the live site.
 // Replaces zips + File Manager "Extract", which silently dropped files. Needs in .env (see .env.example):
-//   FTP_HOST, FTP_USER, FTP_PASS, FTP_DIR (folder of the site on the FTP account, usually public_html), FTP_TLS_INSECURE=1 if FTP_HOST is an IP
+//   FTP_HOST, FTP_USER, FTP_PASS, FTP_DIR (folder of the site on the FTP account, usually public_html), FTP_HOST may be an IP (TLS is then verified against Hostinger's *.hstgr.io certificate)
 // .deploy-state.json remembers what is on the server (path -> sha1), so unchanged photos are never uploaded again.
 // Any file the live site does not serve (404) is uploaded again, up to 3 rounds.
 //   node scripts/deploy.mjs --dry   show what would be uploaded, upload nothing
@@ -10,11 +10,15 @@ import { existsSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'no
 import { tmpdir } from 'node:os';
 import { join, relative } from 'node:path';
 
-const { FTP_HOST, FTP_USER, FTP_PASS, FTP_DIR = '', SITE_URL } = process.env;
+const { FTP_USER, FTP_PASS, SITE_URL } = process.env;
+const FTP_HOST = (process.env.FTP_HOST || '').trim().replace(/^s?ftps?:\/\//i, '').replace(/\/+$/, ''); // accept "ftp://host/" too
+// FTP_DIR starting with "/" is an absolute server path (e.g. /domains/zapaxenterprise.com/public_html); otherwise relative to the FTP login folder.
+const FTP_ABS = (process.env.FTP_DIR || '').trim().startsWith('/');
+const FTP_DIR = (process.env.FTP_DIR || '').trim().replace(/^\/+|\/+$/g, '');
 const DRY = process.argv.includes('--dry');
 if (!DRY && !(FTP_HOST && FTP_USER && FTP_PASS)) throw new Error('Set FTP_HOST, FTP_USER, FTP_PASS and FTP_DIR in .env (hPanel → Files → FTP Accounts).');
 
-execFileSync(process.execPath, ['build.mjs', '--production'], { stdio: 'inherit', env: { ...process.env, DEPLOY_TARGET: 'cpanel' } });
+execFileSync(process.execPath, ['build.mjs', '--production'], { stdio: 'inherit' });
 
 const STATE = '.deploy-state.json';
 const state = existsSync(STATE) ? JSON.parse(readFileSync(STATE, 'utf8')) : {};
@@ -42,9 +46,12 @@ const missingLive = async (paths) => {
 const q = (s) => `"${s.replace(/[\\"]/g, '\\$&')}"`;
 const upload = (paths) => {
   const cfg = join(tmpdir(), `zapax-ftp-${process.pid}.cfg`); // password goes in a temp file, not on the command line
-  const remote = (p) => `ftp://${FTP_HOST}/${[FTP_DIR, p].filter(Boolean).join('/').split('/').map(encodeURIComponent).join('/')}`;
+  // Hostinger's FTP certificate is *.hstgr.io, so an IP or ftp.<domain> host fails the name check. Connect to FTP_HOST
+  // but verify the certificate as ftp.hstgr.io: full TLS verification, no "insecure" needed.
+  const tlsName = process.env.FTP_TLS_NAME || 'ftp.hstgr.io';
+  const remote = (p) => `ftp://${tlsName}/${FTP_ABS ? '%2F' : ''}${[FTP_DIR, p].filter(Boolean).join('/').split('/').map(encodeURIComponent).join('/')}`;
   writeFileSync(cfg, [`user = ${q(`${FTP_USER}:${FTP_PASS}`)}`, 'ssl-reqd', 'ftp-create-dirs', 'parallel', 'parallel-max = 4', 'retry = 3', 'silent', 'show-error',
-    ...(process.env.FTP_TLS_INSECURE === '1' ? ['insecure'] : []), // still encrypted; only for an FTP_HOST given as an IP address
+    `connect-to = ${q(`${tlsName}:21:${FTP_HOST}:21`)}`,
     ...(process.platform === 'win32' ? ['ssl-no-revoke'] : []),
     `write-out = ${q('%{exitcode} %{url}\\n')}`, ...paths.flatMap((p) => [`upload-file = ${q(join('dist', p))}`, `url = ${q(remote(p))}`])].join('\n'));
   const curl = process.platform === 'win32' ? `${process.env.SystemRoot}\\System32\\curl.exe` : 'curl';

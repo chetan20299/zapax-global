@@ -20,7 +20,7 @@ npm run serve               # → http://localhost:8080 (inquiry emails saved to
 |---------|--------------|
 | `npm run build` / `build:production` | Build the site into `dist/` (production fails without domain + inquiry route) |
 | `npm run qa` | Browser QA: all pages × 4 screen sizes, links, SEO, accessibility basics, navigation, loader, WhatsApp, back-to-top, form states, end-to-end inquiry (dry run) |
-| `npm test` | Inquiry backend tests (validation, spam, emails, failures) with a mocked email API |
+| `npm run qa` | Also tests the quote form: validation, the saved EximFlow document, error toast and "Try again" |
 | `npm run colors` | Palette audit: fails on any colour other than indigo, turmeric or white (text files and PNG pixels) |
 | `npm run verify -- https://domain` | Post-deployment checks against the live domain (HTTPS, redirects, SEO, headers) plus the full QA |
 | `npm run assets` | Regenerate share image, icons and product overview PDF |

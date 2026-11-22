@@ -3,7 +3,6 @@ import { mkdir, writeFile, readFile, rm, cp } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { transform } from 'esbuild';
 import { site, productGroups, exportPages, fullAddress, telHref, waHref } from './src/site.mjs';
-import { buildTemplates } from './server/email-templates.mjs';
 import { pages } from './src/pages.mjs';
 import { icon, patternTile, patternTileInk } from './src/art.mjs';
 import { lockup, symbol, modes } from './src/brand.mjs';
@@ -221,7 +220,7 @@ const PRODUCTION = process.argv.includes('--production');
 if (PRODUCTION) {
   const errors = [];
   if (new URL(site.domain).protocol !== 'https:') errors.push('SITE_URL is not set (the final https:// domain). On Netlify the site URL is used automatically.');
-  if (!site.formEndpoint && !site.email) errors.push('Set FORM_ENDPOINT and/or CONTACT_EMAIL so inquiries can be delivered.');
+  if (!site.formEndpoint && !site.email) errors.push('Set EXIMFLOW_API_KEY and/or CONTACT_EMAIL so inquiries can be delivered.');
   if (errors.length) { console.error(`✖ Production build stopped:\n- ${errors.join('\n- ')}\nSee .env.example and DEPLOYMENT.md.`); process.exit(1); }
 }
 const host = new URL(site.domain).host;
@@ -240,17 +239,6 @@ for (const page of pages) {
   await writeFile(file, layout(page, assets));
 }
 
-// Email templates for the inquiry backend (shared by Netlify, Cloudflare and PHP handlers)
-await mkdir('server/generated', { recursive: true });
-const emailTemplates = JSON.stringify(buildTemplates());
-await writeFile('server/generated/email-templates.json', emailTemplates);
-// cPanel/Apache: ship the PHP handler with the site (DEPLOY_TARGET=cpanel)
-if (process.env.DEPLOY_TARGET === 'cpanel') {
-  await mkdir(`${OUT}/api`, { recursive: true });
-  await cp('server/php/inquiry.php', `${OUT}/api/inquiry.php`);
-  await writeFile(`${OUT}/api/email-templates.json`, emailTemplates);
-}
-
 const indexable = pages.filter((p) => !p.noindex);
 // Image sitemap entries (Google Images): each product/packaging photo on the page, at its largest JPEG size.
 const photoMax = Object.fromEntries(Object.entries(JSON.parse(await readFile('src/photos.json', 'utf8'))).map(([id, v]) => [id, v.w]));
@@ -267,7 +255,7 @@ const gaHosts = site.gaMeasurementId ? ' https://www.googletagmanager.com https:
 const csp = [
   "default-src 'self'", "img-src 'self' data:", "style-src 'self'", "font-src 'self'",
   `script-src 'self' '${loaderHash}'${site.gaMeasurementId ? " 'unsafe-inline' https://www.googletagmanager.com" : ''}`,
-  `connect-src 'self'${formOrigin ? ` ${formOrigin}` : ''}${site.crmEndpoint ? ' https://firestore.googleapis.com' : ''}${gaHosts}`,
+  `connect-src 'self'${formOrigin ? ` ${formOrigin}` : ''}${gaHosts}`,
   `form-action 'self'${formOrigin ? ` ${formOrigin}` : ''} mailto:`,
   "frame-ancestors 'none'", "base-uri 'self'", "object-src 'none'",
 ].join('; ');
@@ -293,9 +281,7 @@ ErrorDocument 404 /404.html
   # 2. Force the canonical host (${host})
   RewriteCond %{HTTP_HOST} ^${altHost.replace(/\./g, '\\.')}$ [NC]
   RewriteRule ^ https://${host}%{REQUEST_URI} [L,R=301]
-  # 3. Inquiry form backend (PHP handler, DEPLOY_TARGET=cpanel)
-  RewriteRule ^api/inquiry$ api/inquiry.php [L]
-  # 4. Retired URLs from the previous site
+  # 3. Retired URLs from the previous site
   RewriteRule ^about\\.html$ /about/ [L,R=301]
   RewriteRule ^products/fresh-(fruits|vegetables)/?$ /products/ [L,R=301]
   RewriteRule ^ZAPAX-product-overview\\.pdf$ /ZAPAX-ENTERPRISE-product-overview.pdf [L,R=301]
@@ -323,9 +309,6 @@ ErrorDocument 404 /404.html
   AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript image/svg+xml application/xml text/plain
 </IfModule>
 
-<FilesMatch "^email-templates\\.json$">
-  Require all denied
-</FilesMatch>
 
 AddType font/woff2 .woff2
 AddType image/avif .avif
@@ -353,5 +336,4 @@ await writeFile(
 const missing = [['EMAIL_DOMAIN or CONTACT_EMAIL', 'email']].filter(([, k]) => !site[k]).map(([e]) => e);
 console.log(`Built ${pages.length} pages for ${site.domain} → ${OUT}/${PRODUCTION ? ' (production)' : ''}`);
 if (!process.env.SITE_URL) console.warn(`⚠ SITE_URL not set: built for ${site.domain} (set your own domain when you have one)`);
-if (site.formEndpoint === 'netlify') console.warn('⚠ Inquiry form uses Netlify Forms (enable form detection + email notification in the Netlify dashboard). Set RESEND_API_KEY, MAIL_FROM, MAIL_TO for buyer confirmations.');
 if (missing.length) console.warn(`⚠ Not configured: ${missing.join(', ')} (see .env.example and CONTENT-REVIEW.md)`);

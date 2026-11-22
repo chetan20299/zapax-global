@@ -1,18 +1,16 @@
-// Production Node server (Hostinger Node.js app): serves dist/ with clean URLs, security headers and POST /api/inquiry.
+// Production Node server (Hostinger Node.js app): serves dist/ with clean URLs, security headers. The quote form saves straight to the EximFlow API from the browser.
 // Start: node server.mjs (or npm start). It rebuilds dist/ from the env vars first, so changing SITE_URL etc. in hPanel
-// only needs a restart. Env: PORT, SITE_URL, EMAIL_DOMAIN, CONTACT_EMAIL, RESEND_API_KEY, MAIL_FROM, MAIL_TO (see .env.example).
+// only needs a restart. Env: PORT, SITE_URL, EMAIL_DOMAIN, CONTACT_EMAIL, EXIMFLOW_API_KEY (see .env.example).
 import { execFileSync } from 'node:child_process';
 import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
 import { extname, join, resolve, sep } from 'node:path';
-import { Readable } from 'node:stream';
-import { handleInquiry } from './server/inquiry-core.mjs';
 
 process.chdir(import.meta.dirname); // Hostinger may start the app from another working directory
 if (process.env.SKIP_BUILD !== '1') execFileSync(process.execPath, ['--env-file-if-exists=.env', 'build.mjs', '--production'], { stdio: 'inherit' });
 const root = resolve('dist');
-const templates = JSON.parse(await readFile('server/generated/email-templates.json', 'utf8'));
-const canonical = new URL(templates.allowedOrigin); // = SITE_URL baked in at build time
+const { site } = await import('./src/site.mjs');
+const canonical = new URL(site.domain); // = SITE_URL
 const altHost = canonical.host.startsWith('www.') ? canonical.host.slice(4) : `www.${canonical.host}`;
 const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.svg': 'image/svg+xml', '.png': 'image/png', '.webp': 'image/webp', '.woff2': 'font/woff2', '.xml': 'application/xml', '.txt': 'text/plain', '.pdf': 'application/pdf', '.ico': 'image/x-icon' };
 const retired = { '/about.html': '/about/', '/ZAPAX-product-overview.pdf': '/ZAPAX-ENTERPRISE-product-overview.pdf' };
@@ -27,11 +25,6 @@ createServer(async (req, res) => {
   try {
     const url = new URL(req.url, canonical);
     if (req.headers.host === altHost) return send(res, 301, { Location: `${canonical.origin}${url.pathname}${url.search}` });
-    if (url.pathname === '/api/inquiry') {
-      const request = new Request(url, { method: req.method, headers: req.headers, body: req.method === 'POST' ? Readable.toWeb(req) : undefined, duplex: 'half' });
-      const r = await handleInquiry(request, process.env, templates);
-      return send(res, r.status, Object.fromEntries(r.headers), await r.text());
-    }
     const path = decodeURIComponent(url.pathname);
     if (retired[path] || /^\/products\/fresh-(fruits|vegetables)\/?$/.test(path)) return send(res, 301, { Location: retired[path] || '/products/' });
     let file = resolve(join(root, path));

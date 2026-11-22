@@ -632,7 +632,6 @@ const field = (name, label, input, { required, hint } = {}) => `
   ${hint ? `<p class="hint" id="f-${name}-hint">${hint}</p>` : '<p class="hint" aria-hidden="true"></p>'}
   <p class="error" id="f-${name}-error" hidden></p>
 </div>`;
-const netlifyForm = site.formEndpoint === 'netlify';
 const describedBy = (name, hint) => `aria-describedby="${hint ? `f-${name}-hint ` : ''}f-${name}-error"`;
 
 const contactPage = {
@@ -646,7 +645,7 @@ const contactPage = {
 ${hero({ h1: 'Request a quote', lead: 'Tell us what you need. We read every inquiry and reply with available options, a clear offer or the questions we need answered to quote accurately.' })}
 <section class="section">
   <div class="wrap contact-grid">
-    <form class="inquiry" id="inquiry" action="${netlifyForm ? '/contact/' : site.formEndpoint || '#'}" method="post" novalidate${netlifyForm ? ' name="inquiry" data-netlify="true" netlify-honeypot="website"' : ''} data-endpoint="${esc(site.formEndpoint)}" data-crm="${esc(site.crmEndpoint)}" data-email="${esc(site.email)}" data-phone="${esc(site.phone)}" data-wa="${esc(waHref())}">
+    <form class="inquiry" id="inquiry" action="#" method="post" novalidate data-endpoint="${esc(site.formEndpoint)}" data-email="${esc(site.email)}" data-phone="${esc(site.phone)}" data-wa="${esc(waHref())}">
       <div class="form-grid">
         ${field('name', 'Full name', `<input id="f-name" name="name" type="text" autocomplete="name" required maxlength="100" ${describedBy('name')}>`, { required: true })}
         ${field('company', 'Company name', `<input id="f-company" name="company" type="text" autocomplete="organization" required maxlength="150" ${describedBy('company')}>`, { required: true })}
@@ -659,7 +658,6 @@ ${hero({ h1: 'Request a quote', lead: 'Tell us what you need. We read every inqu
         <div class="span-2">${field('message', 'Message or specifications', `<textarea id="f-message" name="message" rows="6" maxlength="4000" ${describedBy('message', 1)}></textarea>`, { hint: 'Form or cut, mesh size, packaging, documents and target shipment date.' })}</div>
       </div>
       <div class="hp" aria-hidden="true"><label for="f-website">Leave this field empty</label><input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
-      <input type="hidden" name="_subject" value="New ZAPAX ENTERPRISE website inquiry">${netlifyForm ? '\n      <input type="hidden" name="form-name" value="inquiry">' : ''}
       <p class="form-legal">Fields marked <span class="req">*</span> are required. We use your details only to respond to your inquiry. See our <a href="/privacy/">privacy policy</a>.</p>
       <button class="btn btn-primary btn-lg" type="submit">Send inquiry</button>
       <div class="form-status" role="status" aria-live="polite" tabindex="-1"></div>

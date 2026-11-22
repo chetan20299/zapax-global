@@ -13,10 +13,9 @@ const build = (env, args = []) => execFileSync(process.execPath, ['--env-file-if
 let stage;
 
 if (NODE) {
-  // Sanity check: the site must build and the form tests must pass before we ship it.
+  // Sanity check: the site must build before we ship it.
   build({ SITE_URL: process.env.SITE_URL || 'https://example.com' });
-  execFileSync(process.execPath, ['scripts/test-inquiry.mjs'], { stdio: 'inherit' });
-  const INCLUDE = ['server.mjs', 'build.mjs', 'src', 'public', 'server/inquiry-core.mjs', 'server/email-templates.mjs', '.env.example'];
+  const INCLUDE = ['server.mjs', 'build.mjs', 'src', 'public', '.env.example'];
   const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
   const esbuild = JSON.parse(readFileSync('node_modules/esbuild/package.json', 'utf8')).version;
   stage = mkdtempSync(join(tmpdir(), 'zapax-hostinger-'));
@@ -28,8 +27,8 @@ if (NODE) {
     engines: pkg.engines,
   }, null, 2) + '\n');
 } else {
-  // Production build stops if SITE_URL (set in .env) is missing. DEPLOY_TARGET=cpanel adds api/inquiry.php.
-  build({ DEPLOY_TARGET: 'cpanel' }, ['--production']);
+  // Production build stops if SITE_URL (set in .env) is missing. 
+  build({}, ['--production']);
   stage = mkdtempSync(join(tmpdir(), 'zapax-hostinger-'));
   cpSync('dist', stage, { recursive: true, filter: (src) => !/[\\/]_(headers|redirects)$/.test(src) }); // Netlify-only files
 }

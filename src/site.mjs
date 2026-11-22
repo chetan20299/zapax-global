@@ -34,13 +34,9 @@ export const site = {
   emails: [['Export inquiries', mailbox('exports'), 'Exports'], ['Sales', mailbox('sales'), 'Sales'], ['General information', mailbox('info'), 'Info'], ['Directors', mailbox('directors'), 'Directors']].filter(([, e]) => e),
   phone: env('CONTACT_PHONE', '+91 99980 50731'),
   whatsapp: env('WHATSAPP_NUMBER', '919998050731').replace(/\D/g, ''),
-  // Built-in inquiry backend (server/): emails the team and sends the buyer a confirmation. Override with any form service URL.
-  // 'netlify' = Netlify Forms (submissions in the Netlify dashboard + email notifications), used automatically on Netlify
-  // until RESEND_API_KEY is set. ponytail: no buyer auto-confirmation in that mode; set the Resend variables to enable it.
-  formEndpoint: env('FORM_ENDPOINT', onNetlify && !process.env.RESEND_API_KEY ? 'netlify' : '/api/inquiry'),
-  // EximFlow lead dashboard: every inquiry is also saved there (Firestore REST, create-only, no login).
-  // EXIMFLOW_API_KEY = the Firebase web API key of the EximFlow project (public by design). Empty = off.
-  crmEndpoint: env('EXIMFLOW_API_KEY')
+  // Quote form: every inquiry is saved to the EximFlow lead dashboard (Firestore REST, create-only, no login). No email is sent.
+  // EXIMFLOW_API_KEY = the Firebase web API key of the EximFlow project (public by design). Empty = the form opens the visitor's email app.
+  formEndpoint: env('EXIMFLOW_API_KEY')
     ? `https://firestore.googleapis.com/v1/projects/${env('EXIMFLOW_PROJECT', 'eximflow-73416')}/databases/(default)/documents/tenants/${env('EXIMFLOW_TENANT', 'tarang')}/inquiries?key=${env('EXIMFLOW_API_KEY')}`
     : '',
   gaMeasurementId: env('GA_MEASUREMENT_ID'),
