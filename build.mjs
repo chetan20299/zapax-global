@@ -267,7 +267,7 @@ const gaHosts = site.gaMeasurementId ? ' https://www.googletagmanager.com https:
 const csp = [
   "default-src 'self'", "img-src 'self' data:", "style-src 'self'", "font-src 'self'",
   `script-src 'self' '${loaderHash}'${site.gaMeasurementId ? " 'unsafe-inline' https://www.googletagmanager.com" : ''}`,
-  `connect-src 'self'${formOrigin ? ` ${formOrigin}` : ''}${gaHosts}`,
+  `connect-src 'self'${formOrigin ? ` ${formOrigin}` : ''}${site.crmEndpoint ? ' https://firestore.googleapis.com' : ''}${gaHosts}`,
   `form-action 'self'${formOrigin ? ` ${formOrigin}` : ''} mailto:`,
   "frame-ancestors 'none'", "base-uri 'self'", "object-src 'none'",
 ].join('; ');

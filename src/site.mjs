@@ -38,6 +38,11 @@ export const site = {
   // 'netlify' = Netlify Forms (submissions in the Netlify dashboard + email notifications), used automatically on Netlify
   // until RESEND_API_KEY is set. ponytail: no buyer auto-confirmation in that mode; set the Resend variables to enable it.
   formEndpoint: env('FORM_ENDPOINT', onNetlify && !process.env.RESEND_API_KEY ? 'netlify' : '/api/inquiry'),
+  // EximFlow lead dashboard: every inquiry is also saved there (Firestore REST, create-only, no login).
+  // EXIMFLOW_API_KEY = the Firebase web API key of the EximFlow project (public by design). Empty = off.
+  crmEndpoint: env('EXIMFLOW_API_KEY')
+    ? `https://firestore.googleapis.com/v1/projects/${env('EXIMFLOW_PROJECT', 'eximflow-73416')}/databases/(default)/documents/tenants/${env('EXIMFLOW_TENANT', 'tarang')}/inquiries?key=${env('EXIMFLOW_API_KEY')}`
+    : '',
   gaMeasurementId: env('GA_MEASUREMENT_ID'),
   googleSiteVerification: env('GOOGLE_SITE_VERIFICATION'),
   founders: ['Chetan Punani', 'Keval Chauhan'],

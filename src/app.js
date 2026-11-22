@@ -303,6 +303,19 @@
     if (type && focus) status.focus();
   };
 
+  // EximFlow dashboard: save a copy of the inquiry (Firestore REST, create-only). Never blocks or breaks the
+  // normal email flow; keepalive lets it finish even if the page opens the email app or navigates away.
+  const CRM_FIELDS = { name: 150, company: 150, email: 150, country: 80, phone: 30, product: 120, quantity: 100, destination_port: 100, message: 4000 };
+  const saveToCrm = (url, data) => {
+    if (!url) return;
+    const fields = { createdAt: { timestampValue: new Date().toISOString() }, source: { stringValue: location.hostname.slice(0, 100) }, page: { stringValue: location.pathname.slice(0, 300) } };
+    for (const [k, max] of Object.entries(CRM_FIELDS)) {
+      const v = String(data.get(k) ?? '').trim().slice(0, max);
+      if (v) fields[k === 'destination_port' ? 'port' : k] = { stringValue: v };
+    }
+    fetch(url, { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fields }) }).catch(() => {});
+  };
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const invalid = fields.filter((el) => !validate(el));
@@ -318,6 +331,7 @@
     }
 
     const endpoint = form.dataset.endpoint;
+    saveToCrm(form.dataset.crm, new FormData(form));
     const email = form.dataset.email;
     const phone = form.dataset.phone;
     const wa = form.dataset.wa;

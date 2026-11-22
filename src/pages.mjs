@@ -646,7 +646,7 @@ const contactPage = {
 ${hero({ h1: 'Request a quote', lead: 'Tell us what you need. We read every inquiry and reply with available options, a clear offer or the questions we need answered to quote accurately.' })}
 <section class="section">
   <div class="wrap contact-grid">
-    <form class="inquiry" id="inquiry" action="${netlifyForm ? '/contact/' : site.formEndpoint || '#'}" method="post" novalidate${netlifyForm ? ' name="inquiry" data-netlify="true" netlify-honeypot="website"' : ''} data-endpoint="${esc(site.formEndpoint)}" data-email="${esc(site.email)}" data-phone="${esc(site.phone)}" data-wa="${esc(waHref())}">
+    <form class="inquiry" id="inquiry" action="${netlifyForm ? '/contact/' : site.formEndpoint || '#'}" method="post" novalidate${netlifyForm ? ' name="inquiry" data-netlify="true" netlify-honeypot="website"' : ''} data-endpoint="${esc(site.formEndpoint)}" data-crm="${esc(site.crmEndpoint)}" data-email="${esc(site.email)}" data-phone="${esc(site.phone)}" data-wa="${esc(waHref())}">
       <div class="form-grid">
         ${field('name', 'Full name', `<input id="f-name" name="name" type="text" autocomplete="name" required maxlength="100" ${describedBy('name')}>`, { required: true })}
         ${field('company', 'Company name', `<input id="f-company" name="company" type="text" autocomplete="organization" required maxlength="150" ${describedBy('company')}>`, { required: true })}
