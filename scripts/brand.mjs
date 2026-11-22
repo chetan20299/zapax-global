@@ -82,14 +82,14 @@ const tagSvg = taglinePath(slogan, 10);
 
 let qr = '';
 if (siteUrlSet) {
-  const q = QRCode.create(process.env.SITE_URL.trim(), { errorCorrectionLevel: 'M' });
+  const q = QRCode.create(new URL(process.env.SITE_URL.trim()).href, { errorCorrectionLevel: 'M' });
   const size = q.modules.size, data = q.modules.data;
   let d = '';
   for (let r = 0; r < size; r++) for (let c = 0; c < size; c++) if (data[r * size + c]) d += `M${c} ${r}h1v1h-1z`;
   qr = { size, d };
 }
 const qrBlock = (x, y, s, dark) => {
-  const pad = 1.6;
+  const pad = 2; // ≥ 3 modules of quiet zone on the dark card
   const frame = `<rect x="${x - pad}" y="${y - pad}" width="${s + 2 * pad}" height="${s + 2 * pad}" rx="1.4" fill="#FFFFFF"/>`;
   if (!qr) return `${frame}<rect x="${x}" y="${y}" width="${s}" height="${s}" fill="none" stroke="${colors.indigo}" stroke-width="0.25" stroke-dasharray="0.8 0.6"/><text x="${x + s / 2}" y="${y + s / 2 - 0.6}" font-family="Archivo" font-size="2.1" font-weight="600" fill="${colors.indigo}" text-anchor="middle">[QR code]</text><text x="${x + s / 2}" y="${y + s / 2 + 2.2}" font-family="Archivo" font-size="1.6" fill="${colors.indigo}" text-anchor="middle">set SITE_URL</text>`;
   return `${frame}<g transform="translate(${x} ${y}) scale(${s / qr.size})"><path d="${qr.d}" fill="${colors.indigo}"/></g>`;
@@ -112,38 +112,55 @@ ${route(sx + s + 0.8, dotY, colors.turmeric)}
 <g transform="translate(${sx} ${33 + wm.height * wmS + 2.4}) scale(${3.1 / 10})" fill="${dark ? colors.turmeric : colors.indigo}">${tagSvg.body}</g>`;
 }
 
+// Back grid (mm, bleed-inclusive coords; trim starts at 3): left column x=10, value column x=23,
+// right column x=69–86 (QR, caption and wordmark share it). Name cap-height top = QR top; last address
+// baseline = wordmark baseline. All text is Archivo; sizes in mm (2.3 mm ≈ 6.5 pt).
+const CARD_EMAIL = `directors@${site.emailDomain || 'zapaxenterprise.com'}`;
 function back(theme, person) {
   const dark = theme === 'dark';
   const bg = dark ? colors.indigo : colors.white;
   const text = dark ? colors.white : colors.indigo;
-  const muted = dark ? `fill="${colors.white}" fill-opacity="0.78"` : `fill="${colors.indigo}" fill-opacity="0.78"`;
-  const label = colors.turmeric;
-  const labelAttr = dark ? `fill="${colors.turmeric}"` : `fill="${colors.indigo}"`;
-  const x = 3 + 7, lx = x, vx = x + 13;
-  const first = person.name.split(' ')[0].toLowerCase();
+  const muted = `fill="${text}" fill-opacity="0.72"`;
+  const accent = dark ? colors.turmeric : colors.indigo;
+  const T = (x, y, size, weight, attrs, body, extra = '') => `<text x="${x}" y="${y}" font-family="Archivo" font-size="${size}" font-weight="${weight}" ${attrs}${extra}>${body}</text>`;
+  const L = 10, V = 23, QX = 69, QS = 17, R = QX + QS;
+  const nameY = 15.4, capTop = nameY - 4.2 * 0.72;
   const rows = [
-    ['Phone', `${site.phone} (WhatsApp)`],
-    ['Email', person.email || `${first}@[company-domain]`],
-    ['Web', domain || '[website domain]'],
-    ['Address', site.addressLines[0]],
-    ['', site.addressLines[1]],
-    ['', site.addressLines[2]],
+    ['PHONE', `${site.phone}<tspan ${muted} font-size="1.9" dx="1.4">WhatsApp</tspan>`, 0],
+    ['EMAIL', CARD_EMAIL, 3.7],
+    ['WEBSITE', domain ? `www.${domain.replace(/^www./, '')}` : '[website domain]', 3.7],
+    ['ADDRESS', site.addressLines[0], 3.7],
+    ['', site.addressLines[1], 3.0],
+    ['', site.addressLines[2], 3.0],
   ];
-  const rowY = 27.2, gap = 3.55;
+  let y = 28.2;
+  const rowSvg = rows.map(([l, v, g], i) => { y += g; return T(L, y, 1.9, 600, `fill="${accent}"`, l, ' letter-spacing="0.14"') + T(V, y, 2.2, 400, `fill="${text}"`, v, ` id="contact-${i}"`); }).join('\n');
+  const lastY = y;
+  const wmH = (wm.height * QS) / wm.width;
+  const band = H - BLEED - 3.2;
   return `<rect width="${W}" height="${H}" fill="${bg}"/>
-<rect x="0" y="${H - BLEED - 3.2}" width="${W}" height="${BLEED + 3.2}" fill="${dark ? colors.turmeric : colors.indigo}"/>
-<rect x="0" y="${H - BLEED - 3.2}" width="${W * 0.18}" height="${BLEED + 3.2}" fill="${dark ? colors.white : colors.turmeric}"/>
-<text id="name" x="${x}" y="15" font-family="Archivo" font-weight="700" font-size="3.9" fill="${text}">${person.name}</text>
-<text id="designation" x="${x}" y="19.4" font-family="Archivo" font-weight="500" font-size="2.45" ${muted}>${person.role} · ${site.legalName}</text>
-<rect x="${x}" y="21.6" width="8" height="0.5" fill="${colors.turmeric}"/>
-${rows.map(([l, v], i) => `<text x="${lx}" y="${rowY + i * gap}" font-family="Archivo" font-weight="600" font-size="2.05" ${labelAttr}>${l}</text><text id="contact-${i}" x="${vx}" y="${rowY + i * gap}" font-family="Archivo" font-weight="400" font-size="2.45" fill="${text}">${v}</text>`).join('\n')}
-${qrBlock(W - 3 - 7 - 15, 11, 15, dark)}
-<text x="${W - 3 - 7 - 7.5}" y="31.4" font-family="Archivo" font-weight="500" font-size="1.85" ${muted} text-anchor="middle">Scan to visit</text>
-<g transform="translate(${W - 3 - 7 - 22} ${H - BLEED - 3.2 - 7.6}) scale(${22 / wm.width})" fill="${dark ? '#FFFFFF' : colors.indigo}">${inner((dark ? wmWhite : wm).svg)}</g>`;
+<rect x="0" y="${band}" width="${W}" height="${BLEED + 3.2}" fill="${dark ? colors.turmeric : colors.indigo}"/>
+<rect x="0" y="${band}" width="${V - 1.5}" height="${BLEED + 3.2}" fill="${dark ? colors.white : colors.turmeric}"/>
+${T(L, nameY, 4.2, 700, `fill="${text}"`, person.name, ' id="name" letter-spacing="-0.04"')}
+${T(L, nameY + 4.3, 1.9, 600, `fill="${accent}"`, person.role.toUpperCase(), ' id="designation" letter-spacing="0.14"')}
+${T(L, nameY + 7.4, 2.05, 400, muted, site.legalName, ' letter-spacing="0.06"')}
+<rect x="${L}" y="${nameY + 9.45}" width="8" height="0.48" fill="${colors.turmeric}"/>
+${rowSvg}
+${qrBlock(QX, capTop, QS, dark)}
+${T(QX + QS / 2, capTop + QS + 4.6, 1.7, 600, muted, 'SCAN TO VISIT', ' text-anchor="middle" letter-spacing="0.14"')}
+<g transform="translate(${QX} ${lastY - wmH}) scale(${QS / wm.width})" fill="${dark ? '#FFFFFF' : colors.indigo}">${inner((dark ? wmWhite : wm).svg)}</g>`;
 }
 
 const cardSvg = (body, { editable } = {}) =>
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}mm" height="${H}mm">${editable ? `<style>@font-face{font-family:Archivo;src:url(../fonts/Archivo-Variable.ttf)}</style>` : ''}${body}</svg>`;
+
+// Crop-mark sheet: card (with bleed) at offset M; 0.25 mm marks start 2 mm outside the trim, outside the bleed.
+const M = 10, CW = W + 2 * M, CH = H + 2 * M;
+const cropSheet = (body) => {
+  const t = [M + BLEED, M + W - BLEED], u = [M + BLEED, M + H - BLEED], k = `stroke="#000" stroke-width="0.25"`;
+  const marks = t.flatMap((x) => [`<path d="M${x} 0V${M - 2}M${x} ${CH - M + 2}V${CH}" ${k}/>`]).concat(u.map((y) => `<path d="M0 ${y}H${M - 2}M${CW - M + 2} ${y}H${CW}" ${k}/>`)).join('');
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${CW} ${CH}" width="${CW}mm" height="${CH}mm"><rect width="${CW}" height="${CH}" fill="#fff"/><svg x="${M}" y="${M}" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${body}</svg>${marks}</svg>`;
+};
 
 // Guides overlay (not printed): trim and safe area
 const guides = `<rect x="${BLEED}" y="${BLEED}" width="${W - 2 * BLEED}" height="${H - 2 * BLEED}" fill="none" stroke="#E0A526" stroke-width="0.25"/><rect x="${BLEED + 4}" y="${BLEED + 4}" width="${W - 2 * BLEED - 8}" height="${H - 2 * BLEED - 8}" fill="none" stroke="#2E3277" stroke-width="0.2" stroke-dasharray="1 0.6"/>`;
@@ -170,6 +187,10 @@ for (const theme of ['light', 'dark']) {
     await page.setContent(`<style>${FONTS}@page{size:${W}mm ${H}mm;margin:0}html,body{margin:0}svg{display:block;width:${W}mm;height:${H}mm;break-after:page}</style>${cardSvg(f)}${cardSvg(bk)}`);
     await page.evaluate(() => document.fonts.ready);
     await page.pdf({ path: `${OUT}/business-card/business-card-print-${person.slug}-${theme}.pdf`, width: `${W}mm`, height: `${H}mm`, printBackground: true });
+    // Same artwork centred on a larger page with crop marks at the 90 × 54 mm trim, for printers that ask for marks.
+    await page.setContent(`<style>${FONTS}@page{size:${CW}mm ${CH}mm;margin:0}html,body{margin:0}svg{display:block;break-after:page}</style>${cropSheet(f)}${cropSheet(bk)}`);
+    await page.evaluate(() => document.fonts.ready);
+    await page.pdf({ path: `${OUT}/business-card/business-card-print-${person.slug}-${theme}-cropmarks.pdf`, width: `${CW}mm`, height: `${CH}mm`, printBackground: true });
   }
 }
 // Proof with trim (magenta) and safe-area (cyan) guides
@@ -184,6 +205,21 @@ await renderCard(back('light', site.people[0]), `${OUT}/business-card/print-guid
   await page.setContent(`<style>${FONTS}html,body{margin:0}svg{display:block;width:2640px;height:1680px}</style>${sheet}`);
   await page.evaluate(() => document.fonts.ready);
   await page.screenshot({ path: `${OUT}/business-card/business-card-presentation.png` });
+  // One sheet per founder: light front + back (top), dark front + back (bottom)
+  for (const person of site.people) {
+    const one = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 140"><rect width="220" height="140" fill="#FFFFFF"/><rect width="220" height="140" fill="#2E3277" fill-opacity=".07"/>${side(front('light'), 14, 12)}${side(back('light', person), 116, 12)}${side(front('dark'), 14, 76)}${side(back('dark', person), 116, 76)}</svg>`;
+    await page.setContent(`<style>${FONTS}html,body{margin:0}svg{display:block;width:2640px;height:1680px}</style>${one}`);
+    await page.evaluate(() => document.fonts.ready);
+    await page.screenshot({ path: `${OUT}/business-card/business-card-presentation-${person.slug}.png` });
+  }
+  // Shareable image per founder per theme: front and back side by side
+  await page.setViewport({ width: 2640, height: 912 });
+  for (const person of site.people) for (const theme of ['light', 'dark']) {
+    const pair = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 76"><rect width="220" height="76" fill="#FFFFFF"/><rect width="220" height="76" fill="#2E3277" fill-opacity=".07"/>${side(front(theme), 14, 10)}${side(back(theme, person), 116, 10)}</svg>`;
+    await page.setContent(`<style>${FONTS}html,body{margin:0}svg{display:block;width:2640px;height:912px}</style>${pair}`);
+    await page.evaluate(() => document.fonts.ready);
+    await page.screenshot({ path: `${OUT}/business-card/business-card-share-${person.slug}-${theme}.png` });
+  }
 }
 
 // ---------- 3. Brand guidelines (A4 landscape PDFs) ----------
