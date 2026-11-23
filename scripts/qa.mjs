@@ -145,7 +145,7 @@ await page.click('.to-top');
 await page.waitForFunction(() => scrollY === 0, { timeout: 3000 }).catch(() => fail('to-top', 'did not scroll to top'));
 
 // Form tests
-await page.goto(`${base}/contact/?product=dehydrated-garlic`, { waitUntil: 'networkidle0' });
+await page.goto(`${base}/contact/#product=dehydrated-garlic`, { waitUntil: 'networkidle0' });
 if ((await page.$eval('#f-product', (e) => e.value)) !== 'Dehydrated Garlic') fail('form', 'product preselect from URL failed');
 await page.$eval('#f-product', (e) => (e.value = ''));
 await page.click('button[type=submit]');

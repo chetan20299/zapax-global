@@ -40,7 +40,7 @@ export const site = {
     ? `https://firestore.googleapis.com/v1/projects/${env('EXIMFLOW_PROJECT', 'eximflow-73416')}/databases/(default)/documents/tenants/${env('EXIMFLOW_TENANT', 'tarang')}/inquiries?key=${env('EXIMFLOW_API_KEY')}`
     : '',
   gaMeasurementId: env('GA_MEASUREMENT_ID'),
-  googleSiteVerification: env('GOOGLE_SITE_VERIFICATION'),
+  googleSiteVerification: env('GOOGLE_SITE_VERIFICATION', 'dHMB_YRPRf2RdBm7sYiRlAfohZuiLMArpEWrAuzazfY'),
   founders: ['Chetan Punani', 'Keval Chauhan'],
   people: [
     { name: 'Chetan Punani', role: 'Co-Founder', email: mailbox('chetan'), slug: 'chetan-punani' },
@@ -114,9 +114,9 @@ export const products = [
     group: 'Dehydrated',
     name: 'Dehydrated Onion',
     art: 'onion',
-    title: 'Dehydrated Onion Exporter | Flakes to Powder',
+    title: 'Dehydrated Onion Exporter from India',
     description:
-      'Dehydrated white and red onion from India: kibbled, chopped, minced, granules and powder. Specifications and packing agreed with ZAPAX ENTERPRISE before every order.',
+      'Bulk dehydrated white, red & golden fried onion flakes, chopped, minced, granules & powder exported from India by ZAPAX ENTERPRISE. Request a quote.',
     h1: 'Dehydrated onion from India, from flakes to powder',
     summary: 'White, red and golden fried onion in every common cut, from kibbled flakes to fine powder.',
     intro: [
@@ -153,13 +153,13 @@ export const products = [
     group: 'Dehydrated',
     name: 'Dehydrated Garlic',
     art: 'garlic',
-    title: 'Dehydrated Garlic Exporter | Flakes to Powder',
+    title: 'Dehydrated Garlic Exporter from India',
     description:
-      'Dehydrated garlic from India as cloves, chopped, minced, granules and pure powder. Specifications, packing and export documents coordinated by ZAPAX ENTERPRISE.',
+      'Export-grade dehydrated garlic flakes, chopped, minced, granules & pure powder sourced from trusted Indian processors by ZAPAX ENTERPRISE.',
     h1: 'Dehydrated garlic for seasoning and food manufacturing',
     summary: 'Flakes, chopped, minced, granules and pure garlic powder.',
     intro: [
-      'Dehydrated garlic gives food manufacturers a consistent, measurable garlic flavour without the peeling, waste and short shelf life of fresh bulbs.',
+      'Dehydrated garlic gives seasoning blenders and food manufacturing teams a consistent, measurable garlic flavour without the peeling, waste and short shelf life of fresh bulbs.',
       'ZAPAX ENTERPRISE coordinates supply from producing partners in the forms below. Each order starts with a written specification covering cut size, moisture, colour and microbiological limits.',
     ],
     varieties: ['White garlic'],
@@ -186,10 +186,11 @@ export const products = [
     slug: 'black-garlic',
     group: 'Other',
     name: 'Black Garlic',
+    nav: 'Aged black garlic', // menu label: differs from the card title so each anchor text is unique
     art: 'blackgarlic',
-    title: 'Black Garlic Exporter | Bulbs, Cloves, Powder',
+    title: 'Black Garlic Exporter | Cloves, Powder',
     description:
-      'Black garlic from India: whole and solo bulbs, peeled cloves, paste and powder for gourmet, food service and health food brands. Specifications agreed per order.',
+      'Slow-aged Indian black garlic whole bulbs, solo bulbs, peeled cloves, paste & powder exported worldwide by ZAPAX ENTERPRISE. Request specs.',
     h1: 'Black garlic: bulbs, peeled cloves, paste and powder',
     summary: 'Slow-aged garlic with a sweet, mellow flavour, as bulbs, peeled cloves, paste or powder.',
     photos: [['black-garlic-range', 'Black garlic range: whole bulb, solo bulb, peeled cloves, paste and powder', 'Black garlic: whole bulb, solo bulb, peeled cloves, paste, powder']],
@@ -225,9 +226,9 @@ export const products = [
     group: 'Dehydrated',
     name: 'Dehydrated Ginger',
     art: 'ginger',
-    title: 'Dehydrated Ginger Exporter | Slices to Powder',
+    title: 'Dehydrated Ginger Exporter from India',
     description:
-      'Dried whole ginger, slices, flakes, granules and powder from India for food, beverage and seasoning use. Specifications confirmed per order.',
+      'Indian dehydrated ginger whole dried, slices, flakes, granules & fine powder supplied in bulk export packaging by ZAPAX ENTERPRISE, Gujarat.',
     h1: 'Dried ginger: whole, slices, flakes, granules and powder',
     summary: 'Whole dried ginger, slices, flakes, granules and powder.',
     intro: [
@@ -258,13 +259,13 @@ export const products = [
     group: 'Dehydrated',
     name: 'Dehydrated Vegetables',
     art: 'vegetables',
-    title: 'Dehydrated Vegetables Exporter | Pieces, Powder',
+    title: 'Dehydrated Vegetables Exporter, India',
     description:
-      'Dehydrated vegetables from India: tomato, carrot, beetroot, green chilli, spinach, okra, cabbage and more, as flakes, dices and powder for food makers.',
+      'Bulk dehydrated tomato, carrot, beetroot, spinach, green chilli, cabbage & vegetable powders exported from India by ZAPAX ENTERPRISE.',
     h1: 'Dehydrated vegetables for soups, snacks and seasoning',
     summary: 'Tomato, carrot, beetroot, chilli, spinach, okra and more as dehydrated pieces or powder.',
     intro: [
-      'Dehydrated vegetables add colour, flavour and nutrition to products that need a long shelf life, from instant soups to snack seasonings. Every vegetable we supply is dehydrated, ready to store and ship.',
+      'Dehydrated vegetables add colour, flavour and nutrition to products that need a long shelf life, from instant soups to snacks and seasonings. Every vegetable we supply is dehydrated, ready to store and ship.',
       'ZAPAX ENTERPRISE currently coordinates the vegetables below in the forms that suit each one. If you need a vegetable that is not listed, ask us. Our range is growing with our partner network.',
     ],
     varieties: ['Tomato', 'Carrot', 'Beetroot', 'Green chilli', 'Spinach', 'Cabbage', 'Bell pepper', 'Bitter gourd', 'Pumpkin', 'Curry leaf', 'Mint', 'Okra', 'Mixed vegetables'],
@@ -294,9 +295,9 @@ export const products = [
     group: 'Dehydrated',
     name: 'Dehydrated Fruits',
     art: 'driedfruit',
-    title: 'Dehydrated Fruit Pieces and Powders from India',
+    title: 'Dehydrated Fruit Pieces and Powders',
     description:
-      'Dehydrated mango, banana, papaya, pineapple, amla, jackfruit, lemon, strawberry and orange peel from India, as pieces and powders for food makers.',
+      'Dehydrated mango, banana, papaya, pineapple, amla, lemon & spray-dried or freeze-dried fruit powders exported from India by ZAPAX ENTERPRISE.',
     h1: 'Dehydrated fruit pieces and fruit powders',
     summary: 'Mango, banana, papaya, pineapple, amla, lemon, strawberry and more as dehydrated pieces or powder.',
     intro: [
@@ -329,9 +330,9 @@ export const products = [
     group: 'Dehydrated',
     name: 'Dehydrated Potato',
     art: 'potato',
-    title: 'Dehydrated Potato Exporter | Flakes, Dices, Powder',
+    title: 'Dehydrated Potato Exporter from India',
     description:
-      'Dehydrated potato from India as flakes, dices, slices, granules and powder for snacks, ready meals and food manufacturing. Specifications agreed per order.',
+      'Bulk dehydrated potato flakes, dices, slices, granules & powder exported from India with pre-agreed written specs by ZAPAX ENTERPRISE.',
     h1: 'Dehydrated potato: flakes, dices, slices, granules and powder',
     summary: 'Potato flakes, dices, slices, granules and powder.',
     intro: [
@@ -358,10 +359,11 @@ export const products = [
     slug: 'moringa',
     group: 'Other',
     name: 'Moringa',
+    nav: 'Moringa leaf and seeds',
     art: 'moringa',
-    title: 'Moringa Exporter | Leaves, Tea Cut, Powder, Seeds',
+    title: 'Moringa Exporter | Leaf Powder, Seeds',
     description:
-      'Moringa from India: dried leaves, tea cut, leaf powder, seeds and kernels for health food, tea and supplement brands. Specifications agreed per order.',
+      'Indian moringa whole dried leaves, tea cut, leaf powder, seeds & kernels exported in bulk with lab-tested specs by ZAPAX ENTERPRISE.',
     h1: 'Moringa: dried leaves, tea cut, powder, seeds and kernels',
     summary: 'Dried whole leaves, tea cut, leaf powder, seeds and kernels.',
     intro: [
@@ -388,10 +390,11 @@ export const products = [
     slug: 'starch',
     group: 'Other',
     name: 'Starch',
+    nav: 'Native starches',
     art: 'starch',
-    title: 'Starch Exporter | Potato, Tapioca, Corn, Rice',
+    title: 'Starch Exporter | Potato, Tapioca, Corn',
     description:
-      'Native potato, tapioca, corn, rice and wheat starch from India for food, paper, textile and industrial use. Grades and packing agreed by ZAPAX ENTERPRISE.',
+      'Native potato, tapioca, corn, rice & wheat starch fine powders exported from India in bulk packaging by ZAPAX ENTERPRISE. Request a quote.',
     h1: 'Native starch: potato, tapioca, corn, rice and wheat',
     summary: 'Potato, tapioca, corn, rice and wheat starch.',
     intro: [

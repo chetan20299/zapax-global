@@ -259,8 +259,8 @@
   const submit = $('button[type="submit"]', form);
   const startedAt = Date.now();
 
-  // Preselect product from ?product=slug
-  const slug = new URLSearchParams(location.search).get('product');
+  // Preselect product from #product=slug (a hash keeps internal links parameter-free for SEO; ?product= still works)
+  const slug = new URLSearchParams(location.hash.slice(1)).get('product') || new URLSearchParams(location.search).get('product');
   if (slug) {
     const opt = $(`#f-product option[data-slug="${CSS.escape(slug)}"]`);
     if (opt) opt.selected = true;

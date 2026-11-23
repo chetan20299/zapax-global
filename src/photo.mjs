@@ -33,7 +33,7 @@ export function photo(id, alt, { sizes = '(max-width: 640px) 100vw, (max-width: 
     + `<img class="shot-img" src="${url(p.widths.find((w) => w >= 800) ?? p.w, 'jpg')}" srcset="${set('jpg')}" sizes="${sizes}" width="${p.w}" height="${p.h}" alt="${esc(alt)}" ${load} decoding="async"></picture>`
     // Placeholder cover: under the photo by default (no JS), lifted above it by app.js and wiped away once loaded.
     // The photo itself is never clipped or hidden: browsers skip lazy-loading fully clipped images.
-    + `<span class="shot-cover" aria-hidden="true"><img class="shot-lqip" src="${p.lqip}" alt="">`
+    + `<span class="shot-cover" aria-hidden="true"><img class="shot-lqip" src="${p.lqip}" alt="${esc(`Loading preview: ${alt}`)}">`
     + (doodle ? `<span class="shot-doodle">${doodle}</span>` : '') + `</span>`
     + (interactive ? `<button class="shot-open" type="button" aria-label="Open larger view: ${esc(alt)}"><span class="shot-hint">${icon('zoom')}<span>View &amp; zoom</span></span></button>` : '')
     + `</div>${caption ? `<figcaption>${esc(caption)}</figcaption>` : ''}</figure>`;

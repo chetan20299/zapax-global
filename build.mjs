@@ -29,10 +29,11 @@ const organization = {
   '@id': orgId,
   name: site.brand,
   ...(site.legalName && { legalName: site.legalName }),
+  alternateName: ['Zapax Enterprise', 'Zapax'],
   url: abs('/'),
   logo: abs('/brand/logo-symbol-512.png'),
   slogan: site.slogan,
-  description: 'India-based export company for dehydrated onion, garlic, ginger, potato, vegetables and fruits, plus black garlic, moringa and starch, growing into a wide range of products from India.',
+  description: 'Dehydrated onion, garlic, ginger, potato, vegetables, fruits, black garlic, moringa and starch exporter from Gujarat, India.',
   founder: site.people.map((p) => ({ '@type': 'Person', name: p.name, jobTitle: p.role })),
   address: { '@type': 'PostalAddress', streetAddress: site.street, addressLocality: site.locality, postalCode: site.postalCode, addressRegion: site.region, addressCountry: 'IN' },
   location: { '@type': 'Place', geo: { '@type': 'GeoCoordinates', latitude: site.geo.lat, longitude: site.geo.lng }, hasMap: site.mapsUrl },
@@ -67,7 +68,7 @@ function nav(current) {
         <li class="has-menu">
           <button class="nav-link menu-btn" type="button" aria-expanded="false" aria-controls="menu-products"${current.startsWith('/products/') ? ' data-current' : ''}>Products${icon('down')}</button>
           <div class="dropdown mega" id="menu-products">
-            ${productGroups.map((g) => `<div class="mega-col"><a class="mega-h" href="/products/#${g.id}">${g.label}</a><ul>${g.items.map(link).map(([href, t]) => `<li><a href="${href}"${is(href)}>${t}</a></li>`).join('')}</ul></div>`).join('')}
+            ${productGroups.map((g) => `<div class="mega-col"><a class="mega-h" href="/products/#${g.id}">${g.label}</a><ul>${g.items.map((p) => [`/products/${p.slug}/`, p.nav || p.name.replace(/^Dehydrated /, '')]).map(([href, t]) => `<li><a href="${href}"${is(href)}>${t}</a></li>`).join('')}</ul></div>`).join('')}
             <a class="mega-all" href="/products/"${current === '/products/' ? ' aria-current="page"' : ''}>All products ${icon('arrow')}</a>
           </div>
         </li>
@@ -82,7 +83,15 @@ function nav(current) {
   </header>`;
 }
 
-function footer() {
+// Share links: plain URLs, no third-party scripts (CSP stays strict).
+const share = (url, title) => [
+  ['LinkedIn', `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`],
+  ['Facebook', `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`],
+  ['X', `https://x.com/intent/post?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`],
+  ['WhatsApp', `https://wa.me/?text=${encodeURIComponent(`${title} ${url}`)}`],
+];
+
+function footer(page) {
   const contactLines = [
     `<li>${icon('pin')}<span>${site.addressLines.join('<br>')}</span></li>`,
     `<li>${icon('phone')}<a href="${telHref}">${site.phone}</a></li>`,
@@ -90,7 +99,7 @@ function footer() {
     // All mailboxes in one compact block: one icon, one line each, short label + address
     site.emails.length && `<li>${icon('mail')}<dl class="footer-mails">${site.emails.map(([, e, short]) => `<div><dt>${short}</dt><dd><a href="mailto:${e}">${e}</a></dd></div>`).join('')}</dl></li>`,
   ].filter(Boolean).join('');
-  const col = (title, links) => `<div><h2 class="footer-h">${title}</h2><ul>${links.map(([h, t]) => `<li><a href="${h}">${t}</a></li>`).join('')}</ul></div>`;
+  const col = (title, links) => `<div><p class="footer-h">${title}</p><ul>${links.map(([h, t]) => `<li><a href="${h}">${t}</a></li>`).join('')}</ul></div>`;
   return `
   <footer class="site-footer">
     <div class="footer-band" aria-hidden="true"></div>
@@ -102,17 +111,18 @@ function footer() {
         <ul class="footer-contact">${contactLines}</ul>
         ${site.social.length ? `<ul class="footer-social">${site.social.map((s) => `<li><a href="${s.url}" rel="noopener" target="_blank">${esc(s.name)}</a></li>`).join('')}</ul>` : ''}
       </div>
-      <div>${productGroups.map((g) => `<h2 class="footer-h">${g.label}</h2><ul class="footer-products">${g.items.map(link).map(([h, t]) => `<li><a href="${h}">${t}</a></li>`).join('')}</ul>`).join('')}</div>
-      ${col('Export', [...exportPages, ['/quality/', 'Quality assurance']])}
-      ${col('Company', [['/about/', 'About ZAPAX ENTERPRISE'], ['/vision/', 'Our vision'],['/company-registrations/', 'Company registrations'], ['/sustainability/', 'Sustainability'], ['/trade-terms/', 'Trade terms and fraud prevention'], ['/faq/', 'FAQ'], ['/contact/', 'Contact and quotes'], ['/ZAPAX-ENTERPRISE-product-overview.pdf', 'Product overview (PDF)']])}
+      <div>${productGroups.map((g) => `<p class="footer-h">${g.label}</p><ul class="footer-products">${g.items.map((p) => [`/products/${p.slug}/`, `${p.name} exporter`]).map(([h, t]) => `<li><a href="${h}">${t}</a></li>`).join('')}</ul>`).join('')}</div>
+      ${col('Export', [['/export/', 'Export services'], ['/packaging/', 'Export packing options'], ['/documentation/', 'Shipping documents'], ['/shipping/', 'Sea and air freight'], ['/quality/', 'Quality assurance']])}
+      ${col('Company', [['/about/', 'About ZAPAX ENTERPRISE'], ['/vision/', 'Vision and mission'], ['/company-registrations/', 'Company registrations'], ['/sustainability/', 'Sustainable sourcing'], ['/trade-terms/', 'Fraud prevention'], ['/faq/', 'FAQ'], ['/contact/', 'Contact and quotes'], ['/ZAPAX-ENTERPRISE-product-overview.pdf', 'Product overview (PDF)']])}
     </div>
     <div class="wrap footer-base">
+      <p class="footer-share">Share this page: ${share(abs(page.path === '/404' ? '/' : page.path), page.path === '/' ? page.title : `${page.title} | ${site.brand}`).map(([n, u]) => `<a href="${u}" target="_blank" rel="noopener" aria-label="Share on ${n}">${n}</a>`).join(' · ')}</p>
       <p>© <span data-year>${new Date().getFullYear()}</span> ${esc(site.legalName)}. All rights reserved.</p>
       <ul><li><a href="/privacy/">Privacy policy</a></li><li><a href="/terms/">Terms of use</a></li></ul>
     </div>
   </footer>
   <div class="mobile-bar">
-    <a class="btn btn-primary" href="/contact/">Request a quote</a>
+    <a class="btn btn-primary" href="/contact/">Get a quote</a>
   </div>`;
 }
 
@@ -207,7 +217,7 @@ ${nav(page.path)}
 ${breadcrumbHtml(page.trail)}
 ${page.body}
 </main>
-${footer()}
+${footer(page)}
 ${floating(page)}
 <script src="${assets.js}" defer></script>
 </body>
@@ -271,6 +281,8 @@ await writeFile(
 Options -Indexes
 DirectoryIndex index.html
 ErrorDocument 404 /404.html
+AddDefaultCharset UTF-8
+AddCharset UTF-8 .html .css .js .xml .txt .svg .json
 
 <IfModule mod_rewrite.c>
   RewriteEngine On

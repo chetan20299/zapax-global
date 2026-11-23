@@ -5,7 +5,7 @@ import { photo } from './photo.mjs';
 
 const esc = (s = '') => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const home = ['/', 'Home'];
-const quote = (slug, label = 'Request a quote') => `<a class="btn btn-primary" href="/contact/${slug ? `?product=${slug}` : ''}">${label}</a>`;
+const quote = (slug, label = 'Get an export quote') => `<a class="btn btn-primary" href="/contact/${slug ? `#product=${slug}` : ''}">${label}</a>`;
 
 const hero = ({ h1, lead, actions = '', art = '', kicker = '', photo: isPhoto = false }) => `
 <section class="page-hero">
@@ -25,13 +25,14 @@ const cta = (title = 'Start with your requirement', text = 'Tell us the product,
 <section class="section">
   <div class="wrap cta-panel">
     <div><h2>${title}</h2><p>${text}</p></div>
-    <div class="actions">${quote()}<a class="btn btn-ghost" href="/ZAPAX-ENTERPRISE-product-overview.pdf" download>Download product overview (PDF)</a></div>
+    <div class="actions">${quote('', 'Send your requirement')}<a class="btn btn-ghost" href="/ZAPAX-ENTERPRISE-product-overview.pdf" download>Download product overview (PDF)</a></div>
   </div>
 </section>`;
 
 const list = (items, cls = 'ticks') => `<ul class="${cls}">${items.map((i) => `<li>${icon('check')}<span>${i}</span></li>`).join('')}</ul>`;
 const features = (items) => `<div class="features">${items.map(([ic, t, d]) => `<div class="feature">${icon(ic)}<h3>${t}</h3><p>${d}</p></div>`).join('')}</div>`;
-const steps = (items) => `<ol class="steps">${items.map(([t, d]) => `<li><h3>${t}</h3><p>${d}</p></li>`).join('')}</ol>`;
+// Step titles are styled like h3 but are not headings: keeps the heading count in proportion to the text.
+const steps = (items) => `<ol class="steps">${items.map(([t, d]) => `<li><p class="h3 step-t">${t}</p><p>${d}</p></li>`).join('')}</ol>`;
 const prose = (html) => `<div class="prose">${html}</div>`;
 const split = (left, right, cls = '') => `<section class="section ${cls}"><div class="wrap split">${left}<div>${right}</div></div></section>`;
 const head = (h2, p = '') => `<div class="section-head"><h2>${h2}</h2>${p ? `<p>${p}</p>` : ''}</div>`;
@@ -57,14 +58,14 @@ const cardSizes = '(max-width: 640px) 100vw, (max-width: 1100px) 50vw, 420px';
 const productCards = (items) => `
 <ul class="cards">${items.map((p) => `
   <li>
-    <a class="card" href="/products/${p.slug}/">
+    <div class="card">
       ${photo(p.photos[0][0], p.photos[0][1], { interactive: false, sizes: cardSizes, doodle: productArt(p.art) })}
       <span class="card-body">
-        <strong class="card-title">${p.name}${icon('arrow')}</strong>
+        <a class="card-title" href="/products/${p.slug}/">${p.name}${icon('arrow')}</a>
         <span class="card-text">${p.summary}</span>
         <span class="card-forms">${[...new Set(p.forms.map(([, t]) => t))].map((t) => `<span class="form-chip">${t}</span>`).join('')}</span>
       </span>
-    </a>
+    </div>
   </li>`).join('')}
 </ul>`;
 // h = heading level for category titles ('h2' on /products/, 'h3' under the home section heading)
@@ -92,18 +93,19 @@ const heroTiles = [['dehydrated-onion', 0], ['dehydrated-vegetables', 1], ['dehy
 const homePage = {
   path: '/',
   title: 'ZAPAX ENTERPRISE | Dehydrated Food Exporter from India',
-  description: `ZAPAX ENTERPRISE exports ${productNames} from India, on written terms.`,
+  description: 'ZAPAX ENTERPRISE LLP exports dehydrated onion, garlic, ginger, vegetables, fruits, black garlic, moringa & starch from Gujarat, India on written terms.',
   bodyClass: 'is-home',
   body: `
 <section class="home-hero">
   <div class="wrap home-hero-grid">
     <div class="home-hero-text">
       <p class="kicker">Export company · Gujarat, India</p>
-      <h1>Indian exports, carried on trust.</h1>
-      <p class="lead">ZAPAX ENTERPRISE exports ${productNames} from India, sourced through trusted producing partners. Every detail is agreed with you in writing, so the trust built at the first inquiry travels with your order all the way to your port.</p>
+      <h1>ZAPAX ENTERPRISE — Dehydrated Food Exporter from India</h1>
+      <p class="hero-sub">Indian exports, carried on trust.</p>
+      <p class="lead">ZAPAX ENTERPRISE is a dehydrated food exporter from Gujarat, India. We export ${productNames}, sourced through trusted producing partners. Every detail is agreed with you in writing, so the trust built at the first inquiry travels with your order all the way to your port.</p>
       <div class="actions">${quote()}<a class="btn btn-ghost" href="/products/">Browse products</a></div>
     </div>
-    <div class="home-hero-media">${heroTiles.map(([slug, i], n) => { const p = products.find((x) => x.slug === slug); return `<a class="hm hm-${n + 1}" href="/products/${slug}/">${photo(p.photos[i][0], p.photos[i][1], { interactive: false, eager: n === 0, doodle: productArt(p.art), sizes: n === 0 ? '(max-width: 1024px) 64vw, 32vw' : '(max-width: 1024px) 32vw, 16vw' })}<span class="sr-only">${p.name}</span></a>`; }).join('')}</div>
+    <div class="home-hero-media">${heroTiles.map(([slug, i], n) => { const p = products.find((x) => x.slug === slug); return `<a class="hm hm-${n + 1}" href="/products/${slug}/">${photo(p.photos[i][0], p.photos[i][1], { interactive: false, eager: n === 0, doodle: productArt(p.art), sizes: n === 0 ? '(max-width: 1024px) 64vw, 32vw' : '(max-width: 1024px) 32vw, 16vw' })}<span class="sr-only">See ${p.name.toLowerCase()} forms</span></a>`; }).join('')}</div>
   </div>
   <div class="band" aria-hidden="true"></div>
 </section>
@@ -213,12 +215,12 @@ ${cta('Ready to discuss your next order?')}
 // ---------- About ----------
 const aboutPage = {
   path: '/about/',
-  title: 'About Us | Export Company from Gujarat, India',
-  description: 'ZAPAX ENTERPRISE LLP was founded in Gujarat by Chetan Punani and Keval Chauhan to carry India’s products to the world on trust. Our story, founders and values.',
+  title: 'About Us | Export Company in Gujarat',
+  description: 'ZAPAX ENTERPRISE LLP was founded in Gujarat by Chetan Punani and Keval Chauhan to carry India’s products to the world. Our story, founders and values.',
   schemaType: 'AboutPage',
   trail: [home, ['/about/', 'About']],
   body: `
-${hero({ h1: 'Built in Gujarat to carry India’s best to the world', lead: 'ZAPAX ENTERPRISE began with a simple belief: international buyers deserve an Indian export partner who is clear, dependable and honest about what it can deliver. Trust is what we build, and what travels with every order.' })}
+${hero({ h1: 'Built in Gujarat to carry India’s best to the world', lead: 'ZAPAX ENTERPRISE began with a simple belief: international buyers deserve an Indian export partner who is clear, dependable and honest about what it can deliver. Trust is what we build, and what travels with every order. We built this company in Gujarat to carry the best of India’s products to buyers worldwide.' })}
 ${split('<h2>Our story</h2>', prose(`
   <p>ZAPAX ENTERPRISE was founded in Gujarat, India, by Chetan Punani and Keval Chauhan. Gujarat is one of India’s great trading states, with major ports and a long tradition of commerce, and buyers around the world already depend on Indian products such as onion, garlic, ginger and spices.</p>
   <p>The founders saw that buyers abroad often struggle to find an Indian supplier they can rely on, one that gives straight answers, agrees specifications properly and stays responsive after the order is placed. They started ZAPAX ENTERPRISE to fill that gap.</p>
@@ -278,13 +280,13 @@ ${cta('Let’s talk about your requirements')}
 // ---------- Products index ----------
 const productsPage = {
   path: '/products/',
-  title: 'Dehydrated Foods, Moringa and Starch from India',
+  title: 'Dehydrated Foods, Moringa and Starch',
   description: 'Dehydrated onion, garlic, ginger, potato, vegetables and fruits, plus black garlic, moringa and starch from India: forms, specifications and packaging.',
   schemaType: 'CollectionPage',
   trail: [home, ['/products/', 'Products']],
   schema: [{ '@type': 'ItemList', itemListElement: productGroups.flatMap((g) => g.items).map((p, i) => ({ '@type': 'ListItem', position: i + 1, name: p.name, url: `${site.domain}/products/${p.slug}/` })) }],
   body: `
-${hero({ h1: 'Products from India, ready to travel', lead: 'Browse our current range. Every product page lists available forms, the parameters we agree on the specification sheet, packaging options and how the product travels.' })}
+${hero({ h1: 'Products from India, ready to travel', lead: 'Browse our current range of dehydrated foods, moringa and starch, ready to travel from India to your port. Every product page lists available forms, the parameters we agree on the specification sheet, packaging options and how the product travels.' })}
 <section class="section">
   <div class="wrap">
     ${catalog('h2')}
@@ -373,11 +375,11 @@ ${cta(`Request a quote for ${p.name.toLowerCase()}`, 'Share your form, specifica
 // ---------- Quality ----------
 const qualityPage = {
   path: '/quality/',
-  title: 'Quality Assurance | How We Source, Check and Ship',
-  description: 'How ZAPAX ENTERPRISE handles product selection, sourcing standards, inspection, packaging, transport, documentation and traceability for exports from India.',
+  title: 'Quality Assurance and Lot Checks',
+  description: 'How ZAPAX ENTERPRISE handles product selection, sourcing, inspection, packaging, transport, documents and traceability for exports from India.',
   trail: [home, ['/quality/', 'Quality']],
   body: `
-${hero({ h1: 'Quality you can check, not just a promise', lead: 'Quality in export trade means the product that arrives matches the product that was agreed. Here is how we make sure the trust you place in an order travels with it, stage by stage, and what we can and cannot claim.' })}
+${hero({ h1: 'Quality you can check, not just a promise', lead: 'Quality in export trade is not just a promise. It means the product that arrives matches the product that was agreed, and that you can check it. Here is how we make sure the trust you place in an order travels with it, stage by stage, including the lot checks we run before dispatch.' })}
 <section class="section">
   <div class="wrap">
     ${head('From selection to shipment')}
@@ -414,14 +416,14 @@ ${cta('Have a specific quality requirement?', 'Send us your specification sheet 
 // ---------- Export capabilities ----------
 const exportPage = {
   path: '/export/',
-  title: 'Export Capabilities | Bulk Supply from India',
+  title: 'Export Capabilities | Bulk Supply',
   description: 'How ZAPAX ENTERPRISE coordinates bulk exports from India: product handling, packaging, buyer requirements, shipping, documents and communication.',
   trail: [home, ['/export/', 'Export capabilities']],
   body: `
 ${hero({ h1: 'Export coordination from inquiry to arrival', lead: 'We handle the practical work of exporting from India, so you deal with one trusted partner who understands both the product and the paperwork, wherever your goods are travelling.' })}
 <section class="section">
   <div class="wrap">
-    ${head('What we handle for you')}
+    ${head('What we handle for you', 'ZAPAX ENTERPRISE coordinates bulk supply from India for importers, distributors and food manufacturers. We match each order with a suitable producing partner, agree packing and documents in writing, book freight with our forwarders and keep you informed until the goods reach your port.')}
     ${features([
       ['box', 'Product handling', 'We coordinate how each product is prepared, packed and stored at the producing partner, following the agreed specification.'],
       ['scale', 'Bulk supply inquiries', 'We quote for bulk quantities, from part loads to full containers. Minimum quantities depend on the product, so tell us the volume you have in mind.'],
@@ -461,11 +463,11 @@ const packGallery = `<div class="gallery gallery-3">${packShots.map(([id, alt, c
 
 const packagingPage = {
   path: '/packaging/',
-  title: 'Export Packaging for Dehydrated Products',
+  title: 'Export Packaging for Dehydrated Foods',
   description: 'Export packaging for dehydrated products and starch: lined cartons, foil bags, pouches, jars, sacks, jumbo bags, pallets and container loading.',
   trail: [home, ['/export/', 'Export'], ['/packaging/', 'Packaging']],
   body: `
-${hero({ h1: 'Packaging built for the journey', lead: 'The right packing depends on the product, the destination climate, transit time and how you handle goods at the other end. We agree it with you before the order is confirmed.' })}
+${hero({ h1: 'Packaging built for the journey', lead: 'Export packaging for dehydrated foods has to be built for the whole journey, from the factory to your warehouse. The right packing depends on the product, the destination climate, transit time and how you handle goods at the other end. We agree it with you before the order is confirmed.' })}
 <section class="section">
   <div class="wrap">
     ${head('Packed for export', 'From retail pouches to full container loads. Open any photo to see the detail.')}
@@ -510,13 +512,14 @@ const docs = [
 ];
 const documentationPage = {
   path: '/documentation/',
-  title: 'Export Documentation for Products from India',
+  title: 'Export Documentation from India',
   description: 'Documents commonly needed to import products from India: commercial invoices, packing lists, bills of lading, certificates of origin and phytosanitary certificates.',
   trail: [home, ['/export/', 'Export'], ['/documentation/', 'Documentation']],
   body: `
-${hero({ h1: 'Export documentation, prepared and checked', lead: 'Documents decide whether a shipment clears customs smoothly, and correct paperwork is how trust travels across borders. Here are the documents commonly involved in exports from India. The exact set depends on your product and destination.' })}
+${hero({ h1: 'Export documentation, prepared and checked', lead: 'Documents decide whether a shipment clears customs smoothly, and correct paperwork is how trust travels across borders. Here are the documents commonly involved in exports from India. The exact set depends on your product and destination, and each one is prepared and checked with you before shipment.' })}
 <section class="section">
   <div class="wrap">
+    ${head('Documents commonly required')}
     <dl class="doc-grid">${docs.map(([t, d]) => `<div>${icon('doc')}<dt>${t}</dt><dd>${d}</dd></div>`).join('')}</dl>
   </div>
 </section>
@@ -566,7 +569,7 @@ const sustainabilityPage = {
   description: 'ZAPAX ENTERPRISE’s practical approach to responsible sourcing, reducing food waste, using resources efficiently and building a sustainable export business.',
   trail: [home, ['/sustainability/', 'Sustainability']],
   body: `
-${hero({ h1: 'Responsible trade, one practical step at a time', lead: 'We are a young company, so we focus on what we can influence today, and we report honestly on it. We make no environmental claims we cannot support.' })}
+${hero({ h1: 'Responsible trade, one practical step at a time', lead: 'We are a young company, so we take responsible trade one practical step at a time. We focus on what we can influence today, and we report honestly on it. We make no environmental claims we cannot support.' })}
 <section class="section">
   <div class="wrap">
     ${head('Where we focus')}
@@ -607,6 +610,13 @@ const faqs = [
   ['What are your payment terms?', 'Payment terms are agreed in writing for each contract and stated on the proforma invoice. Common international options include advance payment, letter of credit (LC) and documents against payment (D/P).'],
   ['Which countries do you ship to?', 'We welcome inquiries from buyers worldwide. Whether we can ship to your country depends on the product and the destination’s import rules, which we check before quoting.'],
 ];
+// FAQ sections: [heading, indexes into faqs]. Every question appears exactly once.
+const faqGroups = [
+  ['About ZAPAX ENTERPRISE', [0, 1]],
+  ['Products and range', [2, 3]],
+  ['Orders, samples and payment', [4, 5, 9, 11]],
+  ['Shipping, documents and certificates', [6, 7, 8, 10, 12]],
+];
 const faqPage = {
   path: '/faq/',
   title: 'Frequently Asked Questions',
@@ -614,8 +624,8 @@ const faqPage = {
   trail: [home, ['/faq/', 'FAQ']],
   schema: [faqSchema(faqs)],
   body: `
-${hero({ h1: 'Frequently asked questions', lead: 'Straight answers to the questions international buyers ask us most. If yours is not here, ask us directly.' })}
-<section class="section"><div class="wrap narrow">${faqList(faqs)}</div></section>
+${hero({ h1: 'Frequently asked questions', lead: 'Straight answers to the questions international buyers have most frequently asked us. If yours is not here, ask us directly.' })}
+<section class="section"><div class="wrap narrow">${faqGroups.map(([h, idx]) => `<h2>${h}</h2>${faqList(idx.map((i) => faqs[i]))}`).join('')}</div></section>
 ${cta('Still have a question?', 'Send us a message and our team will reply with a clear answer.')}
 `,
 };
@@ -645,6 +655,7 @@ const contactPage = {
 ${hero({ h1: 'Request a quote', lead: 'Tell us what you need. We read every inquiry and reply with available options, a clear offer or the questions we need answered to quote accurately.' })}
 <section class="section">
   <div class="wrap contact-grid">
+    <div><h2 class="h3">Send your inquiry</h2>
     <form class="inquiry" id="inquiry" action="#" method="post" novalidate data-endpoint="${esc(site.formEndpoint)}" data-email="${esc(site.email)}" data-phone="${esc(site.phone)}" data-wa="${esc(waHref())}">
       <div class="form-grid">
         ${field('name', 'Full name', `<input id="f-name" name="name" type="text" autocomplete="name" required maxlength="100" ${describedBy('name')}>`, { required: true })}
@@ -658,10 +669,10 @@ ${hero({ h1: 'Request a quote', lead: 'Tell us what you need. We read every inqu
         <div class="span-2">${field('message', 'Message or specifications', `<textarea id="f-message" name="message" rows="6" maxlength="4000" ${describedBy('message', 1)}></textarea>`, { hint: 'Form or cut, mesh size, packaging, documents and target shipment date.' })}</div>
       </div>
       <div class="hp" aria-hidden="true"><label for="f-website">Leave this field empty</label><input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
-      <p class="form-legal">Fields marked <span class="req">*</span> are required. We use your details only to respond to your inquiry. See our <a href="/privacy/">privacy policy</a>.</p>
+      <p class="form-legal">Fields marked <span class="req">*</span> are required. We use your details only to respond to your inquiry. See <a href="/privacy/">how we handle your data</a>.</p>
       <button class="btn btn-primary btn-lg" type="submit">Send inquiry</button>
       <div class="form-status" role="status" aria-live="polite" tabindex="-1"></div>
-    </form>
+    </form></div>
     <aside class="contact-aside">
       <h2 class="h3">What happens next</h2>
       <ol class="mini-steps">
@@ -693,7 +704,7 @@ ${hero({ h1: 'Request a quote', lead: 'Tell us what you need. We read every inqu
 const tradeTermsPage = {
   path: '/trade-terms/',
   title: 'Trade Terms and Fraud Prevention',
-  description: 'Every ZAPAX ENTERPRISE deal follows pre-agreed written terms. How we protect buyers from fraud, and how to verify genuine ZAPAX ENTERPRISE messages.',
+  description: 'Every ZAPAX ENTERPRISE deal follows pre-agreed written terms. How we protect buyers from fraud and how to verify genuine messages from us.',
   trail: [home, ['/export/', 'Export'], ['/trade-terms/', 'Trade terms and fraud prevention']],
   body: `
 ${hero({ h1: 'Every deal on agreed terms, in writing', lead: 'International trade only works when both sides can trust each other. That is why every ZAPAX ENTERPRISE deal, first or repeat, large or small, in any product category, follows the same pre-agreed written terms. They protect you, protect us, and keep the relationship strong for the long term.' })}
@@ -748,11 +759,11 @@ ${cta('Start a relationship built on clear terms')}
 // ---------- Vision ----------
 const visionPage = {
   path: '/vision/',
-  title: 'Our Vision | The Best of India to the World',
+  title: 'Our Vision | India’s Best to the World',
   description: 'The vision and mission of ZAPAX ENTERPRISE: starting with dehydrated food products and growing into a wide range of products from India, built on trust.',
   trail: [home, ['/vision/', 'Our vision']],
   body: `
-${hero({ kicker: 'Our vision', h1: 'Carrying the best of India to the world, on trust', lead: site.vision })}
+${hero({ kicker: 'Our vision', h1: 'Carrying the best of India to the world, on trust', lead: `${site.vision} We started ZAPAX ENTERPRISE to keep carrying the best of India’s products to buyers worldwide, one trusted shipment at a time.` })}
 <section class="section">
   <div class="wrap split">
     <h2>Our mission</h2>
@@ -763,8 +774,8 @@ ${hero({ kicker: 'Our vision', h1: 'Carrying the best of India to the world, on 
   <div class="wrap">
     ${head('Starting focused, built to grow', 'We are not a company of one category. Dehydrated food products are where we begin.')}
     <div class="split">
-      <div><h3>Where we are today</h3><p>We export ${productNames}, in the forms and specifications our buyers need, with every detail agreed in writing.</p><p><a class="link" href="/products/">See our current range ${icon('arrow')}</a></p></div>
-      <div><h3>Where we are going</h3><p>India makes and grows an extraordinary range of products. Our plan is to bring more and more of them to buyers around the world, across many categories, through the same partner network and the same written terms.</p></div>
+      <div><p class="h3">Where we are today</p><p>We export ${productNames}, in the forms and specifications our buyers need, with every detail agreed in writing.</p><p><a class="link" href="/products/">See our current range ${icon('arrow')}</a></p></div>
+      <div><p class="h3">Where we are going</p><p>India makes and grows an extraordinary range of products. Our plan is to bring more and more of them to buyers around the world, across many categories, through the same partner network and the same written terms.</p></div>
     </div>
   </div>
 </section>
@@ -795,11 +806,11 @@ ${cta('Tell us what you want to source from India', 'Whether it is in our curren
 // ---------- Company registrations ----------
 const registrationsPage = {
   path: '/company-registrations/',
-  title: 'Company Registrations and Export Licences',
+  title: 'Company Registrations and Licences',
   description: `Registrations and export licences of ${site.legalName}, a registered LLP in Gujarat, India, with links to verify each one on official government portals.`,
-  trail: [home, ['/about/', 'About'], ['/company-registrations/', 'Company registrations']],
+  trail: [home, ['/about/', 'About us'], ['/company-registrations/', 'Company registrations']],
   body: `
-${hero({ kicker: 'Trust and compliance', h1: 'Registered, licensed and verifiable', lead: `${esc(site.legalName)} is a limited liability partnership registered in India. These are the registrations that allow us to trade and export, with links to the official portals where you can check them independently.` })}
+${hero({ kicker: 'Trust and compliance', h1: 'Registered, licensed and verifiable', lead: `${esc(site.legalName)} is a limited liability partnership registered and licensed in India. Every entry below is verifiable. These are the registrations and export licences that allow us to trade and export, with links to the official portals where you can check them independently.` })}
 <section class="section">
   <div class="wrap">
     ${head("Our registrations", "Each entry links to the government portal that issued it, so you can confirm it without relying on us.")}
@@ -854,7 +865,7 @@ ${hero({ h1: 'Terms of use', lead: `Last updated ${updated}. By using this websi
   <h2>Product information</h2>
   <p>Product descriptions, forms, reference sizes and packaging information on this website are for general guidance only. They are not an offer to sell and do not form part of any contract. Availability, specifications, prices and terms are confirmed in writing for each order, and the quotation and sales contract for that order take precedence over anything on this website.</p>
   <h2>Inquiries and orders</h2>
-  <p>Submitting an inquiry does not create a contract. A contract exists only when both parties have agreed and confirmed the order terms in writing. How ZAPAX ENTERPRISE agrees and protects every deal is described in our <a href="/trade-terms/">trade terms and fraud prevention</a> page.</p>
+  <p>Submitting an inquiry does not create a contract. A contract exists only when both parties have agreed and confirmed the order terms in writing. How ZAPAX ENTERPRISE agrees and protects every deal is described on our <a href="/trade-terms/">written trade terms</a> page.</p>
   <h2>Intellectual property</h2>
   <p>The content, text, illustrations and design of this website belong to ${esc(site.legalName)} unless stated otherwise. You may view and print pages for your own business use, but you may not copy or republish content without our written permission. The ZAPAX ENTERPRISE name and logo are our brand identifiers.</p>
   <h2>Links</h2>

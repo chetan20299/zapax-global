@@ -14,7 +14,8 @@
     "package:hostinger": "node scripts/package-hostinger.mjs",
     "package:hostinger-node": "node scripts/package-hostinger.mjs --node",
     "photos": "node scripts/photos.mjs",
-    "deploy": "node --env-file-if-exists=.env scripts/deploy.mjs"
+    "deploy": "node --env-file-if-exists=.env scripts/deploy.mjs",
+    "seo": "node --env-file-if-exists=.env scripts/seo.mjs"
   },
   "devDependencies": {
     "esbuild": "^0.25.12",
